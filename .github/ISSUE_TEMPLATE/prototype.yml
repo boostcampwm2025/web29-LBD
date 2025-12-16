@@ -1,7 +1,7 @@
-name: 사용자 스토리
-description: 사용자에게 가치를 전달하는 기능을 추가합니다.
-title: "[USER_STORY_PROTOTYPE]"
-labels: ["USER_STORY", "PROTOTYPE"]
+name: 프로토타입
+description: 사용자 스토리에 기반한 프로토타입 제작 작업
+title: "[PROTOTYPE]"
+labels: ["PROTOTYPE"]
 body:
     - type: textarea
       id: user-story
