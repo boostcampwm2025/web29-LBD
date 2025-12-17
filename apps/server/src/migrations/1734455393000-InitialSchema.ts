@@ -69,13 +69,13 @@ export class InitialSchema1734455393000 implements MigrationInterface {
     `);
 
     await queryRunner.query(`
-      ALTER TABLE \`problem\` 
-      ADD FOREIGN KEY (\`id\`) REFERENCES \`related_problem\` (\`problem_id\`)
+      ALTER TABLE \`related_problem\` 
+      ADD FOREIGN KEY (\`problem_id\`) REFERENCES \`problem\` (\`id\`)
     `);
 
     await queryRunner.query(`
-      ALTER TABLE \`problem\` 
-      ADD FOREIGN KEY (\`id\`) REFERENCES \`related_problem\` (\`related_problem_id\`)
+      ALTER TABLE \`related_problem\` 
+      ADD FOREIGN KEY (\`related_problem_id\`) REFERENCES \`problem\` (\`id\`)
     `);
 
     await queryRunner.query(`
