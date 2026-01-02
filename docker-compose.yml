@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  web:
+    image: ${WEB_IMAGE_NAME}:${IMAGE_TAG:-latest}
+    container_name: web29-web
+    restart: unless-stopped
+    ports:
+      - "${WEB_PORT:-3000}:3000"
+    environment:
+      - NODE_ENV=production
+      # Add your environment variables here
+      # - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+    networks:
+      - app-network
+    depends_on:
+      - server
+
+  server:
+    image: ${SERVER_IMAGE_NAME}:${IMAGE_TAG:-latest}
+    container_name: web29-server
+    restart: unless-stopped
+    ports:
+      - "${SERVER_PORT:-4000}:3000"
+    environment:
+      - NODE_ENV=production
+      # Add your environment variables here
+      # - DATABASE_URL=${DATABASE_URL}
+      # - JWT_SECRET=${JWT_SECRET}
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

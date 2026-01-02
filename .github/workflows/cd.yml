@@ -1,0 +1,90 @@
+name: Deploy to Production
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Deployment environment"
+        required: true
+        default: "production"
+        type: choice
+        options:
+          - pre-production
+          - production
+      image_tag:
+        description: "Docker image tag to deploy (default: latest)"
+        required: false
+        default: "latest"
+        type: string
+
+jobs:
+  deploy:
+    name: Deploy to ${{ inputs.environment }}
+    runs-on: [self-hosted, Linux]
+    environment: ${{ inputs.environment }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Copy deployment files to server
+        run: |
+          scp -i ~/.ssh/deploy_key \
+            docker-compose.yml \
+            .env.example \
+            ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.DEPLOY_PATH }}/
+
+      - name: Deploy with Docker Compose
+        run: |
+          ssh -i ~/.ssh/deploy_key ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'ENDSSH'
+            cd ${{ secrets.DEPLOY_PATH }}
+
+            # Create .env file if it doesn't exist
+            if [ ! -f .env ]; then
+              echo "Creating .env file from .env.example"
+              cp .env.example .env
+              echo "⚠️  Please update .env file with actual values"
+            fi
+
+            # Export environment variables
+            export IMAGE_TAG=${{ inputs.image_tag }}
+
+            # Pull latest images
+            echo "Pulling Docker images..."
+            docker-compose pull
+
+            # Stop and remove old containers
+            echo "Stopping old containers..."
+            docker-compose down
+
+            # Start new containers
+            echo "Starting new containers..."
+            docker-compose up -d
+
+            # Show running containers
+            echo "Deployment complete! Running containers:"
+            docker-compose ps
+
+            # Clean up old images
+            echo "Cleaning up old images..."
+            docker image prune -f
+          ENDSSH
+
+      - name: Cleanup SSH key
+        if: always()
+        run: |
+          rm -f ~/.ssh/deploy_key
+
+      - name: Deployment notification
+        if: success()
+        run: |
+          echo "✅ Deployment to ${{ inputs.environment }} completed successfully!"
+          echo "Image tag: ${{ inputs.image_tag }}"
+          echo "Deployed at: $(date)"
