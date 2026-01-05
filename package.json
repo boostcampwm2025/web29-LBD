@@ -9,15 +9,15 @@
     "prepare": "husky"
   },
   "devDependencies": {
-    "@trivago/prettier-plugin-sort-imports": "^6.0.0",
     "husky": "^9.1.7",
-    "lint-staged": "^16.2.7",
-    "prettier": "^3.7.4",
-    "prettier-plugin-tailwindcss": "^0.7.2"
+    "lint-staged": "^16.2.7"
   },
   "lint-staged": {
     "apps/client/**/*.{ts,tsx}": [
       "pnpm --filter client exec eslint --fix"
+    ],
+    "apps/web/**/*.{ts,tsx}": [
+      "pnpm --filter web exec eslint --fix"
     ],
     "apps/server/**/*.ts": [
       "pnpm --filter server exec eslint --fix"

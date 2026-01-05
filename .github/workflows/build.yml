@@ -1,0 +1,161 @@
+name: Build Docker Images
+
+on:
+  push:
+    branches:
+      - production
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-web:
+    name: Build and Push Web Image
+    runs-on: [self-hosted, Linux]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check for Git tag
+        id: check_tag
+        run: |
+          TAG=$(git describe --exact-match --tags HEAD 2>/dev/null || echo "")
+
+          if [ -n "$TAG" ]; then
+            echo "Found annotated tag: $TAG"
+
+            if [[ $TAG =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+              echo "Valid semVer tag: $TAG"
+              echo "semver_tag=$TAG" >> $GITHUB_OUTPUT
+              echo "has_semver=true" >> $GITHUB_OUTPUT
+            else
+              echo "Tag exists but not in semVer format: $TAG"
+              echo "has_semver=false" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "No annotated tag found"
+            echo "has_semver=false" >> $GITHUB_OUTPUT
+          fi
+
+          SHA_SHORT=$(git rev-parse --short HEAD)
+          echo "sha_short=$SHA_SHORT" >> $GITHUB_OUTPUT
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_WEB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_WEB_TOKEN }}
+
+      - name: Extract metadata for Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ secrets.WEB_IMAGE_NAME }}
+          tags: |
+            type=raw,value=rc-${{ steps.check_tag.outputs.sha_short }}
+            type=raw,value=${{ steps.check_tag.outputs.semver_tag }},enable=${{ steps.check_tag.outputs.has_semver == 'true' }}
+          flavor: |
+            latest=false
+
+      - name: Build and push Web image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./apps/web/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=registry,ref=${{ secrets.WEB_IMAGE_NAME }}:buildcache
+          cache-to: type=registry,ref=${{ secrets.WEB_IMAGE_NAME }}:buildcache,mode=max
+          target: production
+
+      - name: Image build summary
+        run: |
+          echo "### Web Image Build Summary" >> $GITHUB_STEP_SUMMARY
+          echo "**Built tags:**" >> $GITHUB_STEP_SUMMARY
+          echo "- rc-${{ steps.check_tag.outputs.sha_short }}" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ steps.check_tag.outputs.has_semver }}" == "true" ]; then
+            echo "- ${{ steps.check_tag.outputs.semver_tag }}" >> $GITHUB_STEP_SUMMARY
+          fi
+
+  build-server:
+    name: Build and Push Server Image
+    runs-on: [self-hosted, Linux]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check for Git tag
+        id: check_tag
+        run: |
+          TAG=$(git describe --exact-match --tags HEAD 2>/dev/null || echo "")
+
+          if [ -n "$TAG" ]; then
+            echo "Found annotated tag: $TAG"
+
+            if [[ $TAG =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+              echo "Valid semVer tag: $TAG"
+              echo "semver_tag=$TAG" >> $GITHUB_OUTPUT
+              echo "has_semver=true" >> $GITHUB_OUTPUT
+            else
+              echo "Tag exists but not in semVer format: $TAG"
+              echo "has_semver=false" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "No annotated tag found"
+            echo "has_semver=false" >> $GITHUB_OUTPUT
+          fi
+
+          SHA_SHORT=$(git rev-parse --short HEAD)
+          echo "sha_short=$SHA_SHORT" >> $GITHUB_OUTPUT
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_SERVER_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_SERVER_TOKEN }}
+
+      - name: Extract metadata for Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ secrets.SERVER_IMAGE_NAME }}
+          tags: |
+            type=raw,value=rc-${{ steps.check_tag.outputs.sha_short }}
+            type=raw,value=${{ steps.check_tag.outputs.semver_tag }},enable=${{ steps.check_tag.outputs.has_semver == 'true' }}
+          flavor: |
+            latest=false
+
+      - name: Build and push Server image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./apps/server/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=registry,ref=${{ secrets.SERVER_IMAGE_NAME }}:buildcache
+          cache-to: type=registry,ref=${{ secrets.SERVER_IMAGE_NAME }}:buildcache,mode=max
+          target: production
+
+      - name: Image build summary
+        run: |
+          echo "### Server Image Build Summary" >> $GITHUB_STEP_SUMMARY
+          echo "**Built tags:**" >> $GITHUB_STEP_SUMMARY
+          echo "- rc-${{ steps.check_tag.outputs.sha_short }}" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ steps.check_tag.outputs.has_semver }}" == "true" ]; then
+            echo "- ${{ steps.check_tag.outputs.semver_tag }}" >> $GITHUB_STEP_SUMMARY
+          fi

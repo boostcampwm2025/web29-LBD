@@ -10,9 +10,9 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  test-client:
-    name: Client Tests & Build
-    runs-on: ubuntu-latest
+  test-web:
+    name: Web Tests
+    runs-on: [self-hosted, Linux]
 
     steps:
       - name: Checkout code
@@ -33,14 +33,11 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Run tests
-        run: pnpm --filter client test
-
-      - name: Build
-        run: pnpm --filter client build
+        run: pnpm --filter web test
 
   test-server:
-    name: Server Tests & Build
-    runs-on: ubuntu-latest
+    name: Server Tests
+    runs-on: [self-hosted, Linux]
 
     steps:
       - name: Checkout code
@@ -62,6 +59,3 @@ jobs:
 
       - name: Run tests
         run: pnpm --filter server test
-
-      - name: Build
-        run: pnpm --filter server build

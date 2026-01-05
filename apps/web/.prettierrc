@@ -1,12 +1,13 @@
 {
-  "printWidth": 80,
+  "semi": false,
+  "singleQuote": true,
   "tabWidth": 2,
   "trailingComma": "all",
-  "singleQuote": true,
-  "semi": true,
+  "printWidth": 80,
   "endOfLine": "auto",
   "importOrder": [
     "^react",
+    "^next",
     "^@",
     "\\.(png|jpe?g|gif|svg|webp)$"
   ],
