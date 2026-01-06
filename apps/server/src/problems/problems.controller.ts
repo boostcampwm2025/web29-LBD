@@ -1,10 +1,15 @@
-import { Controller, Post, Param } from '@nestjs/common';
+import { Controller, Post, Param, Body } from '@nestjs/common';
+import { SubmitRequestDto } from './dto/submit-request.dto';
 
 @Controller('problems')
 export class ProblemsController {
   @Post(':problemId/submit')
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  submit(@Param('problemId') problemId: string) {
+  submit(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    @Param('problemId') problemId: string,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    @Body() body: SubmitRequestDto,
+  ) {
     return {
       result: 'PASS',
       feedback: [],
