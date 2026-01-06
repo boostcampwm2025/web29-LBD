@@ -29,10 +29,16 @@ jobs:
           node-version: "22"
           cache: "pnpm"
 
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+      - name: Runner Info
+        run: |
+          echo "Runner: $RUNNER_NAME"
+          echo "Memory: $(free -h | grep Mem)"
+          hostname
 
-      - name: Run tests
+      - name: Install web dependencies
+        run: pnpm install --filter web --filter web^... --frozen-lockfile
+
+      - name: Run web tests
         run: pnpm --filter web test
 
   test-server:
@@ -54,8 +60,14 @@ jobs:
           node-version: "22"
           cache: "pnpm"
 
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+      - name: Runner Info
+        run: |
+          echo "Runner: $RUNNER_NAME"
+          echo "Memory: $(free -h | grep Mem)"
+          hostname
 
-      - name: Run tests
+      - name: Install server dependencies
+        run: pnpm install --filter server --filter server^... --frozen-lockfile
+
+      - name: Run server tests
         run: pnpm --filter server test
