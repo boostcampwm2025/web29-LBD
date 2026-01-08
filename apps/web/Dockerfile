@@ -38,32 +38,30 @@ RUN pnpm build
 # Production stage
 FROM node:22-alpine AS production
 
-# Install pnpm
-RUN corepack enable && corepack prepare pnpm@latest --activate
-
 WORKDIR /app
 
-# Copy workspace files
-COPY pnpm-workspace.yaml package.json pnpm-lock.yaml ./
+# Create non-root user for security
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 nextjs
 
-# Copy web package.json
-COPY apps/web/package.json ./apps/web/
+# Copy public folder
+COPY --from=build /app/apps/web/public ./public
 
-# Install production dependencies only
-RUN pnpm install --frozen-lockfile --prod
+# Copy standalone output (includes minimal node_modules)
+COPY --from=build --chown=nextjs:nodejs /app/apps/web/.next/standalone ./
+# Copy static files
+COPY --from=build --chown=nextjs:nodejs /app/apps/web/.next/static ./.next/static
 
-# Copy built files from build stage
-COPY --from=build /app/apps/web/.next ./apps/web/.next
-COPY --from=build /app/apps/web/public ./apps/web/public
-COPY --from=build /app/apps/web/next.config.ts ./apps/web/next.config.ts
-
-WORKDIR /app/apps/web
+# Switch to non-root user
+USER nextjs
 
 # Expose port (Next.js default)
 EXPOSE 3000
 
 # Set environment to production
 ENV NODE_ENV=production
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
 
-# Start Next.js in production mode
-CMD ["pnpm", "start"]
+# Run standalone server
+CMD ["node", "server.js"]
