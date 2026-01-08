@@ -21,47 +21,36 @@ RUN pnpm install --frozen-lockfile
 # Build stage
 FROM base AS build
 
-# Copy web package.json
-COPY apps/web/package.json ./apps/web/
+ENV CI=true
 
-# Install all dependencies (needed for build)
+# [수정] 빌드에 필요한 모든 소스 코드를 루트 기준으로 복사합니다.
+# 터보팩은 프로젝트 전체 구조를 참조해야 하므로 앱 코드만 복사하면 안 됩니다.
+COPY . .
+
+# 의존성 설치 (루트에서 한 번에 실행)
 RUN pnpm install --frozen-lockfile
 
-# Copy web source code
-COPY apps/web ./apps/web
-
-WORKDIR /app/apps/web
-
-# Build the Next.js application
-RUN pnpm build
+# [수정] 빌드 실행
+# apps/web으로 이동하지 않고 루트에서 필터를 써서 실행하는 것이 경로 오류를 줄입니다.
+RUN pnpm --filter web build
 
 # Production stage
 FROM node:22-alpine AS production
-
 WORKDIR /app
 
-# Create non-root user for security
 RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nextjs
 
-# Copy public folder
-COPY --from=build /app/apps/web/public ./public
-
-# Copy standalone output (includes minimal node_modules)
+# [중요] 경로 복사 - standalone은 모노레포 구조를 그대로 가지고 나옵니다.
 COPY --from=build --chown=nextjs:nodejs /app/apps/web/.next/standalone ./
-# Copy static files
-COPY --from=build --chown=nextjs:nodejs /app/apps/web/.next/static ./.next/static
+COPY --from=build --chown=nextjs:nodejs /app/apps/web/public ./apps/web/public
+COPY --from=build --chown=nextjs:nodejs /app/apps/web/.next/static ./apps/web/.next/static
 
-# Switch to non-root user
 USER nextjs
 
-# Expose port (Next.js default)
-EXPOSE 3000
-
-# Set environment to production
 ENV NODE_ENV=production
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-# Run standalone server
-CMD ["node", "server.js"]
+# [중요] 실행 파일 위치 확인
+CMD ["node", "apps/web/server.js"]
