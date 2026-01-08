@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { Suspense } from 'react'
 
 import CloudFrontCacheBehavior from '@/aws-services/cloudfront/cloudfront-cache-behavior'
 import CloudFrontDistributionSettings from '@/aws-services/cloudfront/cloudfront-distribution-settings'
@@ -10,6 +10,7 @@ import S3BucketCreate from '@/aws-services/s3/s3-bucket-create'
 import S3FileUpload from '@/aws-services/s3/s3-file-upload'
 import { StepsNavigator } from '@/components/steps'
 import type { StepConfig } from '@/components/steps'
+import { Spinner } from '@/components/ui/spinner'
 
 const REACT_DEPLOY_STEPS: StepConfig[] = [
   {
@@ -78,7 +79,11 @@ const REACT_DEPLOY_STEPS: StepConfig[] = [
   },
 ]
 
-export default function Problem1Page() {
+export default function Problem1Page({
+  searchParams,
+}: {
+  readonly searchParams: Promise<{ q?: string }>
+}) {
   return (
     <div className="bg-background min-h-screen">
       {/* Problem Header */}
@@ -114,12 +119,20 @@ export default function Problem1Page() {
       </div>
 
       {/* Steps Navigator */}
-      <StepsNavigator
-        steps={REACT_DEPLOY_STEPS}
-        defaultStep={0}
-        queryParamName="step"
-        className="p-6"
-      />
+      <Suspense
+        fallback={
+          <div className="gird items-center">
+            <Spinner className="size-6" />
+          </div>
+        }
+      >
+        <StepsNavigator
+          steps={REACT_DEPLOY_STEPS}
+          defaultStep={0}
+          queryParamName="step"
+          className="p-6"
+        />
+      </Suspense>
     </div>
   )
 }
