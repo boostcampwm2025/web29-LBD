@@ -54,12 +54,14 @@ jobs:
           DOCKERHUB_WEB_TOKEN: ${{ secrets.DOCKERHUB_WEB_TOKEN }}
           DOCKERHUB_SERVER_USERNAME: ${{ secrets.DOCKERHUB_SERVER_USERNAME }}
           DOCKERHUB_SERVER_TOKEN: ${{ secrets.DOCKERHUB_SERVER_TOKEN }}
+          WEB_IMAGE_NAME: ${{ secrets.WEB_IMAGE_NAME }}
+          SERVER_IMAGE_NAME: ${{ secrets.SERVER_IMAGE_NAME }}
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT || 22 }}
-          envs: IMAGE_TAG,DOCKERHUB_WEB_USERNAME,DOCKERHUB_WEB_TOKEN,DOCKERHUB_SERVER_USERNAME,DOCKERHUB_SERVER_TOKEN
+          envs: IMAGE_TAG,DOCKERHUB_WEB_USERNAME,DOCKERHUB_WEB_TOKEN,DOCKERHUB_SERVER_USERNAME,DOCKERHUB_SERVER_TOKEN, WEB_IMAGE_NAME, SERVER_IMAGE_NAME
           command_timeout: 30m
           script: |
             cd ${{ secrets.DEPLOY_PATH }} || exit 1
