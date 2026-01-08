@@ -1,32 +1,32 @@
-import { Button } from '../components/ui/button';
+import { Button } from '../components/ui/button'
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '../components/ui/card';
-import { Tabs, TabsList, TabsTrigger } from '../components/ui/tabs';
-import { problems } from '../lib/problems';
-import { Award, Play } from 'lucide-react';
+} from '../components/ui/card'
+import { Tabs, TabsList, TabsTrigger } from '../components/ui/tabs'
+import { problems } from '../lib/problems'
+import { Award, Play } from 'lucide-react'
 
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
-import type { Category } from '@/types/problems/problem';
+import type { Category } from '@/types/problems/problem'
 
 const Problems = () => {
-  const navigate = useNavigate();
-  const [category, setCategory] = useState<Category>('all');
+  const navigate = useNavigate()
+  const [category, setCategory] = useState<Category>('all')
 
   const filteredProblems = problems.filter(
     (p) => category === 'all' || p.category === category,
-  );
+  )
 
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8">
-        <h1 className="mb-2">문제</h1>
+        <h2 className="mb-2">문제</h2>
         <p className="text-muted-foreground">
           AWS 클라우드 인프라를 직접 설정하며 학습하세요
         </p>
@@ -80,7 +80,7 @@ const Problems = () => {
         ))}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Problems;
+export default Problems
