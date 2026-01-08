@@ -2,6 +2,8 @@
 
 import React from 'react'
 
+import Link from 'next/link'
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 // 문제 타입
@@ -131,7 +133,7 @@ const getDifficultyColor = (difficulty: Problem['difficulty']) => {
 }
 
 interface ProblemListProps {
-  problems: Problem[]
+  readonly problems: Problem[]
 }
 
 function ProblemList({ problems }: ProblemListProps) {
