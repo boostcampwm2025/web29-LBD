@@ -12,7 +12,9 @@ export class Solution {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @OneToOne(() => Problem, (problem) => problem.solution)
+  @OneToOne(() => Problem, (problem) => problem.solution, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'problem_id' })
   problem: Problem;
 

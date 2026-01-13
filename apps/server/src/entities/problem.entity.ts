@@ -40,7 +40,9 @@ export class Problem {
   @UpdateDateColumn({ type: 'timestamp' })
   updated_at: Date;
 
-  @OneToOne(() => Solution, (solution) => solution.problem)
+  @OneToOne(() => Solution, (solution) => solution.problem, {
+    cascade: true,
+  })
   solution: Solution;
 
   @ManyToMany(() => Problem)

@@ -3,7 +3,7 @@ import { Cookbook } from './cookbook.entity';
 import { Problem } from './problem.entity';
 
 @Entity('cookbook_problem')
-export class CookProblem {
+export class CookbookProblem {
   @PrimaryColumn({ type: 'int' })
   cookbook_id: number;
 
@@ -13,11 +13,15 @@ export class CookProblem {
   @Column({ type: 'int' })
   order_number: number;
 
-  @ManyToOne(() => Cookbook)
+  @ManyToOne(() => Cookbook, (cookbook) => cookbook.cookbook_problems, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'cookbook_id' })
   cookbook: Cookbook;
 
-  @ManyToOne(() => Problem)
+  @ManyToOne(() => Problem, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'problem_id' })
   problem: Problem;
 }

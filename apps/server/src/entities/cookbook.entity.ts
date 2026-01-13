@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { CookbookProblem } from './cookbook-problem.entity';
 
 @Entity('cookbook')
 export class Cookbook {
@@ -13,4 +14,13 @@ export class Cookbook {
 
   @Column({ type: 'json' })
   tags: string[];
+
+  @OneToMany(
+    () => CookbookProblem,
+    (cookbookProblem) => cookbookProblem.cookbook,
+    {
+      cascade: true,
+    },
+  )
+  cookbook_problems: CookbookProblem[];
 }
