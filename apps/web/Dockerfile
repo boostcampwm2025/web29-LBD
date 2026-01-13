@@ -22,6 +22,7 @@ RUN pnpm install --frozen-lockfile
 FROM base AS build
 
 ENV CI=true
+ENV DOCKER_BUILD=true
 
 # [수정] 빌드에 필요한 모든 소스 코드를 루트 기준으로 복사합니다.
 # 터보팩은 프로젝트 전체 구조를 참조해야 하므로 앱 코드만 복사하면 안 됩니다.
