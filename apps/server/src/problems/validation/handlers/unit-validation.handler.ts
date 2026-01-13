@@ -1,38 +1,68 @@
 import { ValidationHandler } from './validation.handler';
 import { SubmitResponseDto } from 'src/problems/dto/submit-response.dto';
-import { ConfigDto } from 'src/problems/dto/submit-request.dto';
-import { ProblemType } from 'src/problems/types/problem-type.enum';
+import { SubmitRequestDto } from 'src/problems/dto/submit-request.dto';
+import { ProblemType } from '../../types/problem-type.enum';
+import type { ProblemData } from './validation.handler';
 
 export class UnitValidationHandler implements ValidationHandler {
   support(problemType: ProblemType): boolean {
     return problemType === ProblemType.UNIT;
   }
 
-  validate(submitConfig: ConfigDto, problemData: any): SubmitResponseDto {
-    // test 용 검증 로직: 제출한 풀이가 problemData.answer와 일치하는지 확인
-    const answer = (submitConfig.configInfo?.answer ?? '') as string;
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    const expectedAnswer = problemData.answer as string;
-
-    if (answer === expectedAnswer) {
-      return { result: 'PASS', feedback: [] };
+  // unit 문제는 networkTask가 필요 없음.
+  // TODO: feedback 생성하는 로직 작성 후 이 메서드에서 사용하기
+  validate(
+    submitRequestDto: SubmitRequestDto,
+    problemData: ProblemData,
+  ): SubmitResponseDto {
+    if (!problemData || !submitRequestDto.submitConfig) {
+      throw new Error('문제가 존재하지 않거나 제출된 설정이 없습니다.');
+    }
+    if (submitRequestDto.networkTask) {
+      throw new Error('Unit 문제에는 networkTask가 필요하지 않습니다.');
+    }
+    const solutionConfig = problemData.solution;
+    const submitConfig = submitRequestDto.submitConfig;
+    // 만약 키가 다르면, 즉 구성한 서비스 종류가 다르면 바로 틀림 처리
+    if (
+      !this.isDeepEqual(Object.keys(submitConfig), Object.keys(solutionConfig))
+    ) {
+      return {
+        result: 'FAIL',
+        feedback: [],
+      };
+    }
+    const mismatchedConfigs = {};
+    for (const key in solutionConfig) {
+      const { onlyInAnswer, onlyInSolution } = this.checkDifference(
+        submitConfig[key],
+        solutionConfig[key],
+      );
+      if (onlyInAnswer.length > 0 || onlyInSolution.length > 0) {
+        mismatchedConfigs[key] = { onlyInAnswer, onlyInSolution };
+      }
     }
 
+    // 만약 다른 설정 없음? -> 통과
+    if (Object.keys(mismatchedConfigs).length === 0) {
+      // 통과
+      return {
+        result: 'PASS',
+        feedback: [],
+      };
+    }
+
+    // 아니면 정답과 일치하지 않는 설정들 -> 틀림
     return {
       result: 'FAIL',
-      feedback: [
-        {
-          field: 'answer',
-          code: 'WRONG_ANSWER',
-          message: '틀렸습니다.',
-        },
-      ],
+      feedback: [],
     };
   }
 
   // 같은 것 제외하고 남은 차이점만 골라내기
   // onlyInAnswer: 제출 답안에만 있는 설정들. 정답에 없는 필요 없는 설정들
   // onlyInSolution: 정답에만 있는 설정들. 제출 답안에 없는 필수 설정들
+  // 나중에 unknown 타입 서비스 union으로 변경하기
   private checkDifference(
     answerConfigs: unknown[],
     solutionConfigs: unknown[],
