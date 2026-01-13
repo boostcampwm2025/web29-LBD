@@ -1,6 +1,7 @@
 import { BookOpenIcon, FileTextIcon, LayersIcon } from 'lucide-react'
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { cn } from '@/lib/utils'
 
 export const ProblemTypeTab = () => {
   const problemTabList = [
@@ -27,12 +28,16 @@ export const ProblemTypeTab = () => {
 
   return (
     <Tabs defaultValue="unit" className="w-full">
-      <TabsList className="w-full gap-4 bg-transparent p-0">
+      <TabsList className="w-full rounded-none bg-transparent p-0">
         {problemTabList.map((tab) => (
           <TabsTrigger
             key={tab.type}
             value={tab.type}
-            className="h-8 text-base"
+            className={cn(
+              'h-10 rounded-none bg-transparent',
+              'data-[state=active]:text-primary text-foreground/60 data-[state=active]:bg-transparent',
+              'data-[state=active]:border-primary border-b',
+            )}
           >
             <tab.icon className="mr-2 inline-block h-4 w-4" />
             {tab.label}

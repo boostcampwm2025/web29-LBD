@@ -2,7 +2,7 @@ import { ProblemTypeTab } from './components/problem-type-tab'
 
 export default function ProblemsPage() {
   return (
-    <div className="mx-auto max-w-5xl py-2">
+    <div className="w-full py-2">
       <div className="flex flex-col gap-4 py-8">
         <h2 className="text-3xl font-bold">문제 목록</h2>
         <p className="text-foreground font-medium">
