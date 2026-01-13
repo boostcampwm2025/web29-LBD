@@ -188,7 +188,7 @@ export default function S3FileUpload({
       {/* Action Buttons */}
       <div className="flex justify-between gap-3 pt-6">
         <Button variant="outline" onClick={onPrev}>
-          취소
+          이전
         </Button>
         <Button onClick={onNext}>다음단계</Button>
       </div>

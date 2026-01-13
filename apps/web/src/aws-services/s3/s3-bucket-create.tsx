@@ -483,10 +483,9 @@ export default function S3BucketCreate({
       {/* Action Buttons */}
       <div className="flex justify-between gap-3 pt-6">
         <Button variant="outline" onClick={onPrev} disabled={!canGoPrev}>
-          이전
+          취소
         </Button>
         <div className="flex gap-3">
-          <Button variant="outline">취소</Button>
           <Button onClick={onNext}>다음 단계</Button>
         </div>
       </div>

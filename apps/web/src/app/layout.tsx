@@ -1,9 +1,8 @@
 import './globals.css'
 
 import type { Metadata, Viewport } from 'next'
-import Link from 'next/link'
 
-import { Button } from '@/components/ui/button'
+import { Footer, Header } from '@/components/layout'
 import { cn } from '@/lib/utils'
 
 export const viewport: Viewport = {
@@ -31,21 +30,9 @@ export default function RootLayout({
           'selection:bg-primary/30 selection:text-foreground',
         )}
       >
-        <header className="mx-4 grid h-16 grid-cols-[200px_1fr] items-center justify-between px-4">
-          <Button variant="link" asChild>
-            <Link href="/">LOGO</Link>
-          </Button>
-
-          <div className="flex gap-4 justify-self-end">
-            <Button asChild variant="outline">
-              <Link href="/problems">문제</Link>
-            </Button>
-            <Button asChild>
-              <Link href="/login">로그인하기</Link>
-            </Button>
-          </div>
-        </header>
-        {children}
+        <Header />
+        <main className="h-full min-h-[calc(100vh)] pt-18">{children}</main>
+        <Footer />
       </body>
     </html>
   )

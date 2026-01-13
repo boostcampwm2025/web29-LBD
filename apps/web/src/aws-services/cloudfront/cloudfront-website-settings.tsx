@@ -510,7 +510,7 @@ export default function CloudFrontWebsiteSettings({
           이전
         </Button>
         <div className="flex gap-3">
-          <Button variant="outline">취소</Button>
+          <Button variant="outline">이전</Button>
           <Button size="lg" className="px-8">
             설정 저장
           </Button>

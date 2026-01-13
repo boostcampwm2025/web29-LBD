@@ -1,9 +1,5 @@
 'use client'
 
-import React from 'react'
-
-import Link from 'next/link'
-
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 // 문제 타입
@@ -163,8 +159,7 @@ function ProblemList({ problems }: ProblemListProps) {
 
 export default function ProblemsPage() {
   return (
-    <div className="mx-auto max-w-5xl space-y-6 p-6">
-      {/* Header */}
+    <div className="mx-auto max-w-5xl space-y-6 px-4 pt-12">
       <div className="space-y-2">
         <h2 className="text-3xl font-bold">문제 목록</h2>
         <p className="text-muted-foreground">
@@ -173,18 +168,18 @@ export default function ProblemsPage() {
       </div>
 
       {/* Tabs */}
-      <Tabs defaultValue="cookbook" className="w-full">
+      <Tabs defaultValue="unit" className="w-full">
         <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="cookbook">
-            Cookbook
-            <span className="bg-primary/10 text-primary ml-2 rounded-full px-2 py-0.5 text-xs font-semibold">
-              {COOKBOOK_PROBLEMS.length}
-            </span>
-          </TabsTrigger>
           <TabsTrigger value="unit">
             Unit
             <span className="bg-primary/10 text-primary ml-2 rounded-full px-2 py-0.5 text-xs font-semibold">
               {UNIT_PROBLEMS.length}
+            </span>
+          </TabsTrigger>
+          <TabsTrigger value="cookbook">
+            Cookbook
+            <span className="bg-primary/10 text-primary ml-2 rounded-full px-2 py-0.5 text-xs font-semibold">
+              {COOKBOOK_PROBLEMS.length}
             </span>
           </TabsTrigger>
           <TabsTrigger value="scenario">

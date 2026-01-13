@@ -1,0 +1,65 @@
+name: Epic
+description: 하나의 주제(기능 단위)를 정의하는 Epic 이슈입니다.
+title: "[EPIC]"
+labels: ["EPIC"]
+body:
+  - type: textarea
+    id: epic-goal
+    attributes:
+      label: Epic 목표
+      description: 이 Epic이 해결하려는 사용자 가치 또는 문제를 작성해주세요
+      placeholder: |
+        - 어떤 사용자를 위한 기능인가?
+        - 어떤 문제를 해결하는가?
+        - 이 Epic이 완료되면 무엇이 달라지는가?
+
+        예시:
+        - 사용자가 문제를 쉽게 탐색할 수 있도록 문제 목록을 제공한다.
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: 범위 (Scope)
+      description: 이 Epic에 **포함되는 것 / 포함되지 않는 것**을 정리해주세요
+      placeholder: |
+        포함
+        - 유형별 문제 목록 조회
+        - 문제 목록 페이지 UI
+
+        제외
+        - 문제 상세 페이지
+        - 문제 풀이 기능
+      value: /
+        **포함**
+        - 
+
+        **제외**
+        - 
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: Epic 완료 조건
+      description: Epic이 완료되었다고 판단할 수 있는 기준을 작성해주세요
+      placeholder: |
+        - [ ] 기준1
+        - [ ] 기준2
+      value: |
+        - [ ]
+    validations:
+      required: true
+
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Blocked By
+      description: 이 Epic이 블로킹 되고 있는 원인이 있다면 알려주세요
+      placeholder: |
+        - #123 (이슈 완료 후 시작 가능)
+        - 외부 API 연동 필요
+    validations:
+      required: false
