@@ -25,6 +25,12 @@ export class Problem {
   @Column({ type: 'text', nullable: false })
   description: string;
 
+  @Column({ type: 'json', nullable: false })
+  required_fields: Array<{
+    field: string;
+    fixed_options?: Record<string, any>;
+  }>;
+
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;
 
