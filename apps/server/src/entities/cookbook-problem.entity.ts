@@ -11,7 +11,7 @@ export class CookProblem {
   problem_id: number;
 
   @Column({ type: 'int' })
-  problem_number: number;
+  order_number: number;
 
   @ManyToOne(() => Cookbook)
   @JoinColumn({ name: 'cookbook_id' })

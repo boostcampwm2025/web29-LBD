@@ -10,4 +10,7 @@ export class Cookbook {
 
   @Column({ type: 'text' })
   description: string;
+
+  @Column({ type: 'json' })
+  tags: string[];
 }
