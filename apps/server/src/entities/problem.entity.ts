@@ -31,6 +31,9 @@ export class Problem {
     fixed_options?: Record<string, any>;
   }>;
 
+  @Column({ type: 'json' })
+  tags: string[];
+
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;
 
