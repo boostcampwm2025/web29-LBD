@@ -6,7 +6,7 @@ import CloudFrontCacheBehavior from '@/aws-services/cloudfront/cloudfront-cache-
 import CloudFrontDistributionSettings from '@/aws-services/cloudfront/cloudfront-distribution-settings'
 import CloudFrontOriginSettings from '@/aws-services/cloudfront/cloudfront-origin-settings'
 import CloudFrontWebsiteSettings from '@/aws-services/cloudfront/cloudfront-website-settings'
-import S3BucketCreate from '@/aws-services/s3/s3-bucket-create'
+import S3BucketCreate from '@/aws-services/s3/s3-bucket-create/s3-bucket-create'
 import S3FileUpload from '@/aws-services/s3/s3-file-upload'
 import { StepsNavigator } from '@/components/steps'
 import type { StepConfig } from '@/components/steps'
@@ -17,9 +17,7 @@ const REACT_DEPLOY_STEPS: StepConfig[] = [
     id: 's3-create',
     title: 'S3 버킷 생성',
     description: '정적 파일 저장소',
-    render: ({ onNext, onPrev, canGoPrev }) => (
-      <S3BucketCreate onNext={onNext} onPrev={onPrev} canGoPrev={canGoPrev} />
-    ),
+    render: ({ onNext, onPrev, canGoPrev }) => null,
   },
   {
     id: 's3-upload',
