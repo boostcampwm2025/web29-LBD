@@ -12,14 +12,11 @@ export class ProblemsService {
     // MOCK 문제 데이터
     const problemData = {
       problemType: ProblemType.UNIT,
-      answer: '1234',
+      solution: {},
     };
+    // problemId로 문제 데이터를 조회하는 로직 추후 구현 필요
 
-    const result = this.validationService.validate(
-      problemData.problemType,
-      body.submitConfig[0],
-      problemData,
-    );
+    const result = this.validationService.validate(body, problemData);
 
     return result;
   }

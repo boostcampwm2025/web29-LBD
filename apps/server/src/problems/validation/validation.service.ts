@@ -1,18 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigDto } from '../dto/submit-request.dto';
 import { HandlerResolver } from './handler-resolver';
-import { ProblemType } from '../types/problem-type.enum';
+import type { ProblemData } from './handlers/validation.handler';
+import type { SubmitRequestDto } from 'src/problems/dto/submit-request.dto';
 
 @Injectable()
 export class ValidationService {
   constructor(private readonly handlerResolver: HandlerResolver) {}
 
-  validate(
-    problemType: ProblemType,
-    submitConfig: ConfigDto,
-    problemData: any,
-  ) {
-    const handler = this.handlerResolver.resolve(problemType);
-    return handler.validate(submitConfig, problemData);
+  validate(submitRequestDto: SubmitRequestDto, problemData: ProblemData) {
+    const handler = this.handlerResolver.resolve(problemData.problemType);
+    return handler.validate(submitRequestDto, problemData);
   }
 }
