@@ -32,6 +32,8 @@ services:
   server:
     image: ${SERVER_IMAGE_NAME}:${IMAGE_TAG:-latest}
     container_name: web29-server
+    env_file:
+      - .env
     restart: unless-stopped
     ports:
       - "${SERVER_PORT:-4000}:3000"
