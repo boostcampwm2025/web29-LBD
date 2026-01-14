@@ -7,10 +7,15 @@ export class SchemaV21767508529080 implements MigrationInterface {
     // ========================================
 
     // problem 테이블의 solution_id FK 제거
-    await queryRunner.query(`
-      ALTER TABLE \`problem\`
-      DROP FOREIGN KEY IF EXISTS \`FK_problem_solution\`
-    `);
+    // MySQL은 IF EXISTS를 지원하지 않으므로 try-catch 사용
+    try {
+      await queryRunner.query(`
+        ALTER TABLE \`problem\`
+        DROP FOREIGN KEY \`problem_ibfk_1\`
+      `);
+    } catch {
+      console.log('FK problem_ibfk_1 does not exist, skipping...');
+    }
 
     // problem 테이블 수정
     // 1. type → problem_type 컬럼명 변경 및 ENUM 값 수정

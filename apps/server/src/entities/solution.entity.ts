@@ -1,13 +1,23 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToOne,
+  JoinColumn,
+} from 'typeorm';
+import { Problem } from './problem.entity';
 
 @Entity('solution')
 export class Solution {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'varchar', length: 255 })
-  config_type: string;
+  @OneToOne(() => Problem, (problem) => problem.solution, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'problem_id' })
+  problem: Problem;
 
   @Column({ type: 'json' })
-  config_info: object;
+  answer_config: Record<string, any>;
 }
