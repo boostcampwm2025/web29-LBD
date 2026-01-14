@@ -1,4 +1,8 @@
+'use client'
+
 import { PlayIcon, TagIcon } from 'lucide-react'
+
+import { useRouter } from 'next/navigation'
 
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -10,30 +14,44 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { UnitProblem } from '@/types/problem.type'
 
-export const UnitProblemCard = () => {
+export const UnitProblemCard = ({
+  id,
+  title,
+  description,
+  tags,
+}: UnitProblem) => {
+  const router = useRouter()
+
+  const handleCardClick = () => {
+    router.push(`/problems/${id}`)
+  }
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>VPC 서브넷 구성</CardTitle>
+        <CardTitle>{title}</CardTitle>
         <div className="flex gap-1">
-          <Badge variant={'secondary'} className="rounded-md">
-            <TagIcon className="h-4 w-4" />
-            Badge
-          </Badge>
-          <Badge variant={'secondary'} className="rounded-md">
-            <TagIcon className="h-4 w-4" />
-            Badge
-          </Badge>
+          {tags.slice(0, 3).map((tag) => (
+            <Badge key={tag} variant={'secondary'} className="rounded-xl">
+              <TagIcon className="h-4 w-4" />
+              {tag}
+            </Badge>
+          ))}
         </div>
       </CardHeader>
+
       <CardContent>
-        <CardDescription>
-          Public 서브넷에 EC2 인스턴스를 배치하세요
-        </CardDescription>
+        <CardDescription>{description}</CardDescription>
       </CardContent>
+
       <CardFooter>
-        <Button className="w-full font-semibold" variant={'ghost'}>
+        <Button
+          className="w-full font-semibold"
+          variant={'ghost'}
+          onClick={handleCardClick}
+        >
           <PlayIcon className="mr-1" />
           문제 풀기
         </Button>

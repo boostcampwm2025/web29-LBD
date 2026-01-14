@@ -1,4 +1,12 @@
 import { ProblemTypeTab } from './components/problem-type-tab'
+import { UnitProblemCard } from './components/unit-problem-card'
+
+const fakeUnitProblem = {
+  id: 1,
+  title: 'VPC 서브넷 구성',
+  description: 'Public 서브넷에 EC2 인스턴스를 배치하세요',
+  tags: ['VPC', 'EC2', 'Subnet', 'Networking'],
+}
 
 export default function ProblemsPage() {
   return (
@@ -12,6 +20,10 @@ export default function ProblemsPage() {
       </div>
 
       <ProblemTypeTab />
+
+      <section className="grid grid-cols-3 gap-4 pt-4">
+        <UnitProblemCard {...fakeUnitProblem} />
+      </section>
     </div>
   )
 }
