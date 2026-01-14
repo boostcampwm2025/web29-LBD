@@ -23,6 +23,13 @@ export class SubmitConfig {
   subnet?: ServiceConfigType.SubnetConfig[];
 }
 
+// TODO: NetworkTask 구체화하기
+export class NetworkTask {
+  source: unknown;
+  destination: unknown;
+  protocol: unknown;
+}
+
 export class SubmitRequestDto {
   @IsObject()
   @ValidateNested()
@@ -34,11 +41,4 @@ export class SubmitRequestDto {
   @ValidateNested()
   @Type(() => NetworkTask)
   networkTask?: NetworkTask;
-}
-
-// TODO: NetworkTask 구체화하기
-export class NetworkTask {
-  source: unknown;
-  destination: unknown;
-  protocol: unknown;
 }
