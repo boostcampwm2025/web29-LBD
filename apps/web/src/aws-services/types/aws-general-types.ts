@@ -1,24 +1,30 @@
 import type { Control, FieldValues, UseFormSetValue } from 'react-hook-form'
 
-export interface GeneralFieldsConfig {
-  visible: boolean
-  disabled?: boolean
-  [key: string]: unknown
-}
-
-export type GeneralBackendConfig<T extends string> = Record<
-  T,
-  GeneralFieldsConfig
->
-
-export interface AwsSectionProps<T extends FieldValues, F extends string> {
+export interface AwsSectionProps<
+  T extends FieldValues,
+  TConfig extends Record<string, boolean> = Record<string, boolean>,
+> {
   control: Control<T>
-  config: GeneralBackendConfig<F>
+  config: TConfig
 }
 
 export type AwsWithSetValueSectionProps<
   T extends FieldValues,
-  F extends string,
+  TConfig extends Record<string, boolean> = Record<string, boolean>,
 > = {
   setValue: UseFormSetValue<T>
-} & AwsSectionProps<T, F>
+} & AwsSectionProps<T, TConfig>
+
+/**
+ * 서비스별 Section 타입을 일괄 생성하는 유틸리티 타입
+ * @example
+ * type S3Types = AwsServiceSectionTypes<S3BucketFormData, S3BucketCreateConfig>
+ * export type S3SectionProps = S3Types['SectionProps']
+ */
+export type AwsServiceSectionTypes<
+  TForm extends FieldValues,
+  TConfig extends Record<string, boolean>,
+> = {
+  SectionProps: AwsSectionProps<TForm, TConfig>
+  WithSetValueProps: AwsWithSetValueSectionProps<TForm, TConfig>
+}
