@@ -2,8 +2,6 @@
 
 import { BookOpenIcon, FileTextIcon, LayersIcon } from 'lucide-react'
 
-import { useEffect } from 'react'
-
 import { useRouter } from 'next/navigation'
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'

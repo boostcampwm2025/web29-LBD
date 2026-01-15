@@ -14,19 +14,19 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { UnitProblem } from '@/types/problem.type'
+import { Unit } from '@/types/problem.type'
 
-interface CookbookProblemCardProps extends UnitProblem {
+interface CookbookCardProps extends Unit {
   children: React.ReactNode
 }
 
-export const CookbookProblemCard = ({
+export const CookbookCard = ({
   id,
   title,
   description,
   tags,
   children,
-}: CookbookProblemCardProps) => {
+}: CookbookCardProps) => {
   const router = useRouter()
 
   const handleCardClick = () => {
