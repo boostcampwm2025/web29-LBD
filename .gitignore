@@ -43,6 +43,7 @@ coverage/
 *.tmp
 .cache/
 .claude/
+CLAUDE.md
 
 # Docker
 .dockerignore
