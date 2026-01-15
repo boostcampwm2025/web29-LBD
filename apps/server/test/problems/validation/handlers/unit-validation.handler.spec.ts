@@ -157,7 +157,7 @@ describe('UnitValidationHandler', () => {
     });
   });
 
-  describe('makeFeedbackMessage 메서드', () => {
+  describe('generateFeedbackMessage 메서드', () => {
     it('요구하는 서비스보다 적은 서비스를 구성했을 때 피드백이 잘 생성되어야 한다.', () => {
       const validateResult = {
         vpc: {
@@ -165,7 +165,7 @@ describe('UnitValidationHandler', () => {
           onlyInSolution: [{ name: 'vpc-1' }, { name: 'vpc-2' }],
         },
       };
-      const feedbacks = handler['makeFeedbackMessage'](validateResult);
+      const feedbacks = handler['generateFeedbackMessage'](validateResult);
       expect(feedbacks).toEqual([
         {
           field: 'vpc',
@@ -184,7 +184,7 @@ describe('UnitValidationHandler', () => {
           ],
         },
       };
-      const feedbacks = handler['makeFeedbackMessage'](validateResult);
+      const feedbacks = handler['generateFeedbackMessage'](validateResult);
       expect(feedbacks).toEqual([
         {
           field: 'vpc',
@@ -202,7 +202,7 @@ describe('UnitValidationHandler', () => {
           onlyInSolution: [{ name: 'vpc-1', cidrBlock: 'A' }],
         },
       };
-      const feedbacks = handler['makeFeedbackMessage'](validateResult);
+      const feedbacks = handler['generateFeedbackMessage'](validateResult);
       expect(feedbacks).toEqual([
         {
           field: 'vpc',
@@ -218,7 +218,7 @@ describe('UnitValidationHandler', () => {
           onlyInSolution: [],
         },
       };
-      const feedbacks = handler['makeFeedbackMessage'](validateResult);
+      const feedbacks = handler['generateFeedbackMessage'](validateResult);
       expect(feedbacks).toEqual([]);
     });
 
@@ -229,7 +229,7 @@ describe('UnitValidationHandler', () => {
           onlyInSolution: [{ name: 'vpc-1', cidrBlock: 'B' }],
         },
       };
-      const feedbacks = handler['makeFeedbackMessage'](validateResult);
+      const feedbacks = handler['generateFeedbackMessage'](validateResult);
       expect(feedbacks).toEqual([
         {
           field: 'vpc',
@@ -257,7 +257,7 @@ describe('UnitValidationHandler', () => {
           ],
         },
       };
-      const feedbacks = handler['makeFeedbackMessage'](validateResult);
+      const feedbacks = handler['generateFeedbackMessage'](validateResult);
       expect(feedbacks).toEqual([
         {
           field: 'vpc',
@@ -277,7 +277,7 @@ describe('UnitValidationHandler', () => {
           onlyInSolution: [{ name: 'subnet-1', cidrBlock: 'D' }],
         },
       };
-      const feedbacks = handler['makeFeedbackMessage'](validateResult);
+      const feedbacks = handler['generateFeedbackMessage'](validateResult);
       expect(feedbacks).toEqual([
         {
           field: 'vpc',
@@ -303,7 +303,7 @@ describe('UnitValidationHandler', () => {
           ],
         },
       };
-      const feedbacks = handler['makeFeedbackMessage'](validateResult);
+      const feedbacks = handler['generateFeedbackMessage'](validateResult);
       expect(feedbacks).toEqual([
         {
           field: 'vpc',
@@ -311,7 +311,6 @@ describe('UnitValidationHandler', () => {
           message:
             '제출한 vpc 설정에 누락된 서비스가 있습니다: 1개의 서비스 설정이 누락되었습니다.',
         },
-
         {
           field: 'vpc',
           code: UnitProblemFeedbackType.FIELD_MISSING,

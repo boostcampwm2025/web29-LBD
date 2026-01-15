@@ -3,6 +3,15 @@ import { SubmitResponseDto } from 'src/problems/dto/submit-response.dto';
 import { SubmitRequestDto } from 'src/problems/dto/submit-request.dto';
 import { ProblemType } from '../../types/problem-type.enum';
 import type { ProblemData } from './validation.handler';
+import type {
+  UnitProblemValidateResult,
+  UnitProblemValidateResultEntry,
+} from '../../types/unit-problem-validate-results';
+import {
+  UnitProblemFeedbackType,
+  feedbackMessages,
+} from '../../types/unit-problem-feedback-types';
+import type { FeedbackDto } from '../../dto/submit-response.dto';
 
 export class UnitValidationHandler implements ValidationHandler {
   support(problemType: ProblemType): boolean {
@@ -96,6 +105,205 @@ export class UnitValidationHandler implements ValidationHandler {
       onlyInAnswer,
       onlyInSolution,
     };
+  }
+
+  private generateFeedbackMessage(
+    validationInfo: UnitProblemValidateResult,
+  ): FeedbackDto[] {
+    const feedbacks: FeedbackDto[] = [];
+
+    const serviceKeys = Object.keys(
+      validationInfo,
+    ) as (keyof UnitProblemValidateResult)[];
+
+    for (const serviceKey of serviceKeys) {
+      const { onlyInAnswer, onlyInSolution } = validationInfo[
+        serviceKey
+      ] as UnitProblemValidateResultEntry;
+
+      // 만약 정답보다 적은 서비스 구성했다면 -> 누락된 서비스 피드백
+      const serviceMissingFeedback = this.generateServiceMissingFeedback(
+        onlyInAnswer,
+        onlyInSolution,
+        serviceKey,
+      );
+      if (serviceMissingFeedback) {
+        feedbacks.push(serviceMissingFeedback as FeedbackDto);
+      }
+
+      for (const submittedConfig of onlyInAnswer) {
+        const serviceName = (submittedConfig as Record<string, unknown>)
+          .name as string;
+        const matchedSolutionConfig = this.findServiceByName(
+          onlyInSolution,
+          serviceName,
+        );
+
+        // 만약 제출 설정의 필드가 더 적다면 -> 누락된 필드 피드백
+        const fieldMissingFeedback = this.generateFieldMissingFeedback(
+          submittedConfig,
+          matchedSolutionConfig,
+          serviceKey,
+        );
+        if (fieldMissingFeedback) {
+          feedbacks.push(fieldMissingFeedback as FeedbackDto);
+        }
+
+        // 만약 더 많다면 -> 불필요한 필드 피드백
+        const unnecessaryFieldFeedback = this.generateUnnecessaryFieldFeedback(
+          submittedConfig,
+          matchedSolutionConfig,
+          serviceKey,
+        );
+        if (unnecessaryFieldFeedback) {
+          feedbacks.push(unnecessaryFieldFeedback as FeedbackDto);
+        }
+        // 값이 다르다면 -> 올바르지 않은 값 피드백
+        const incorrectValueFeedback = this.generateIncorrectValueFeedback(
+          submittedConfig,
+          matchedSolutionConfig,
+          serviceKey,
+        );
+        if (incorrectValueFeedback) {
+          feedbacks.push(incorrectValueFeedback as FeedbackDto);
+        }
+      }
+    }
+    return feedbacks;
+  }
+
+  private generateServiceMissingFeedback(
+    onlyInAnswer: unknown[],
+    onlyInSolution: unknown[],
+    serviceKey: string,
+  ) {
+    const missingServicesCount = onlyInSolution.length - onlyInAnswer.length;
+    if (missingServicesCount > 0) {
+      return {
+        field: serviceKey,
+        code: UnitProblemFeedbackType.SERVICE_MISSING,
+        message: feedbackMessages[UnitProblemFeedbackType.SERVICE_MISSING](
+          serviceKey,
+          `${missingServicesCount}개의 서비스 설정이 누락되었습니다.`,
+        ),
+      };
+    } else {
+      return null;
+    }
+  }
+
+  private generateFieldMissingFeedback(
+    submittedConfig: unknown,
+    solutionConfig: unknown,
+    serviceKey: string,
+  ) {
+    const submittedKeys = Object.keys(
+      submittedConfig as Record<string, unknown>,
+    );
+    const solutionKeys = Object.keys(solutionConfig as Record<string, unknown>);
+    const missingFields = solutionKeys.filter(
+      (key) => !submittedKeys.includes(key),
+    );
+
+    if (
+      missingFields.length > 0 &&
+      solutionKeys.length > submittedKeys.length
+    ) {
+      return {
+        field: serviceKey,
+        code: UnitProblemFeedbackType.FIELD_MISSING,
+        message: feedbackMessages[UnitProblemFeedbackType.FIELD_MISSING](
+          serviceKey,
+          missingFields.join(', '),
+        ),
+      };
+    } else {
+      return null;
+    }
+  }
+
+  private generateUnnecessaryFieldFeedback(
+    submittedConfig: unknown,
+    solutionConfig: unknown,
+    serviceKey: string,
+  ) {
+    const submittedKeys = Object.keys(
+      submittedConfig as Record<string, unknown>,
+    );
+    const solutionKeys = Object.keys(solutionConfig as Record<string, unknown>);
+    const unnecessaryFields = submittedKeys.filter(
+      (key) => !solutionKeys.includes(key),
+    );
+    if (
+      unnecessaryFields.length > 0 &&
+      submittedKeys.length > solutionKeys.length
+    ) {
+      return {
+        field: serviceKey,
+        code: UnitProblemFeedbackType.UNNECESSARY,
+        message: feedbackMessages[UnitProblemFeedbackType.UNNECESSARY](
+          serviceKey,
+          unnecessaryFields.join(', '),
+        ),
+      };
+    } else {
+      return null;
+    }
+  }
+
+  private generateIncorrectValueFeedback(
+    submittedConfig: unknown,
+    solutionConfig: unknown,
+    serviceKey: string,
+  ) {
+    const incorrectFields: string[] = [];
+    const submittedKeys = Object.keys(
+      submittedConfig as Record<string, unknown>,
+    );
+    const solutionKeys = Object.keys(solutionConfig as Record<string, unknown>);
+    const commonKeys = submittedKeys.filter((key) =>
+      solutionKeys.includes(key),
+    );
+    for (const key of commonKeys) {
+      if (
+        !this.isDeepEqual(
+          (submittedConfig as Record<string, unknown>)[key],
+          (solutionConfig as Record<string, unknown>)[key],
+        )
+      ) {
+        incorrectFields.push(key);
+      }
+    }
+
+    if (incorrectFields.length > 0) {
+      return {
+        field: serviceKey,
+        code: UnitProblemFeedbackType.INCORRECT,
+        message: feedbackMessages[UnitProblemFeedbackType.INCORRECT](
+          serviceKey,
+          incorrectFields.join(', '),
+        ),
+      };
+    } else {
+      return null;
+    }
+  }
+
+  private findServiceByName(
+    serviceConfigs: unknown[],
+    serviceName: string,
+  ): unknown {
+    for (const config of serviceConfigs) {
+      if (
+        typeof config === 'object' &&
+        config !== null &&
+        'name' in config &&
+        (config as Record<string, unknown>)['name'] === serviceName
+      ) {
+        return config as unknown;
+      }
+    }
+    return undefined;
   }
 
   private isDeepEqual(obj1: unknown, obj2: unknown): boolean {
