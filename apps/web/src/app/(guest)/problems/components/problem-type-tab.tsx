@@ -1,6 +1,11 @@
 'use client'
 
-import { BookOpenIcon, FileTextIcon, LayersIcon } from 'lucide-react'
+import {
+  BadgeInfoIcon,
+  BookOpenIcon,
+  FileTextIcon,
+  LayersIcon,
+} from 'lucide-react'
 
 import { useRouter } from 'next/navigation'
 
@@ -58,7 +63,15 @@ export const ProblemTypeTab = () => {
       </TabsList>
 
       {problemTabList.map((tab) => (
-        <TabsContent key={tab.type} value={tab.type} className="pt-2 text-base">
+        <TabsContent
+          key={tab.type}
+          value={tab.type}
+          className={cn(
+            'mt-4 mb-10 flex items-center gap-2 p-4',
+            'bg-primary-foreground text-primary border-primary rounded-xl text-base font-medium',
+          )}
+        >
+          <BadgeInfoIcon />
           {tab.description}
         </TabsContent>
       ))}

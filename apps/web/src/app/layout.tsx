@@ -1,9 +1,11 @@
 import './globals.css'
+import { QueryProvider } from './provider'
 
 import type { Metadata, Viewport } from 'next'
 
 import { Footer, Header } from '@/components/layout'
 import { cn } from '@/lib/utils'
+import { MSWProvider } from '@/mock/msw-provider'
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -30,9 +32,13 @@ export default function RootLayout({
           'selection:bg-primary/30 selection:text-foreground',
         )}
       >
-        <Header />
-        <main className="h-full min-h-[calc(100vh)] pt-18">{children}</main>
-        <Footer />
+        <MSWProvider>
+          <QueryProvider>
+            <Header />
+            <main className="h-full min-h-[calc(100vh)] pt-18">{children}</main>
+            <Footer />
+          </QueryProvider>
+        </MSWProvider>
       </body>
     </html>
   )

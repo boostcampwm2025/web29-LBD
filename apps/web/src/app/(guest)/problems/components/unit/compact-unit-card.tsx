@@ -1,7 +1,7 @@
 import { Badge } from '@/components/ui/badge'
-import { Unit } from '@/types/problem.type'
+import { UnitProblem } from '@/types/problem.type'
 
-interface CompactUnitCardProps extends Unit {
+interface CompactUnitCardProps extends UnitProblem {
   step: number
 }
 

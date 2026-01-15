@@ -6,7 +6,7 @@ import {
 
 export default function LandingPage() {
   return (
-    <main className="bg-background mx-auto max-w-[var(--screen-xl)] px-4">
+    <main className="flex w-full flex-col gap-24">
       <HeroSection />
       <ValuePropositionSection />
       <HowItWorksSection />

@@ -4,9 +4,15 @@ export const enum ProblemType {
   SCENARIO = 'scenario',
 }
 
-export type Unit = {
+type BaseProblem = {
   id: number
   title: string
   description: string
   tags?: string[]
+}
+
+export type UnitProblem = BaseProblem
+
+export type CookbookProblem = BaseProblem & {
+  problems: UnitProblem[]
 }

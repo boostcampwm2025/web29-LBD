@@ -14,9 +14,9 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { Unit } from '@/types/problem.type'
+import { UnitProblem } from '@/types/problem.type'
 
-export const UnitCard = ({ id, title, description, tags }: Unit) => {
+export const UnitCard = ({ id, title, description, tags }: UnitProblem) => {
   const router = useRouter()
 
   const handleCardClick = () => {
@@ -44,7 +44,7 @@ export const UnitCard = ({ id, title, description, tags }: Unit) => {
       <CardFooter>
         <Button
           className="w-full font-semibold"
-          variant={'ghost'}
+          variant={'outline'}
           onClick={handleCardClick}
         >
           <PlayIcon className="mr-1" />
