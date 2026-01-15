@@ -3,9 +3,9 @@ import { TServiceConfigMap } from '../../constants/service-convention';
 
 export class ProblemDetailResponseDto {
   id: number;
-  problemType: ProblemType;
+  problem_type: ProblemType;
   title: string;
   description: string;
-  requiredFields: TServiceConfigMap[];
+  required_fields: TServiceConfigMap[];
   tags: string[];
 }

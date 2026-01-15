@@ -41,9 +41,9 @@ export class ProblemsService {
 
     return {
       id: problem.id,
-      problemType: problem.problem_type,
+      problem_type: problem.problem_type,
       title: problem.title,
-      requiredFields: problem.required_fields,
+      required_fields: problem.required_fields,
       description: problem.description,
       tags: problem.tags.map((tag) => tag.name),
     };
