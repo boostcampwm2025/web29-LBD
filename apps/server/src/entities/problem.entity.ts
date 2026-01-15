@@ -11,6 +11,7 @@ import {
 import { Solution } from './solution.entity';
 import { ProblemType } from '../problems/types/problem-type.enum';
 import { Tag } from './tag.entity';
+import { TServiceConfigMap } from '../constants/service-convention';
 
 @Entity('problem')
 export class Problem {
@@ -27,10 +28,7 @@ export class Problem {
   description: string;
 
   @Column({ type: 'json', nullable: false })
-  required_fields: Array<{
-    field: string;
-    fixed_options?: Record<string, any>;
-  }>;
+  required_fields: TServiceConfigMap[];
 
   @ManyToMany(() => Tag, (tag) => tag.problems)
   @JoinTable({

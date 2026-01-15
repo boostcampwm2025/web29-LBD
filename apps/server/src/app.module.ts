@@ -4,6 +4,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProblemsModule } from './problems/problems.module';
+import { CookbooksModule } from './cookbooks/cookbooks.module';
 
 @Module({
   imports: [
@@ -22,13 +23,14 @@ import { ProblemsModule } from './problems/problems.module';
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_DATABASE'),
-        entities: [__dirname + '/**/*.entity.{.ts,.js}'],
+        entities: ['dist/**/*.entity.js'],
         synchronize: false,
         logging: true,
         charset: 'utf8mb4',
       }),
     }),
     ProblemsModule,
+    CookbooksModule,
   ],
   controllers: [AppController],
   providers: [AppService],
