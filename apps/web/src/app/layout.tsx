@@ -1,4 +1,5 @@
 import './globals.css'
+import { QueryProvider } from './provider'
 
 import type { Metadata, Viewport } from 'next'
 
@@ -32,9 +33,11 @@ export default function RootLayout({
         )}
       >
         <MSWProvider>
-          <Header />
-          <main className="h-full min-h-[calc(100vh)] pt-18">{children}</main>
-          <Footer />
+          <QueryProvider>
+            <Header />
+            <main className="h-full min-h-[calc(100vh)] pt-18">{children}</main>
+            <Footer />
+          </QueryProvider>
         </MSWProvider>
       </body>
     </html>
