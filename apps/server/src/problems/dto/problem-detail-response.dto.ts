@@ -1,13 +1,11 @@
 import { ProblemType } from '../types/problem-type.enum';
+import { TServiceConfigMap } from '../../constants/service-convention';
 
 export class ProblemDetailResponseDto {
   id: number;
   problemType: ProblemType;
   title: string;
   description: string;
-  requiredFields: Array<{
-    field: string;
-    fixedOptions?: Record<string, any>;
-  }>;
+  requiredFields: TServiceConfigMap[];
   tags: string[];
 }
