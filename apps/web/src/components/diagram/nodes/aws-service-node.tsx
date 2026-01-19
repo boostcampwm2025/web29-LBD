@@ -10,6 +10,7 @@ export interface AwsServiceNodeData {
   label: string
   icon: AwsServiceIconKey
   description?: string
+  [key: string]: unknown
 }
 
 interface AwsServiceNodeProps {

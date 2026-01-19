@@ -13,6 +13,7 @@ export interface AwsGroupNodeData {
   bgColor?: string
   width?: number
   height?: number
+  [key: string]: unknown
 }
 
 interface AwsGroupNodeProps {

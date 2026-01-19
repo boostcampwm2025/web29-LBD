@@ -10,6 +10,7 @@ export interface AwsResourceNodeData {
   label: string
   icon: AwsResourceIconKey
   description?: string
+  [key: string]: unknown
 }
 
 interface AwsResourceNodeProps {
