@@ -6,9 +6,11 @@ import { ProblemsService } from './problems.service';
 import { ValidationService } from './validation/validation.service';
 import { HandlerResolver } from './validation/handler-resolver';
 import { UnitValidationHandler } from './validation/handlers/unit-validation.handler';
+import { Cookbook } from 'src/entities/cookbook.entity';
+import { CookbookProblem } from 'src/entities/cookbook-problem.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Problem])],
+  imports: [TypeOrmModule.forFeature([Problem, Cookbook, CookbookProblem])],
   controllers: [ProblemsController],
   providers: [
     ProblemsService,
