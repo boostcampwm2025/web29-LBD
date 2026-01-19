@@ -5,6 +5,7 @@ import {
   Body,
   HttpCode,
   ParseIntPipe,
+  Get,
 } from '@nestjs/common';
 import { SubmitRequestDto } from './dto/submit-request.dto';
 import { ProblemsService } from './problems.service';
@@ -20,5 +21,11 @@ export class ProblemsController {
     @Body() body: SubmitRequestDto,
   ) {
     return this.problemsService.submit(problemId, body);
+  }
+
+  @Get(':problemId')
+  @HttpCode(200)
+  getProblemDetail(@Param('problemId', ParseIntPipe) problemId: number) {
+    return this.problemsService.findByProblemId(problemId);
   }
 }
