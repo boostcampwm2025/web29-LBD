@@ -14,9 +14,9 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { Unit } from '@/types/problem.type'
+import { UnitProblem } from '@/types/problem.type'
 
-interface CookbookCardProps extends Unit {
+interface CookbookCardProps extends UnitProblem {
   children: React.ReactNode
 }
 

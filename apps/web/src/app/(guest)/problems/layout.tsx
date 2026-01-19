@@ -7,7 +7,7 @@ export default function ProblemsLayout({
 }>) {
   return (
     <ProblemProvider>
-      <div className="mx-auto w-full max-w-5xl px-4">{children}</div>
+      <div className="mx-auto w-full max-w-7xl px-4">{children}</div>
     </ProblemProvider>
   )
 }
