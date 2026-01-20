@@ -1,8 +1,7 @@
-import type { S3DetailWithSetValueSectionProps } from '../types'
-
 import { useWatch } from 'react-hook-form'
 
 import { Button } from '@/components/ui/button'
+import type { S3DetailWithSetValueSectionProps } from '@/types/aws-services/s3/bucket-detail'
 
 export const SelectionInfoSection = ({
   control,

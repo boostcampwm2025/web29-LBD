@@ -1,7 +1,8 @@
-import type { S3DetailSectionProps } from '../types'
 import { ChevronRight } from 'lucide-react'
 
 import { useWatch } from 'react-hook-form'
+
+import type { S3DetailSectionProps } from '@/types/aws-services/s3/bucket-detail'
 
 export const BreadcrumbSection = ({
   control,

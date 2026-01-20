@@ -1,9 +1,9 @@
-import type { S3DetailSectionProps } from '../types'
 import { Search } from 'lucide-react'
 
 import { Controller } from 'react-hook-form'
 
 import { Input } from '@/components/ui/input'
+import type { S3DetailSectionProps } from '@/types/aws-services/s3/bucket-detail'
 
 export const SearchBarSection = ({ control, config }: S3DetailSectionProps) => {
   if (!config.searchBar) return null

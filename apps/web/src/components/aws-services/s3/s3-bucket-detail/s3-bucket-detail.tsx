@@ -9,10 +9,14 @@ import {
   SearchBarSection,
   SelectionInfoSection,
 } from './sections'
-import type { S3DetailWithSetValueSectionProps, S3Object } from './types'
 
 import { useMemo } from 'react'
 import { useWatch } from 'react-hook-form'
+
+import type {
+  S3DetailWithSetValueSectionProps,
+  S3Object,
+} from '@/types/aws-services/s3/bucket-detail'
 
 interface S3BucketDetailProps extends S3DetailWithSetValueSectionProps {
   onUpload: () => void

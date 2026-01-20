@@ -1,9 +1,9 @@
-import type { S3DetailSectionProps } from '../types'
 import { Upload } from 'lucide-react'
 
 import { useWatch } from 'react-hook-form'
 
 import { Button } from '@/components/ui/button'
+import type { S3DetailSectionProps } from '@/types/aws-services/s3/bucket-detail'
 
 interface HeaderSectionProps extends S3DetailSectionProps {
   onUpload: () => void

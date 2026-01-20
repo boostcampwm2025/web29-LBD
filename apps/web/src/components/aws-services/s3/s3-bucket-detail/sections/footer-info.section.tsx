@@ -1,7 +1,10 @@
-import type { S3DetailSectionProps, S3Object } from '../types'
-
 import { useMemo } from 'react'
 import { useWatch } from 'react-hook-form'
+
+import type {
+  S3DetailSectionProps,
+  S3Object,
+} from '@/types/aws-services/s3/bucket-detail'
 
 export const FooterInfoSection = ({
   control,

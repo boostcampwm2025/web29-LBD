@@ -1,4 +1,3 @@
-import type { S3DetailWithSetValueSectionProps, S3Object } from '../types'
 import { File, Folder } from 'lucide-react'
 
 import { useMemo } from 'react'
@@ -13,6 +12,10 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import type {
+  S3DetailWithSetValueSectionProps,
+  S3Object,
+} from '@/types/aws-services/s3/bucket-detail'
 
 export const ObjectListTableSection = ({
   control,
