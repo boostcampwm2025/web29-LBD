@@ -78,7 +78,7 @@ describe('UnitValidationHandler', () => {
         { id: '3', name: 'vpc-wrong', cidrBlock: '10.0.0.0/16' },
       ];
 
-      const result = handler['checkDifference'](
+      const result = handler['diffServiceConfigs'](
         answerVPCConfigs,
         solutionConfigs,
         'vpc',
@@ -101,7 +101,7 @@ describe('UnitValidationHandler', () => {
         { id: 's3-1', name: 'bucket-1' },
         { id: 's3-2', name: 'DONT_CARE' },
       ];
-      const result = handler['checkDifference'](
+      const result = handler['diffServiceConfigs'](
         answerS3Configs,
         solutionConfigs,
         's3',
@@ -119,7 +119,7 @@ describe('UnitValidationHandler', () => {
         { id: 's3-1', name: 'bucket-1' },
         { id: 's3-2', name: 'bucket-22' },
       ];
-      const result = handler['checkDifference'](
+      const result = handler['diffServiceConfigs'](
         answerS3Configs,
         solutionConfigs,
         's3',
@@ -139,7 +139,7 @@ describe('UnitValidationHandler', () => {
         { id: 's3-1', name: 'bucket-1' },
         { id: 's3-2', name: 'bucket-2' },
       ];
-      const result = handler['checkDifference'](
+      const result = handler['diffServiceConfigs'](
         answerS3Configs,
         solutionConfigs,
         's3',
@@ -223,29 +223,6 @@ describe('UnitValidationHandler', () => {
     });
   });
 
-  describe('findServiceByName 메서드', () => {
-    it('이름으로 서비스를 올바르게 찾아야 한다.', () => {
-      const vpcServices = [
-        { id: '1', name: 'vpc-1', cidrBlock: '10.0.0.0/16' },
-        { id: '2', name: 'vpc-2', cidrBlock: '10.0.1.0/16' },
-      ];
-      const result = handler['findServiceByName'](vpcServices, 'vpc-2');
-      expect(result).toEqual({
-        id: '2',
-        name: 'vpc-2',
-        cidrBlock: '10.0.1.0/16',
-      });
-    });
-    it('존재하지 않는 이름에 대해 undefined를 반환해야 한다.', () => {
-      const vpcServices = [
-        { id: '1', name: 'vpc-1', cidrBlock: '10.0.0.0/16' },
-        { id: '2', name: 'vpc-2', cidrBlock: '10.0.1.0/16' },
-      ];
-      const result = handler['findServiceByName'](vpcServices, 'vpc-3');
-      expect(result).toBeUndefined();
-    });
-  });
-
   describe('generateFeedbackMessage 메서드', () => {
     it('요구하는 서비스보다 적은 서비스를 구성했을 때 피드백이 잘 생성되어야 한다.', () => {
       const validateResult = {
@@ -257,7 +234,7 @@ describe('UnitValidationHandler', () => {
           ],
         },
       };
-      const feedbacks = handler['generateFeedbackMessage'](validateResult);
+      const feedbacks = handler['generateFeedbacks'](validateResult);
       expect(feedbacks).toEqual([
         {
           serviceType: 'vpc',
@@ -276,7 +253,7 @@ describe('UnitValidationHandler', () => {
           ],
         },
       };
-      const feedbacks = handler['generateFeedbackMessage'](validateResult);
+      const feedbacks = handler['generateFeedbacks'](validateResult);
       expect(feedbacks).toEqual([
         {
           serviceType: 'vpc',
@@ -296,7 +273,7 @@ describe('UnitValidationHandler', () => {
           onlyInSolution: [{ id: '1', name: 'vpc-1', cidrBlock: 'A' }],
         },
       };
-      const feedbacks = handler['generateFeedbackMessage'](validateResult);
+      const feedbacks = handler['generateFeedbacks'](validateResult);
       expect(feedbacks).toEqual([
         {
           serviceType: 'vpc',
@@ -314,7 +291,7 @@ describe('UnitValidationHandler', () => {
           onlyInSolution: [],
         },
       };
-      const feedbacks = handler['generateFeedbackMessage'](validateResult);
+      const feedbacks = handler['generateFeedbacks'](validateResult);
       expect(feedbacks).toEqual([]);
     });
 
@@ -325,7 +302,7 @@ describe('UnitValidationHandler', () => {
           onlyInSolution: [{ id: '1', name: 'vpc-1', cidrBlock: 'B' }],
         },
       };
-      const feedbacks = handler['generateFeedbackMessage'](validateResult);
+      const feedbacks = handler['generateFeedbacks'](validateResult);
       expect(feedbacks).toEqual([
         {
           serviceType: 'vpc',
@@ -357,7 +334,7 @@ describe('UnitValidationHandler', () => {
           ],
         },
       };
-      const feedbacks = handler['generateFeedbackMessage'](validateResult);
+      const feedbacks = handler['generateFeedbacks'](validateResult);
       expect(feedbacks).toEqual([
         {
           serviceType: 'vpc',
@@ -379,7 +356,7 @@ describe('UnitValidationHandler', () => {
           onlyInSolution: [{ id: '1', name: 'subnet-1', cidrBlock: 'D' }],
         },
       };
-      const feedbacks = handler['generateFeedbackMessage'](validateResult);
+      const feedbacks = handler['generateFeedbacks'](validateResult);
       expect(feedbacks).toEqual([
         {
           serviceType: 'vpc',
@@ -409,7 +386,7 @@ describe('UnitValidationHandler', () => {
           ],
         },
       };
-      const feedbacks = handler['generateFeedbackMessage'](validateResult);
+      const feedbacks = handler['generateFeedbacks'](validateResult);
       expect(feedbacks).toEqual([
         {
           serviceType: 'vpc',

@@ -27,7 +27,7 @@ describe('FieldValidationHandler', () => {
         { id: '1', name: 'vpc-1', cidrBlock: '10.0.0.0/16' },
         { id: '2', name: 'vpc-1', cidrBlock: '10.1.0.0/16' },
       ];
-      const feedbacks: FeedbackDto[] = handler['validateVPCField'](vpcConfigs);
+      const feedbacks: FeedbackDto[] = handler['validateVpcs'](vpcConfigs);
       expect(feedbacks).toHaveLength(1);
       expect(feedbacks).toEqual([
         {
@@ -44,7 +44,7 @@ describe('FieldValidationHandler', () => {
       const vpcConfigs: VPCConfig[] = [
         { id: '1', name: 'vpc-1', cidrBlock: 'invalid-cidr' },
       ];
-      const feedbacks: FeedbackDto[] = handler['validateVPCField'](vpcConfigs);
+      const feedbacks: FeedbackDto[] = handler['validateVpcs'](vpcConfigs);
       expect(feedbacks).toHaveLength(1);
       expect(feedbacks).toEqual([
         {
@@ -63,7 +63,7 @@ describe('FieldValidationHandler', () => {
         { id: '1', name: 'vpc-1', cidrBlock: '10.0.0.0/16' },
         { id: '2', name: 'vpc-2', cidrBlock: '10.0.0.0/16' },
       ];
-      const feedbacks: FeedbackDto[] = handler['validateVPCField'](vpcConfigs);
+      const feedbacks: FeedbackDto[] = handler['validateVpcs'](vpcConfigs);
       expect(feedbacks).toHaveLength(2);
       expect(feedbacks).toEqual([
         {
@@ -90,7 +90,7 @@ describe('FieldValidationHandler', () => {
         { id: '1', name: 'vpc-1', cidrBlock: '10.0.0.0/15' },
         { id: '2', name: 'vpc-2', cidrBlock: '10.0.0.0/29' },
       ];
-      const feedbacks: FeedbackDto[] = handler['validateVPCField'](vpcConfigs);
+      const feedbacks: FeedbackDto[] = handler['validateVpcs'](vpcConfigs);
       expect(feedbacks).toHaveLength(4);
       expect(feedbacks).toEqual([
         {
@@ -133,7 +133,7 @@ describe('FieldValidationHandler', () => {
         { id: '1', name: 'vpc-1', cidrBlock: '10.0.0.0/16' },
         { id: '2', name: 'vpc-2', cidrBlock: '10.1.0.0/16' },
       ];
-      const feedbacks: FeedbackDto[] = handler['validateVPCField'](vpcConfigs);
+      const feedbacks: FeedbackDto[] = handler['validateVpcs'](vpcConfigs);
       expect(feedbacks).toHaveLength(0);
     });
   });
@@ -158,7 +158,7 @@ describe('FieldValidationHandler', () => {
       const vpcConfigs: VPCConfig[] = [
         { id: 'vpc-1', name: 'vpc-1', cidrBlock: '10.0.0.0/16' },
       ];
-      const feedbacks: FeedbackDto[] = handler['validateSubnetField'](
+      const feedbacks: FeedbackDto[] = handler['validateSubnets'](
         subnetConfigs,
         vpcConfigs,
       );
@@ -186,7 +186,7 @@ describe('FieldValidationHandler', () => {
       const vpcConfigs: VPCConfig[] = [
         { id: 'vpc-1', name: 'vpc-1', cidrBlock: '10.0.0.0/16' },
       ];
-      const feedbacks: FeedbackDto[] = handler['validateSubnetField'](
+      const feedbacks: FeedbackDto[] = handler['validateSubnets'](
         subnetConfigs,
         vpcConfigs,
       );
@@ -223,7 +223,7 @@ describe('FieldValidationHandler', () => {
       const vpcConfigs: VPCConfig[] = [
         { id: 'vpc-1', name: 'vpc-1', cidrBlock: '10.0.0.0/16' },
       ];
-      const feedbacks: FeedbackDto[] = handler['validateSubnetField'](
+      const feedbacks: FeedbackDto[] = handler['validateSubnets'](
         subnetConfigs,
         vpcConfigs,
       );
@@ -260,7 +260,7 @@ describe('FieldValidationHandler', () => {
       const vpcConfigs: VPCConfig[] = [
         { id: 'vpc-1', name: 'vpc-1', cidrBlock: '10.0.0.0/16' },
       ];
-      const feedbacks: FeedbackDto[] = handler['validateSubnetField'](
+      const feedbacks: FeedbackDto[] = handler['validateSubnets'](
         subnetConfigs,
         vpcConfigs,
       );
@@ -304,7 +304,7 @@ describe('FieldValidationHandler', () => {
       const vpcConfigs: VPCConfig[] = [
         { id: 'vpc-1', name: 'vpc-1', cidrBlock: '10.0.0.0/16' },
       ];
-      const feedbacks: FeedbackDto[] = handler['validateSubnetField'](
+      const feedbacks: FeedbackDto[] = handler['validateSubnets'](
         subnetConfigs,
         vpcConfigs,
       );
@@ -358,7 +358,7 @@ describe('FieldValidationHandler', () => {
         securityGroups: sgConfigs,
       };
       const feedbacks: FeedbackDto[] =
-        handler['validateEC2Field'](submitConfig);
+        handler['validateEc2Instances'](submitConfig);
       expect(feedbacks).toHaveLength(1);
       expect(feedbacks).toEqual([
         {
@@ -405,7 +405,7 @@ describe('FieldValidationHandler', () => {
         securityGroups: sgConfigs,
       };
       const feedbacks: FeedbackDto[] =
-        handler['validateEC2Field'](submitConfig);
+        handler['validateEc2Instances'](submitConfig);
       expect(feedbacks).toHaveLength(2);
       expect(feedbacks).toEqual([
         {
@@ -461,7 +461,7 @@ describe('FieldValidationHandler', () => {
         securityGroups: sgConfigs,
       };
       const feedbacks: FeedbackDto[] =
-        handler['validateEC2Field'](submitConfig);
+        handler['validateEc2Instances'](submitConfig);
       expect(feedbacks).toHaveLength(1);
       expect(feedbacks).toEqual([
         {
@@ -509,7 +509,7 @@ describe('FieldValidationHandler', () => {
         securityGroups: sgConfigs,
       };
       const feedbacks: FeedbackDto[] =
-        handler['validateEC2Field'](submitConfig);
+        handler['validateEc2Instances'](submitConfig);
       expect(feedbacks).toHaveLength(2);
       expect(feedbacks).toEqual([
         {
@@ -536,7 +536,7 @@ describe('FieldValidationHandler', () => {
         { id: '1', name: 'bucket-1' },
         { id: '2', name: 'bucket-1' },
       ];
-      const feedbacks: FeedbackDto[] = handler['validateS3Field'](s3Configs);
+      const feedbacks: FeedbackDto[] = handler['validateS3Buckets'](s3Configs);
       expect(feedbacks).toHaveLength(1);
       expect(feedbacks).toEqual([
         {
@@ -562,7 +562,7 @@ describe('FieldValidationHandler', () => {
           name: '-invalid-start-char',
         },
       ];
-      const feedbacks: FeedbackDto[] = handler['validateS3Field'](s3Configs);
+      const feedbacks: FeedbackDto[] = handler['validateS3Buckets'](s3Configs);
       expect(feedbacks).toHaveLength(4);
       expect(feedbacks).toEqual([
         {
@@ -629,7 +629,7 @@ describe('FieldValidationHandler', () => {
         ],
       };
       const feedbacks: FeedbackDto[] =
-        handler['validateRouteTableField'](submitConfig);
+        handler['validateRouteTables'](submitConfig);
       expect(feedbacks).toHaveLength(1);
       expect(feedbacks).toEqual([
         {
@@ -665,7 +665,7 @@ describe('FieldValidationHandler', () => {
         ],
       };
       const feedbacks: FeedbackDto[] =
-        handler['validateRouteTableField'](submitConfig);
+        handler['validateRouteTables'](submitConfig);
       expect(feedbacks).toHaveLength(1);
       expect(feedbacks).toEqual([
         {
