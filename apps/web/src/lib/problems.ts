@@ -8,7 +8,7 @@ export async function getProblemListByType(type: ProblemType) {
   }
 
   const res = await fetch(`${baseUrl}/api/problems?type=${type}`, {
-    cache: 'force-cache',
+    cache: 'no-store',
   })
 
   if (!res.ok) {
