@@ -1,10 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UnitValidationHandler } from '../../../../src/problems/validation/handlers/unit-validation.handler';
 import { ProblemType } from '../../../../src/problems/types/problem-type.enum';
-import {
-  UnitProblemFeedbackType,
-  VPCServiceFeedbackType,
-} from '../../../../src/problems/types/unit-problem-feedback-types';
+import { UnitProblemFeedbackType } from '../../../../src/problems/types/unit-problem-feedback-types';
+import { VPCServiceFeedbackType } from '../../../../src/problems/types/field-validation-feedback-types';
 import { FieldValidationHandler } from '../../../../src/problems/validation/handlers/field-validation.handler';
 
 describe('UnitValidationHandler', () => {

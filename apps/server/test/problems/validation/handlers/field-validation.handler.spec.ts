@@ -9,7 +9,7 @@ import {
   S3ServiceFeedbackType,
   SubnetServiceFeedbackType,
   VPCServiceFeedbackType,
-} from '../../../../src/problems/types/unit-problem-feedback-types';
+} from '../../../../src/problems/types/field-validation-feedback-types';
 
 describe('FieldValidationHandler', () => {
   let handler: FieldValidationHandler;

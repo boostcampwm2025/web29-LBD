@@ -1,10 +1,10 @@
-export enum UnitProblemFeedbackType {
-  SERVICE_MISSING = 'SERVICE_MISSING',
-  FIELD_MISSING = 'FIELD_MISSING',
-  UNNECESSARY = 'UNNECESSARY',
-  INCORRECT = 'INCORRECT',
-  INVALID = 'INVALID',
-}
+export const UnitProblemFeedbackType = {
+  SERVICE_MISSING: 'SERVICE_MISSING',
+  FIELD_MISSING: 'FIELD_MISSING',
+  UNNECESSARY: 'UNNECESSARY',
+  INCORRECT: 'INCORRECT',
+  INVALID: 'INVALID',
+} as const;
 
 export const feedbackMessages = {
   [UnitProblemFeedbackType.SERVICE_MISSING]: (

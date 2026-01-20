@@ -15,7 +15,7 @@ import {
   S3ServiceFeedbackType,
   SubnetServiceFeedbackType,
   VPCServiceFeedbackType,
-} from '../../types/unit-problem-feedback-types';
+} from '../../types/field-validation-feedback-types';
 import { ValidationHandler } from './validation.handler';
 
 interface IPRange {
