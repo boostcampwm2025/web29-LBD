@@ -4,13 +4,14 @@ import {
 } from 'src/problems/dto/submit-request.dto';
 import { SubmitResponseDto } from 'src/problems/dto/submit-response.dto';
 import { ProblemType } from 'src/problems/types/problem-type.enum';
+import { FeedbackDto } from 'src/problems/dto/submit-response.dto';
 
 export type ProblemData = {
   solution: SubmitConfig;
   problemType: ProblemType;
 };
 
-export interface ValidationHandler {
+export interface ProblemValidationHandler {
   /**
    * 문제 타입(ex. unit)에 대해 핸들러가 지원되는지 여부를 반환하는 메서드
    * @param problemType 문제 타입
@@ -28,4 +29,8 @@ export interface ValidationHandler {
     submitRequsestDto: SubmitRequestDto,
     problemData: ProblemData,
   ): SubmitResponseDto;
+}
+
+export interface ValidationHandler {
+  validate(submitRequsestDto: SubmitRequestDto): FeedbackDto[];
 }
