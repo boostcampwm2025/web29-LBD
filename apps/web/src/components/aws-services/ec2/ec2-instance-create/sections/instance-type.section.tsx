@@ -17,6 +17,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
+import { EC2_TOOLTIPS } from '@/constants/aws-services/ec2/ec2-tooltips.constants'
 import type { EC2SectionProps } from '@/types/aws-services/ec2/ec2-instance-create'
 
 // 인스턴스 유형 옵션
@@ -71,11 +72,7 @@ export function InstanceType({ control }: EC2SectionProps) {
                 <Info className="text-muted-foreground h-4 w-4 cursor-help" />
               </TooltipTrigger>
               <TooltipContent className="max-w-xs text-center">
-                <p>
-                  인스턴스 유형은 인스턴스의 하드웨어를 결정합니다. 각 인스턴스
-                  유형은 다양한 컴퓨팅, 메모리 및 스토리지 기능을 제공하며
-                  이러한 기능을 기반으로 인스턴스 패밀리로 그룹화됩니다.
-                </p>
+                <p>{EC2_TOOLTIPS.instanceType}</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>

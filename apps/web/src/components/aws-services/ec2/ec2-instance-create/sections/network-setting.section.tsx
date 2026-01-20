@@ -12,6 +12,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
+import { EC2_TOOLTIPS } from '@/constants/aws-services/ec2/ec2-tooltips.constants'
 import type { EC2SectionProps } from '@/types/aws-services/ec2/ec2-instance-create'
 
 export function NetworkSetting({ control }: EC2SectionProps) {
@@ -26,11 +27,7 @@ export function NetworkSetting({ control }: EC2SectionProps) {
                 <Info className="text-muted-foreground h-4 w-4 cursor-help" />
               </TooltipTrigger>
               <TooltipContent className="max-w-xs text-center">
-                <p>
-                  네트워크 설정으로 인스턴스의 연결 및 보안을 구성합니다. 퍼블릭
-                  IP를 할당하면 인터넷에서 접근 가능하며, 보안 그룹으로 허용할
-                  트래픽을 선택할 수 있습니다.
-                </p>
+                <p>{EC2_TOOLTIPS.networkSetting}</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>

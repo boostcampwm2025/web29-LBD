@@ -17,6 +17,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
+import { EC2_TOOLTIPS } from '@/constants/aws-services/ec2/ec2-tooltips.constants'
 import type { EC2SectionProps } from '@/types/aws-services/ec2/ec2-instance-create'
 
 // 볼륨 유형 옵션
@@ -68,10 +69,7 @@ export function Storage({ control }: EC2SectionProps) {
                 <Info className="text-muted-foreground h-4 w-4 cursor-help" />
               </TooltipTrigger>
               <TooltipContent className="max-w-xs text-center">
-                <p>
-                  인스턴스의 루트 볼륨 크기와 유형을 선택하세요. 기본 8 GiB
-                  이상을 권장하며, gp3는 최신 범용 SSD 타입입니다.
-                </p>
+                <p>{EC2_TOOLTIPS.storage}</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>

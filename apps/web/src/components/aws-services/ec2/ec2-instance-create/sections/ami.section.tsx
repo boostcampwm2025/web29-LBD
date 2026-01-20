@@ -11,6 +11,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
+import { EC2_TOOLTIPS } from '@/constants/aws-services/ec2/ec2-tooltips.constants'
 import type { EC2SectionProps } from '@/types/aws-services/ec2/ec2-instance-create'
 
 // AMI 옵션 정의
@@ -64,11 +65,7 @@ export function Ami({ control }: EC2SectionProps) {
                 <Info className="text-muted-foreground h-4 w-4 cursor-help" />
               </TooltipTrigger>
               <TooltipContent className="max-w-xs text-center">
-                <p>
-                  AMI는 인스턴스의 운영 체제, 애플리케이션 서버, 애플리케이션이
-                  포함됩니다. 아래에 적합한 AMI가 보이지 않는 경우 검색 필드에서
-                  더 많은 AMI를 찾아보거나 나만의 AMI 찾아보기를 선택하세요.
-                </p>
+                <p>{EC2_TOOLTIPS.ami}</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
