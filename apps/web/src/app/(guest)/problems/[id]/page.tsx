@@ -7,12 +7,12 @@ import {
 } from '@/aws-services/utils/serviceMapper'
 
 interface ProblemDetailPageProps {
-  params: {
+  params: Promise<{
     id: string
-  }
-  searchParams: {
+  }>
+  searchParams: Promise<{
     type?: string
-  }
+  }>
 }
 
 const getData = (_id: string) => {
@@ -22,16 +22,18 @@ const getData = (_id: string) => {
   const result: IServiceMapper = {
     serviceName: 'S3',
     serviceTask: 'bucket-create',
-    inputSections: ['general', 'ownership', 'public'],
+    inputSections: ['general', 'ownership', 'blockPublicAccess'],
   }
   return result
 }
 
 export default async function ProblemDetailPage({
-  params: { id },
-  searchParams: { type: _type },
+  params,
+  searchParams,
 }: ProblemDetailPageProps) {
+  const { id } = await params
+  const { type: _type } = await searchParams
   const problemData = getData(id)
   const { Component, config } = serviceMapper(problemData)
-  return <Component {...config} />
+  return <Component config={config} />
 }

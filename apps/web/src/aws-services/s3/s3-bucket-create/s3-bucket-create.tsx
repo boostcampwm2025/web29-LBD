@@ -1,5 +1,6 @@
 'use client'
 
+import type { S3BucketCreateConfig } from './constants'
 import {
   AdvancedSettings,
   BlockPublicAccess,
@@ -9,17 +10,36 @@ import {
   ObjectOwnership,
   Tags,
 } from './sections'
-import type { S3WithSetValuesSectionProps } from './types'
+import type { S3BucketFormData } from './types'
 
-import React from 'react'
+import { useForm } from 'react-hook-form'
 
 import { Separator } from '@/components/ui/separator'
 
-export default function S3BucketCreate({
-  control,
-  config,
-  setValue,
-}: S3WithSetValuesSectionProps) {
+interface S3BucketCreateProps {
+  config: S3BucketCreateConfig
+}
+
+const defaultValues: S3BucketFormData = {
+  general: { bucketName: '', region: 'ap-northeast-2' },
+  ownership: { aclEnabled: 'disabled' },
+  blockPublicAccess: {
+    blockAll: true,
+    blockPublicAcls: true,
+    ignorePublicAcls: true,
+    blockPublicPolicy: true,
+    restrictPublicBuckets: true,
+  },
+  versioning: { enabled: false },
+  encryption: { type: 'sse-s3' },
+  advancedSettings: { objectLockEnabled: false },
+  tags: [],
+}
+
+export default function S3BucketCreate({ config }: S3BucketCreateProps) {
+  const { control, setValue } = useForm<S3BucketFormData>({
+    defaultValues,
+  })
   return (
     <div className="mx-auto max-w-4xl space-y-6 p-6">
       {/* Header Section */}
