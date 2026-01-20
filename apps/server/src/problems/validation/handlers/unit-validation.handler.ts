@@ -14,6 +14,8 @@ import {
 import type { FeedbackDto } from '../../dto/submit-response.dto';
 import { FieldValidationHandler } from './field-validation.handler';
 import { Injectable } from '@nestjs/common';
+import { containsCidr } from '../utils/cidr-utils';
+import { ServiceConfigTypes } from 'src/problems/types/service-config-type.enum';
 
 @Injectable()
 export class UnitValidationHandler implements ProblemValidationHandler {
@@ -37,20 +39,13 @@ export class UnitValidationHandler implements ProblemValidationHandler {
     }
     const solutionConfig = problemData.solution;
     const submitConfig = submitRequestDto.submitConfig;
-    // 만약 키가 다르면, 즉 구성한 서비스 종류가 다르면 바로 틀림 처리
-    if (
-      !this.isDeepEqual(Object.keys(submitConfig), Object.keys(solutionConfig))
-    ) {
-      return {
-        result: 'FAIL',
-        feedback: [],
-      };
-    }
+
     const mismatchedConfigs = {};
     for (const key in solutionConfig) {
       const { onlyInAnswer, onlyInSolution } = this.checkDifference(
         submitConfig[key],
         solutionConfig[key],
+        key,
       );
       if (onlyInAnswer.length > 0 || onlyInSolution.length > 0) {
         mismatchedConfigs[key] = { onlyInAnswer, onlyInSolution };
@@ -74,11 +69,14 @@ export class UnitValidationHandler implements ProblemValidationHandler {
   // 같은 것 제외하고 남은 차이점만 골라내기
   // onlyInAnswer: 제출 답안에만 있는 설정들. 정답에 없는 필요 없는 설정들
   // onlyInSolution: 정답에만 있는 설정들. 제출 답안에 없는 필수 설정들
-  // 나중에 unknown 타입 서비스 union으로 변경하기
   private checkDifference(
-    answerConfigs: unknown[],
-    solutionConfigs: unknown[],
-  ): { onlyInAnswer: unknown[]; onlyInSolution: unknown[] } {
+    answerConfigs: ServiceConfigTypes[],
+    solutionConfigs: ServiceConfigTypes[],
+    serviceKey: string,
+  ): {
+    onlyInAnswer: ServiceConfigTypes[];
+    onlyInSolution: ServiceConfigTypes[];
+  } {
     const answer = [...answerConfigs];
     const solution = [...solutionConfigs];
 
@@ -90,8 +88,23 @@ export class UnitValidationHandler implements ProblemValidationHandler {
 
       for (let j = 0; j < solution.length; j++) {
         if (matchedSolutionIndices.has(j)) continue;
-
-        if (this.isDeepEqual(answer[i], solution[j])) {
+        if (
+          (serviceKey === 'vpc' || serviceKey === 'subnet') &&
+          'cidrBlock' in answer[i] &&
+          'cidrBlock' in solution[j]
+        ) {
+          // CIDR의 경우 포함되면 같은 것으로 간주
+          const answerCidr = answer[i]['cidrBlock'] as string;
+          const solutionCidr = solution[j]['cidrBlock'] as string;
+          if (
+            containsCidr(solutionCidr, answerCidr) ||
+            solutionCidr === 'DONT_CARE'
+          ) {
+            matchedAnswerIndices.add(i);
+            matchedSolutionIndices.add(j);
+            break;
+          }
+        } else if (this.isDeepEqual(answer[i], solution[j])) {
           matchedAnswerIndices.add(i);
           matchedSolutionIndices.add(j);
           break;
@@ -135,12 +148,15 @@ export class UnitValidationHandler implements ProblemValidationHandler {
       }
 
       for (const submittedConfig of onlyInAnswer) {
-        const serviceName = (submittedConfig as Record<string, unknown>)
-          .name as string;
+        const serviceName = submittedConfig.name;
         const matchedSolutionConfig = this.findServiceByName(
           onlyInSolution,
           serviceName,
         );
+        if (!matchedSolutionConfig) {
+          // 매칭되는 솔루션이 없으면 다음으로
+          continue;
+        }
 
         // 만약 제출 설정의 필드가 더 적다면 -> 누락된 필드 피드백
         const fieldMissingFeedback = this.generateFieldMissingFeedback(
@@ -176,8 +192,8 @@ export class UnitValidationHandler implements ProblemValidationHandler {
   }
 
   private generateServiceMissingFeedback(
-    onlyInAnswer: unknown[],
-    onlyInSolution: unknown[],
+    onlyInAnswer: ServiceConfigTypes[],
+    onlyInSolution: ServiceConfigTypes[],
     serviceKey: string,
   ) {
     const missingServicesCount = onlyInSolution.length - onlyInAnswer.length;
@@ -196,14 +212,12 @@ export class UnitValidationHandler implements ProblemValidationHandler {
   }
 
   private generateFieldMissingFeedback(
-    submittedConfig: unknown,
-    solutionConfig: unknown,
+    submittedConfig: ServiceConfigTypes,
+    solutionConfig: ServiceConfigTypes,
     serviceKey: string,
   ) {
-    const submittedKeys = Object.keys(
-      submittedConfig as Record<string, unknown>,
-    );
-    const solutionKeys = Object.keys(solutionConfig as Record<string, unknown>);
+    const submittedKeys = Object.keys(submittedConfig);
+    const solutionKeys = Object.keys(solutionConfig);
     const missingFields = solutionKeys.filter(
       (key) => !submittedKeys.includes(key),
     );
@@ -226,14 +240,13 @@ export class UnitValidationHandler implements ProblemValidationHandler {
   }
 
   private generateUnnecessaryFieldFeedback(
-    submittedConfig: unknown,
-    solutionConfig: unknown,
+    submittedConfig: ServiceConfigTypes,
+    solutionConfig: ServiceConfigTypes,
     serviceKey: string,
   ) {
-    const submittedKeys = Object.keys(
-      submittedConfig as Record<string, unknown>,
-    );
-    const solutionKeys = Object.keys(solutionConfig as Record<string, unknown>);
+    const submittedKeys = Object.keys(submittedConfig);
+
+    const solutionKeys = Object.keys(solutionConfig);
     const unnecessaryFields = submittedKeys.filter(
       (key) => !solutionKeys.includes(key),
     );
@@ -255,25 +268,18 @@ export class UnitValidationHandler implements ProblemValidationHandler {
   }
 
   private generateIncorrectValueFeedback(
-    submittedConfig: unknown,
-    solutionConfig: unknown,
+    submittedConfig: ServiceConfigTypes,
+    solutionConfig: ServiceConfigTypes,
     serviceKey: string,
   ) {
     const incorrectFields: string[] = [];
-    const submittedKeys = Object.keys(
-      submittedConfig as Record<string, unknown>,
-    );
-    const solutionKeys = Object.keys(solutionConfig as Record<string, unknown>);
+    const submittedKeys = Object.keys(submittedConfig);
+    const solutionKeys = Object.keys(solutionConfig);
     const commonKeys = submittedKeys.filter((key) =>
       solutionKeys.includes(key),
     );
     for (const key of commonKeys) {
-      if (
-        !this.isDeepEqual(
-          (submittedConfig as Record<string, unknown>)[key],
-          (solutionConfig as Record<string, unknown>)[key],
-        )
-      ) {
+      if (!this.isDeepEqual(submittedConfig[key], solutionConfig[key])) {
         incorrectFields.push(key);
       }
     }
@@ -293,17 +299,17 @@ export class UnitValidationHandler implements ProblemValidationHandler {
   }
 
   private findServiceByName(
-    serviceConfigs: unknown[],
+    serviceConfigs: ServiceConfigTypes[],
     serviceName: string,
-  ): unknown {
+  ): ServiceConfigTypes | undefined {
     for (const config of serviceConfigs) {
       if (
         typeof config === 'object' &&
         config !== null &&
         'name' in config &&
-        (config as Record<string, unknown>)['name'] === serviceName
+        config['name'] === serviceName
       ) {
-        return config as unknown;
+        return config;
       }
     }
     return undefined;
@@ -320,7 +326,7 @@ export class UnitValidationHandler implements ProblemValidationHandler {
 
     // 3. 원시 타입(Primitive) 비교
     if (typeof obj1 !== 'object') {
-      return obj1 === obj2;
+      return obj1 === obj2 || obj2 === 'DONT_CARE';
     }
 
     // 4. Date 객체 처리

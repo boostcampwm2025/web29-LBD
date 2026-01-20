@@ -65,33 +65,85 @@ describe('UnitValidationHandler', () => {
   });
 
   describe('checkDifference 메서드', () => {
-    it('차이점을 올바르게 식별해야 한다.', () => {
-      const answerConfigs = [
-        { id: 1, value: 'A' },
-        { id: 2, value: 'B' },
-        { id: 3, value: 'C' },
+    it('CIDR 블록이 완벽히 일치하거나, 정답 범위에 포함되면 통과하고 틀린 것만 식별해야 한다.', () => {
+      const answerVPCConfigs = [
+        { id: '1', name: 'vpc-exact', cidrBlock: '10.0.0.0/16' },
+        { id: '2', name: 'vpc-included', cidrBlock: '10.0.1.0/24' },
+        { id: '3', name: 'vpc-wrong', cidrBlock: '192.168.0.0/24' },
+      ];
+
+      const solutionConfigs = [
+        { id: '1', name: 'vpc-exact', cidrBlock: '10.0.0.0/16' },
+        { id: '2', name: 'vpc-included', cidrBlock: '10.0.0.0/16' },
+        { id: '3', name: 'vpc-wrong', cidrBlock: '10.0.0.0/16' },
+      ];
+
+      const result = handler['checkDifference'](
+        answerVPCConfigs,
+        solutionConfigs,
+        'vpc',
+      );
+
+      expect(result.onlyInAnswer).toEqual([
+        { id: '3', name: 'vpc-wrong', cidrBlock: '192.168.0.0/24' },
+      ]);
+      expect(result.onlyInSolution).toEqual([
+        { id: '3', name: 'vpc-wrong', cidrBlock: '10.0.0.0/16' },
+      ]);
+    });
+
+    it('필드의 정답에 DONT_CARE가 있을 때 올바르게 처리해야 한다.', () => {
+      const answerS3Configs = [
+        { id: 's3-1', name: 'bucket-1' },
+        { id: 's3-2', name: 'bucket-2' },
       ];
       const solutionConfigs = [
-        { id: 2, value: 'B' },
-        { id: 3, value: 'C' },
-        { id: 4, value: 'D' },
+        { id: 's3-1', name: 'bucket-1' },
+        { id: 's3-2', name: 'DONT_CARE' },
       ];
-      const result = handler['checkDifference'](answerConfigs, solutionConfigs);
+      const result = handler['checkDifference'](
+        answerS3Configs,
+        solutionConfigs,
+        's3',
+      );
+      expect(result.onlyInAnswer).toEqual([]);
+      expect(result.onlyInSolution).toEqual([]);
+    });
 
-      expect(result.onlyInAnswer).toEqual([{ id: 1, value: 'A' }]);
-      expect(result.onlyInSolution).toEqual([{ id: 4, value: 'D' }]);
+    it('기타 다른 설정일 때도 차이점을 올바르게 식별해야 한다.', () => {
+      const answerS3Configs = [
+        { id: 's3-1', name: 'bucket-1' },
+        { id: 's3-2', name: 'bucket-2' },
+      ];
+      const solutionConfigs = [
+        { id: 's3-1', name: 'bucket-1' },
+        { id: 's3-2', name: 'bucket-22' },
+      ];
+      const result = handler['checkDifference'](
+        answerS3Configs,
+        solutionConfigs,
+        's3',
+      );
+      expect(result.onlyInAnswer).toEqual([{ id: 's3-2', name: 'bucket-2' }]);
+      expect(result.onlyInSolution).toEqual([
+        { id: 's3-2', name: 'bucket-22' },
+      ]);
     });
 
     it('같은 설정일 경우 빈 배열을 반환해야 한다.', () => {
-      const answerConfigs = [
-        { id: 1, value: 'A' },
-        { id: 2, value: 'B' },
+      const answerS3Configs = [
+        { id: 's3-1', name: 'bucket-1' },
+        { id: 's3-2', name: 'bucket-2' },
       ];
       const solutionConfigs = [
-        { id: 1, value: 'A' },
-        { id: 2, value: 'B' },
+        { id: 's3-1', name: 'bucket-1' },
+        { id: 's3-2', name: 'bucket-2' },
       ];
-      const result = handler['checkDifference'](answerConfigs, solutionConfigs);
+      const result = handler['checkDifference'](
+        answerS3Configs,
+        solutionConfigs,
+        's3',
+      );
       expect(result.onlyInAnswer).toEqual([]);
       expect(result.onlyInSolution).toEqual([]);
     });
@@ -161,19 +213,23 @@ describe('UnitValidationHandler', () => {
 
   describe('findServiceByName 메서드', () => {
     it('이름으로 서비스를 올바르게 찾아야 한다.', () => {
-      const services = [
-        { name: 'service1', value: 'A' },
-        { name: 'service2', value: 'B' },
+      const vpcServices = [
+        { id: '1', name: 'vpc-1', cidrBlock: '10.0.0.0/16' },
+        { id: '2', name: 'vpc-2', cidrBlock: '10.0.1.0/16' },
       ];
-      const result = handler['findServiceByName'](services, 'service2');
-      expect(result).toEqual({ name: 'service2', value: 'B' });
+      const result = handler['findServiceByName'](vpcServices, 'vpc-2');
+      expect(result).toEqual({
+        id: '2',
+        name: 'vpc-2',
+        cidrBlock: '10.0.1.0/16',
+      });
     });
     it('존재하지 않는 이름에 대해 undefined를 반환해야 한다.', () => {
-      const services = [
-        { name: 'service1', value: 'A' },
-        { name: 'service2', value: 'B' },
+      const vpcServices = [
+        { id: '1', name: 'vpc-1', cidrBlock: '10.0.0.0/16' },
+        { id: '2', name: 'vpc-2', cidrBlock: '10.0.1.0/16' },
       ];
-      const result = handler['findServiceByName'](services, 'service3');
+      const result = handler['findServiceByName'](vpcServices, 'vpc-3');
       expect(result).toBeUndefined();
     });
   });
@@ -182,8 +238,11 @@ describe('UnitValidationHandler', () => {
     it('요구하는 서비스보다 적은 서비스를 구성했을 때 피드백이 잘 생성되어야 한다.', () => {
       const validateResult = {
         vpc: {
-          onlyInAnswer: [{ name: 'vpc-1' }],
-          onlyInSolution: [{ name: 'vpc-1' }, { name: 'vpc-2' }],
+          onlyInAnswer: [{ id: '1', name: 'vpc-1', cidrBlock: '10.0.0.0/16' }],
+          onlyInSolution: [
+            { id: '1', name: 'vpc-1', cidrBlock: '10.0.0.0/16' },
+            { id: '2', name: 'vpc-2', cidrBlock: '10.0.1.0/16' },
+          ],
         },
       };
       const feedbacks = handler['generateFeedbackMessage'](validateResult);
@@ -199,9 +258,9 @@ describe('UnitValidationHandler', () => {
     it('누락된 필드가 있을 때 피드백이 잘 생성되어야 한다.', () => {
       const validateResult = {
         vpc: {
-          onlyInAnswer: [{ name: 'vpc-1', cidrBlock: 'A' }],
+          onlyInAnswer: [{ id: '1', name: 'vpc-1', cidrBlock: 'A' }],
           onlyInSolution: [
-            { name: 'vpc-1', cidrBlock: 'A', region: 'us-east-1' },
+            { id: '1', name: 'vpc-1', cidrBlock: 'A', region: 'us-east-1' },
           ],
         },
       };
@@ -218,9 +277,9 @@ describe('UnitValidationHandler', () => {
       const validateResult = {
         vpc: {
           onlyInAnswer: [
-            { name: 'vpc-1', cidrBlock: 'A', region: 'us-east-1' },
+            { id: '1', name: 'vpc-1', cidrBlock: 'A', region: 'us-east-1' },
           ],
-          onlyInSolution: [{ name: 'vpc-1', cidrBlock: 'A' }],
+          onlyInSolution: [{ id: '1', name: 'vpc-1', cidrBlock: 'A' }],
         },
       };
       const feedbacks = handler['generateFeedbackMessage'](validateResult);
@@ -246,8 +305,8 @@ describe('UnitValidationHandler', () => {
     it('값이 다른 경우에도 피드백이 생성되어야 한다.', () => {
       const validateResult = {
         vpc: {
-          onlyInAnswer: [{ name: 'vpc-1', cidrBlock: 'A' }],
-          onlyInSolution: [{ name: 'vpc-1', cidrBlock: 'B' }],
+          onlyInAnswer: [{ id: '1', name: 'vpc-1', cidrBlock: 'A' }],
+          onlyInSolution: [{ id: '1', name: 'vpc-1', cidrBlock: 'B' }],
         },
       };
       const feedbacks = handler['generateFeedbackMessage'](validateResult);
@@ -266,12 +325,14 @@ describe('UnitValidationHandler', () => {
         vpc: {
           onlyInAnswer: [
             {
+              id: '1',
               name: 'vpc-1',
               nested: { nested1: '1', nested2: '2' },
             },
           ],
           onlyInSolution: [
             {
+              id: '1',
               name: 'vpc-1',
               nested: { nested1: '1', nested2: '3' },
             },
@@ -290,12 +351,12 @@ describe('UnitValidationHandler', () => {
     it('여러 서비스의 피드백에 대해서도 각각의 피드백 배열을 제공해야한다.', () => {
       const validateResult = {
         vpc: {
-          onlyInAnswer: [{ name: 'vpc-1', cidrBlock: 'A' }],
-          onlyInSolution: [{ name: 'vpc-1', cidrBlock: 'B' }],
+          onlyInAnswer: [{ id: '1', name: 'vpc-1', cidrBlock: 'A' }],
+          onlyInSolution: [{ id: '1', name: 'vpc-1', cidrBlock: 'B' }],
         },
         subnet: {
-          onlyInAnswer: [{ name: 'subnet-1', cidrBlock: 'C' }],
-          onlyInSolution: [{ name: 'subnet-1', cidrBlock: 'D' }],
+          onlyInAnswer: [{ id: '1', name: 'subnet-1', cidrBlock: 'C' }],
+          onlyInSolution: [{ id: '1', name: 'subnet-1', cidrBlock: 'D' }],
         },
       };
       const feedbacks = handler['generateFeedbackMessage'](validateResult);
@@ -317,10 +378,10 @@ describe('UnitValidationHandler', () => {
       // 제출한 것이 더 많은/적은 서비스를 포함 + 일부 필드 값이 다름 + 일부 필드가 누락/불필요함
       const validateResult = {
         vpc: {
-          onlyInAnswer: [{ name: 'vpc-1', cidrBlock: 'A' }],
+          onlyInAnswer: [{ id: '1', name: 'vpc-1', cidrBlock: 'A' }],
           onlyInSolution: [
-            { name: 'vpc-1', cidrBlock: 'B', region: 'us-east-1' },
-            { name: 'vpc-2' },
+            { id: '1', name: 'vpc-1', cidrBlock: 'B', region: 'us-east-1' },
+            { id: '2', name: 'vpc-2' },
           ],
         },
       };
