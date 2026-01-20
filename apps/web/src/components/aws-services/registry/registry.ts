@@ -8,13 +8,13 @@ import CloudFrontOriginSettings from '../cloudfront/cloudfront-origin-settings/c
 import { CLOUDFRONT_ORIGIN_SETTINGS_SECTIONS } from '../cloudfront/cloudfront-origin-settings/constants'
 import CloudFrontWebsiteSettings from '../cloudfront/cloudfront-website-settings/cloudfront-website-settings'
 import { CLOUDFRONT_WEBSITE_SETTINGS_SECTIONS } from '../cloudfront/cloudfront-website-settings/constants'
-import S3BucketCreate from '../s3/s3-bucket-create/s3-bucket-create'
-import S3BucketDetail from '../s3/s3-bucket-detail/s3-bucket-detail'
-import S3BucketList from '../s3/s3-bucket-list/s3-bucket-list'
-import S3FileUpload from '../s3/s3-file-upload/s3-file-upload'
 
 import { ComponentType } from 'react'
 
+import S3BucketCreate from '@/components/aws-services/s3/s3-bucket-create/s3-bucket-create'
+import S3BucketDetail from '@/components/aws-services/s3/s3-bucket-detail/s3-bucket-detail'
+import S3BucketList from '@/components/aws-services/s3/s3-bucket-list/s3-bucket-list'
+import S3FileUpload from '@/components/aws-services/s3/s3-file-upload/s3-file-upload'
 import { S3_BUCKET_CREATE_SECTIONS } from '@/types/aws-services/s3/bucket-create/'
 import { S3_BUCKET_DETAIL_SECTIONS } from '@/types/aws-services/s3/bucket-detail/'
 import { S3_BUCKET_LIST_SECTIONS } from '@/types/aws-services/s3/bucket-list/'
