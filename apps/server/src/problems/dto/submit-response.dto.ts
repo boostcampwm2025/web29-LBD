@@ -1,5 +1,7 @@
 export type FeedbackDto = {
-  field: string;
+  serviceType: string;
+  service?: string;
+  field?: string;
   code: string;
   message: string;
 };
