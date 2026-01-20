@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { NotFoundException } from '@nestjs/common';
 import { ProblemsService } from './problems.service';
 import { Problem } from '../entities/problem.entity';
+import { Cookbook } from '../entities/cookbook.entity';
 import { ValidationService } from './validation/validation.service';
 import { ProblemType } from './types/problem-type.enum';
 
@@ -49,6 +50,10 @@ describe('ProblemsService', () => {
       validate: jest.fn(),
     };
 
+    const mockCookbookRepository = {
+      findOne: jest.fn(),
+    };
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ProblemsService,
@@ -59,6 +64,10 @@ describe('ProblemsService', () => {
         {
           provide: ValidationService,
           useValue: mockValidationService,
+        },
+        {
+          provide: getRepositoryToken(Cookbook),
+          useValue: mockCookbookRepository,
         },
       ],
     }).compile();
@@ -102,7 +111,7 @@ describe('ProblemsService', () => {
 
       // When & Then: NotFoundException 발생
       await expect(service.findByProblemId(problemId)).rejects.toThrow(
-        new NotFoundException(`Problem with ID ${problemId} not found`),
+        new NotFoundException(`문제 ID ${problemId}을(를) 찾을 수 없습니다.`),
       );
 
       expect(problemRepository.findOne).toHaveBeenCalledWith({
