@@ -1,4 +1,4 @@
-import { ValidationHandler } from './validation.handler';
+import { ProblemValidationHandler } from './validation.handler';
 import { SubmitResponseDto } from 'src/problems/dto/submit-response.dto';
 import { SubmitRequestDto } from 'src/problems/dto/submit-request.dto';
 import { ProblemType } from '../../types/problem-type.enum';
@@ -12,8 +12,14 @@ import {
   feedbackMessages,
 } from '../../types/unit-problem-feedback-types';
 import type { FeedbackDto } from '../../dto/submit-response.dto';
+import { FieldValidationHandler } from './field-validation.handler';
+import { Injectable } from '@nestjs/common';
 
-export class UnitValidationHandler implements ValidationHandler {
+@Injectable()
+export class UnitValidationHandler implements ProblemValidationHandler {
+  constructor(private readonly fieldValidationHandler: FieldValidationHandler) {
+    this.fieldValidationHandler = fieldValidationHandler;
+  }
   support(problemType: ProblemType): boolean {
     return problemType === ProblemType.UNIT;
   }
@@ -54,6 +60,10 @@ export class UnitValidationHandler implements ValidationHandler {
     const feedbacks = this.generateFeedbackMessage(
       mismatchedConfigs as UnitProblemValidateResult,
     );
+
+    const fieldFeedbacks =
+      this.fieldValidationHandler.validate(submitRequestDto);
+    feedbacks.push(...fieldFeedbacks);
 
     return {
       result: Object.keys(mismatchedConfigs).length === 0 ? 'PASS' : 'FAIL',
