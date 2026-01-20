@@ -17,11 +17,7 @@ import {
   VPCServiceFeedbackType,
 } from '../../types/field-validation-feedback-types';
 import { ValidationHandler } from './validation.handler';
-
-interface IPRange {
-  start: number;
-  end: number;
-}
+import { containsCidr, isCidrOverlap } from '../utils/cidr-utils';
 
 @Injectable()
 export class FieldValidationHandler implements ValidationHandler {
@@ -113,7 +109,7 @@ export class FieldValidationHandler implements ValidationHandler {
         const cidr1 = vpcConfigs[i]['cidrBlock'];
         const cidr2 = vpcConfigs[j]['cidrBlock'];
 
-        if (this.isCidrOverlap(cidr1, cidr2)) {
+        if (isCidrOverlap(cidr1, cidr2)) {
           feedbacks.push({
             field: 'vpc',
             code: VPCServiceFeedbackType.VPC_CIDR_OVERLAP,
@@ -177,7 +173,7 @@ export class FieldValidationHandler implements ValidationHandler {
         });
       }
 
-      if (!this.containsCidr(vpcCidr, cidr)) {
+      if (!containsCidr(vpcCidr, cidr)) {
         feedbacks.push({
           field: 'subnet',
           code: SubnetServiceFeedbackType.SUBNET_CIDR_OUT_OF_VPC_CIDR,
@@ -194,7 +190,7 @@ export class FieldValidationHandler implements ValidationHandler {
           const cidr1 = subnets[i]['cidrBlock'];
           const cidr2 = subnets[j]['cidrBlock'];
 
-          if (this.isCidrOverlap(cidr1, cidr2)) {
+          if (isCidrOverlap(cidr1, cidr2)) {
             feedbacks.push({
               field: 'subnet',
               code: SubnetServiceFeedbackType.SUBNET_CIDR_OVERLAP,
@@ -369,53 +365,5 @@ export class FieldValidationHandler implements ValidationHandler {
 
   private validateCIDRBlock(cidr: string): boolean {
     return this.CIDR_REGEX.test(cidr);
-  }
-
-  private ipToLong(ip: string): number {
-    const octets = ip.split('.');
-    if (octets.length !== 4) throw new Error(`Invalid IP: ${ip}`);
-
-    return (
-      ((parseInt(octets[0], 10) << 24) |
-        (parseInt(octets[1], 10) << 16) |
-        (parseInt(octets[2], 10) << 8) |
-        parseInt(octets[3], 10)) >>>
-      0
-    );
-  }
-
-  private getCidrRange(cidr: string): IPRange {
-    const [ipPart, prefixPart] = cidr.split('/');
-    if (!ipPart || !prefixPart) throw new Error();
-
-    const ipNum = this.ipToLong(ipPart);
-    const prefix = parseInt(prefixPart, 10);
-    if (prefix < 0 || prefix > 32) throw new Error();
-
-    const mask = prefix === 0 ? 0 : (0xffffffff << (32 - prefix)) >>> 0;
-    const start = (ipNum & mask) >>> 0;
-    const end = (start | (~mask >>> 0)) >>> 0;
-
-    return { start, end };
-  }
-
-  private isCidrOverlap(cidr1: string, cidr2: string): boolean {
-    try {
-      const range1 = this.getCidrRange(cidr1);
-      const range2 = this.getCidrRange(cidr2);
-      return range1.start <= range2.end && range1.end >= range2.start;
-    } catch {
-      return false;
-    }
-  }
-
-  private containsCidr(parentCidr: string, childCidr: string): boolean {
-    try {
-      const parent = this.getCidrRange(parentCidr);
-      const child = this.getCidrRange(childCidr);
-      return parent.start <= child.start && parent.end >= child.end;
-    } catch {
-      return false;
-    }
   }
 }
