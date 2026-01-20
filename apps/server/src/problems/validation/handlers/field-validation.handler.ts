@@ -72,11 +72,15 @@ export class FieldValidationHandler implements ValidationHandler {
     const vpcNames = vpcConfigs.map((c) => c['name']);
     const duplicatedNames = this.getDuplicatedValues(vpcNames);
     if (duplicatedNames.length > 0) {
-      feedbacks.push({
-        field: 'vpc',
-        code: VPCServiceFeedbackType.VPC_NAME_DUPLICATED,
-        message: `중복된 VPC Name이 존재합니다. ${duplicatedNames.join(', ')}`,
-      });
+      for (const name of duplicatedNames) {
+        feedbacks.push({
+          serviceType: 'vpc',
+          service: name,
+          field: 'name',
+          code: VPCServiceFeedbackType.VPC_NAME_DUPLICATED,
+          message: `중복된 VPC Name이 존재합니다. ${name}`,
+        });
+      }
     }
 
     // 2. CIDR 검사 (형식 및 크기)
@@ -86,7 +90,9 @@ export class FieldValidationHandler implements ValidationHandler {
 
       if (!this.validateCIDRBlock(cidr)) {
         feedbacks.push({
-          field: 'vpc',
+          serviceType: 'vpc',
+          service: name,
+          field: 'cidrBlock',
           code: VPCServiceFeedbackType.CIDR_BLOCK_INVALID,
           message: `VPC ${name}의 CIDR 블록 형식이 올바르지 않습니다. (${cidr})`,
         });
@@ -96,7 +102,9 @@ export class FieldValidationHandler implements ValidationHandler {
       const prefix = parseInt(cidr.split('/')[1], 10);
       if (prefix < 16 || prefix > 28) {
         feedbacks.push({
-          field: 'vpc',
+          serviceType: 'vpc',
+          service: name,
+          field: 'cidrBlock',
           code: VPCServiceFeedbackType.VPC_CIDR_BLOCK_SIZE_INVALID,
           message: `VPC ${name}의 CIDR 블록 크기가 올바르지 않습니다. (${cidr})`,
         });
@@ -111,9 +119,18 @@ export class FieldValidationHandler implements ValidationHandler {
 
         if (isCidrOverlap(cidr1, cidr2)) {
           feedbacks.push({
-            field: 'vpc',
+            serviceType: 'vpc',
+            service: vpcConfigs[i]['name'],
+            field: 'cidrBlock',
             code: VPCServiceFeedbackType.VPC_CIDR_OVERLAP,
             message: `VPC ${vpcConfigs[i]['name']}와 VPC ${vpcConfigs[j]['name']}의 CIDR 블록이 겹칩니다. (${cidr1} , ${cidr2})`,
+          });
+          feedbacks.push({
+            serviceType: 'vpc',
+            service: vpcConfigs[j]['name'],
+            field: 'cidrBlock',
+            code: VPCServiceFeedbackType.VPC_CIDR_OVERLAP,
+            message: `VPC ${vpcConfigs[j]['name']}와 VPC ${vpcConfigs[i]['name']}의 CIDR 블록이 겹칩니다. (${cidr2} , ${cidr1})`,
           });
         }
       }
@@ -132,11 +149,15 @@ export class FieldValidationHandler implements ValidationHandler {
     const subnetNames = subnetConfigs.map((c) => c['name']);
     const duplicatedNames = this.getDuplicatedValues(subnetNames);
     if (duplicatedNames.length > 0) {
-      feedbacks.push({
-        field: 'subnet',
-        code: SubnetServiceFeedbackType.SUBNET_NAME_DUPLICATED,
-        message: `중복된 Subnet Name이 존재합니다. ${duplicatedNames.join(', ')}`,
-      });
+      for (const name of duplicatedNames) {
+        feedbacks.push({
+          serviceType: 'subnet',
+          service: name,
+          field: 'name',
+          code: SubnetServiceFeedbackType.SUBNET_NAME_DUPLICATED,
+          message: `중복된 Subnet Name이 존재합니다.`,
+        });
+      }
     }
 
     const vpcCidrMap = new Map<string, string>();
@@ -158,16 +179,20 @@ export class FieldValidationHandler implements ValidationHandler {
 
       if (!vpcCidr) {
         feedbacks.push({
-          field: 'subnet',
+          serviceType: 'subnet',
+          service: name,
+          field: 'vpcId',
           code: SubnetServiceFeedbackType.NO_VPC_EXIST,
-          message: `Subnet ${name}이(가) 존재하지 않는 VPC ${vpcName}을(를) 참조하고 있습니다.`,
+          message: `Subnet ${name}이 존재하지 않는 VPC ${vpcName}를 참조하고 있습니다.`,
         });
         continue;
       }
 
       if (!this.validateCIDRBlock(cidr)) {
         feedbacks.push({
-          field: 'subnet',
+          serviceType: 'subnet',
+          service: name,
+          field: 'cidrBlock',
           code: SubnetServiceFeedbackType.CIDR_BLOCK_INVALID,
           message: `Subnet ${name}의 CIDR 블록 형식이 올바르지 않습니다. (${cidr})`,
         });
@@ -175,7 +200,9 @@ export class FieldValidationHandler implements ValidationHandler {
 
       if (!containsCidr(vpcCidr, cidr)) {
         feedbacks.push({
-          field: 'subnet',
+          serviceType: 'subnet',
+          service: name,
+          field: 'cidrBlock',
           code: SubnetServiceFeedbackType.SUBNET_CIDR_OUT_OF_VPC_CIDR,
           message: `Subnet ${name}의 CIDR 블록이 VPC ${vpcName}의 CIDR 블록 범위를 벗어났습니다. (${cidr} not in ${vpcCidr})`,
         });
@@ -192,9 +219,18 @@ export class FieldValidationHandler implements ValidationHandler {
 
           if (isCidrOverlap(cidr1, cidr2)) {
             feedbacks.push({
-              field: 'subnet',
+              serviceType: 'subnet',
+              service: subnets[i]['name'],
+              field: 'cidrBlock',
               code: SubnetServiceFeedbackType.SUBNET_CIDR_OVERLAP,
               message: `VPC ${vpcName} 내 Subnet ${subnets[i]['name']}와 Subnet ${subnets[j]['name']}의 CIDR 블록이 겹칩니다. (${cidr1}, ${cidr2})`,
+            });
+            feedbacks.push({
+              serviceType: 'subnet',
+              service: subnets[j]['name'],
+              field: 'cidrBlock',
+              code: SubnetServiceFeedbackType.SUBNET_CIDR_OVERLAP,
+              message: `VPC ${vpcName} 내 Subnet ${subnets[j]['name']}와 Subnet ${subnets[i]['name']}의 CIDR 블록이 겹칩니다. (${cidr2}, ${cidr1})`,
             });
           }
         }
@@ -215,11 +251,15 @@ export class FieldValidationHandler implements ValidationHandler {
     const ec2Names = ec2Configs.map((c) => c['name']);
     const duplicatedNames = this.getDuplicatedValues(ec2Names);
     if (duplicatedNames.length > 0) {
-      feedbacks.push({
-        field: 'ec2',
-        code: EC2ServiceFeedbackType.EC2_NAME_DUPLICATED,
-        message: `중복된 EC2 Name이 존재합니다. ${duplicatedNames.join(', ')}`,
-      });
+      for (const name of duplicatedNames) {
+        feedbacks.push({
+          serviceType: 'ec2',
+          service: name,
+          field: 'name',
+          code: EC2ServiceFeedbackType.EC2_NAME_DUPLICATED,
+          message: `중복된 EC2 Name이 존재합니다.`,
+        });
+      }
     }
 
     const vpcNameSet = new Set(vpcConfigs.map((c) => c['name']));
@@ -235,7 +275,9 @@ export class FieldValidationHandler implements ValidationHandler {
       // 2. VPC 존재 여부
       if (!vpcNameSet.has(vpcName)) {
         feedbacks.push({
-          field: 'ec2',
+          serviceType: 'ec2',
+          service: name,
+          field: 'vpcId',
           code: EC2ServiceFeedbackType.NO_VPC_EXIST,
           message: `EC2 ${name}가 존재하지 않는 VPC ${vpcName}를 참조하고 있습니다.`,
         });
@@ -244,7 +286,9 @@ export class FieldValidationHandler implements ValidationHandler {
       // 3. Subnet 존재 여부
       if (!subnetNameSet.has(subnetName)) {
         feedbacks.push({
-          field: 'ec2',
+          serviceType: 'ec2',
+          service: name,
+          field: 'subnetId',
           code: EC2ServiceFeedbackType.NO_SUBNET_EXIST,
           message: `EC2 ${name}가 존재하지 않는 Subnet ${subnetName}를 참조하고 있습니다.`,
         });
@@ -257,7 +301,9 @@ export class FieldValidationHandler implements ValidationHandler {
         // sgVpc가 존재하고 현재 EC2의 vpcName과 다르면 에러
         if (sgVpc && sgVpc !== vpcName) {
           feedbacks.push({
-            field: 'ec2',
+            serviceType: 'ec2',
+            service: name,
+            field: 'securityGroups',
             code: EC2ServiceFeedbackType.CANT_REF_SG_IN_OTHER_VPC,
             message: `EC2 ${name}가 다른 VPC의 Security Group ${sgName}를 참조하고 있습니다.`,
           });
@@ -274,12 +320,16 @@ export class FieldValidationHandler implements ValidationHandler {
     // 1. 이름 중복 검사
     const bucketNames = s3Configs.map((c) => c['name']);
     const duplicatedNames = this.getDuplicatedValues(bucketNames);
-    if (duplicatedNames.length > 0) {
-      feedbacks.push({
-        field: 's3',
-        code: S3ServiceFeedbackType.BUCKET_NAME_DUPLICATED,
-        message: `중복된 S3 버킷 이름이 존재합니다. ${duplicatedNames.join(', ')}`,
-      });
+    for (const name of duplicatedNames) {
+      if (duplicatedNames.length > 0) {
+        feedbacks.push({
+          serviceType: 's3',
+          service: name,
+          field: 'name',
+          code: S3ServiceFeedbackType.BUCKET_NAME_DUPLICATED,
+          message: `중복된 S3 버킷 이름이 존재합니다.`,
+        });
+      }
     }
 
     // 2. 이름 형식 검사
@@ -291,7 +341,9 @@ export class FieldValidationHandler implements ValidationHandler {
         !this.BUCKET_NAME_REGEX.test(name)
       ) {
         feedbacks.push({
-          field: 's3',
+          serviceType: 's3',
+          service: name,
+          field: 'name',
           code: S3ServiceFeedbackType.BUCKET_NAME_INVALID,
           message: `S3 버킷 이름이 올바르지 않습니다. (${name})`,
         });
@@ -315,7 +367,9 @@ export class FieldValidationHandler implements ValidationHandler {
       // 1. 이름 길이 검사
       if (name.length < 1 || name.length > 255) {
         feedbacks.push({
-          field: 'routeTable',
+          serviceType: 'routeTable',
+          service: name,
+          field: 'name',
           code: RouteTableServiceFeedbackType.ROUTE_TABLE_NAME_INVALID,
           message: `라우트 테이블 ${name}의 이름 길이가 올바르지 않습니다.`,
         });
@@ -328,6 +382,8 @@ export class FieldValidationHandler implements ValidationHandler {
         // 2. CIDR 형식 검사
         if (!this.validateCIDRBlock(cidr)) {
           feedbacks.push({
+            serviceType: 'routeTable',
+            service: name,
             field: 'routeTable',
             code: RouteTableServiceFeedbackType.ROUTE_CIDR_INVALID,
             message: `라우트 테이블 ${name}의 라우트 대상 CIDR 블록 형식이 올바르지 않습니다. (${cidr})`,
@@ -337,6 +393,8 @@ export class FieldValidationHandler implements ValidationHandler {
         // 3. 게이트웨이 존재 여부 검사
         if (targetGateway && !igwIdSet.has(targetGateway)) {
           feedbacks.push({
+            serviceType: 'routeTable',
+            service: name,
             field: 'routeTable',
             code: RouteTableServiceFeedbackType.TARGET_RESOURCE_NOT_EXIST,
             message: `라우트 테이블 ${name}의 라우트가 존재하지 않는 게이트웨이 ${targetGateway}를 참조하고 있습니다.`,

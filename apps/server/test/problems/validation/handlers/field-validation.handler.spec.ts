@@ -31,7 +31,9 @@ describe('FieldValidationHandler', () => {
       expect(feedbacks).toHaveLength(1);
       expect(feedbacks).toEqual([
         {
-          field: 'vpc',
+          serviceType: 'vpc',
+          service: 'vpc-1',
+          field: 'name',
           code: VPCServiceFeedbackType.VPC_NAME_DUPLICATED,
           message: '중복된 VPC Name이 존재합니다. vpc-1',
         },
@@ -46,7 +48,9 @@ describe('FieldValidationHandler', () => {
       expect(feedbacks).toHaveLength(1);
       expect(feedbacks).toEqual([
         {
-          field: 'vpc',
+          serviceType: 'vpc',
+          service: 'vpc-1',
+          field: 'cidrBlock',
           code: VPCServiceFeedbackType.CIDR_BLOCK_INVALID,
           message:
             'VPC vpc-1의 CIDR 블록 형식이 올바르지 않습니다. (invalid-cidr)',
@@ -60,13 +64,23 @@ describe('FieldValidationHandler', () => {
         { id: '2', name: 'vpc-2', cidrBlock: '10.0.0.0/16' },
       ];
       const feedbacks: FeedbackDto[] = handler['validateVPCField'](vpcConfigs);
-      expect(feedbacks).toHaveLength(1);
+      expect(feedbacks).toHaveLength(2);
       expect(feedbacks).toEqual([
         {
-          field: 'vpc',
+          serviceType: 'vpc',
+          service: 'vpc-1',
+          field: 'cidrBlock',
           code: VPCServiceFeedbackType.VPC_CIDR_OVERLAP,
           message:
             'VPC vpc-1와 VPC vpc-2의 CIDR 블록이 겹칩니다. (10.0.0.0/16 , 10.0.0.0/16)',
+        },
+        {
+          serviceType: 'vpc',
+          service: 'vpc-2',
+          field: 'cidrBlock',
+          code: VPCServiceFeedbackType.VPC_CIDR_OVERLAP,
+          message:
+            'VPC vpc-2와 VPC vpc-1의 CIDR 블록이 겹칩니다. (10.0.0.0/16 , 10.0.0.0/16)',
         },
       ]);
     });
@@ -77,25 +91,39 @@ describe('FieldValidationHandler', () => {
         { id: '2', name: 'vpc-2', cidrBlock: '10.0.0.0/29' },
       ];
       const feedbacks: FeedbackDto[] = handler['validateVPCField'](vpcConfigs);
-      expect(feedbacks).toHaveLength(3);
+      expect(feedbacks).toHaveLength(4);
       expect(feedbacks).toEqual([
         {
-          field: 'vpc',
+          serviceType: 'vpc',
+          service: 'vpc-1',
+          field: 'cidrBlock',
           code: VPCServiceFeedbackType.VPC_CIDR_BLOCK_SIZE_INVALID,
           message:
             'VPC vpc-1의 CIDR 블록 크기가 올바르지 않습니다. (10.0.0.0/15)',
         },
         {
-          field: 'vpc',
+          serviceType: 'vpc',
+          service: 'vpc-2',
+          field: 'cidrBlock',
           code: VPCServiceFeedbackType.VPC_CIDR_BLOCK_SIZE_INVALID,
           message:
             'VPC vpc-2의 CIDR 블록 크기가 올바르지 않습니다. (10.0.0.0/29)',
         },
         {
-          field: 'vpc',
+          serviceType: 'vpc',
+          service: 'vpc-1',
+          field: 'cidrBlock',
           code: VPCServiceFeedbackType.VPC_CIDR_OVERLAP,
           message:
             'VPC vpc-1와 VPC vpc-2의 CIDR 블록이 겹칩니다. (10.0.0.0/15 , 10.0.0.0/29)',
+        },
+        {
+          serviceType: 'vpc',
+          service: 'vpc-2',
+          field: 'cidrBlock',
+          code: VPCServiceFeedbackType.VPC_CIDR_OVERLAP,
+          message:
+            'VPC vpc-2와 VPC vpc-1의 CIDR 블록이 겹칩니다. (10.0.0.0/29 , 10.0.0.0/15)',
         },
       ]);
     });
@@ -137,9 +165,11 @@ describe('FieldValidationHandler', () => {
       expect(feedbacks).toHaveLength(1);
       expect(feedbacks).toEqual([
         {
-          field: 'subnet',
+          serviceType: 'subnet',
+          service: 'subnet-1',
+          field: 'name',
           code: SubnetServiceFeedbackType.SUBNET_NAME_DUPLICATED,
-          message: '중복된 Subnet Name이 존재합니다. subnet-1',
+          message: '중복된 Subnet Name이 존재합니다.',
         },
       ]);
     });
@@ -163,13 +193,17 @@ describe('FieldValidationHandler', () => {
       expect(feedbacks).toHaveLength(2);
       expect(feedbacks).toEqual([
         {
-          field: 'subnet',
+          serviceType: 'subnet',
+          service: 'subnet-1',
+          field: 'cidrBlock',
           code: SubnetServiceFeedbackType.CIDR_BLOCK_INVALID,
           message:
             'Subnet subnet-1의 CIDR 블록 형식이 올바르지 않습니다. (invalid-cidr)',
         },
         {
-          field: 'subnet',
+          serviceType: 'subnet',
+          service: 'subnet-1',
+          field: 'cidrBlock',
           code: SubnetServiceFeedbackType.SUBNET_CIDR_OUT_OF_VPC_CIDR,
           message:
             'Subnet subnet-1의 CIDR 블록이 VPC vpc-1의 CIDR 블록 범위를 벗어났습니다. (invalid-cidr not in 10.0.0.0/16)',
@@ -196,7 +230,9 @@ describe('FieldValidationHandler', () => {
       expect(feedbacks).toHaveLength(1);
       expect(feedbacks).toEqual([
         {
-          field: 'subnet',
+          serviceType: 'subnet',
+          service: 'subnet-1',
+          field: 'cidrBlock',
           code: SubnetServiceFeedbackType.SUBNET_CIDR_OUT_OF_VPC_CIDR,
           message:
             'Subnet subnet-1의 CIDR 블록이 VPC vpc-1의 CIDR 블록 범위를 벗어났습니다. (10.1.0.0/24 not in 10.0.0.0/16)',
@@ -228,13 +264,23 @@ describe('FieldValidationHandler', () => {
         subnetConfigs,
         vpcConfigs,
       );
-      expect(feedbacks).toHaveLength(1);
+      expect(feedbacks).toHaveLength(2);
       expect(feedbacks).toEqual([
         {
-          field: 'subnet',
+          serviceType: 'subnet',
+          service: 'subnet-1',
+          field: 'cidrBlock',
           code: SubnetServiceFeedbackType.SUBNET_CIDR_OVERLAP,
           message:
             'VPC vpc-1 내 Subnet subnet-1와 Subnet subnet-2의 CIDR 블록이 겹칩니다. (10.0.0.0/24, 10.0.0.128/25)',
+        },
+        {
+          serviceType: 'subnet',
+          service: 'subnet-2',
+          field: 'cidrBlock',
+          code: SubnetServiceFeedbackType.SUBNET_CIDR_OVERLAP,
+          message:
+            'VPC vpc-1 내 Subnet subnet-2와 Subnet subnet-1의 CIDR 블록이 겹칩니다. (10.0.0.128/25, 10.0.0.0/24)',
         },
       ]);
     });
@@ -316,9 +362,11 @@ describe('FieldValidationHandler', () => {
       expect(feedbacks).toHaveLength(1);
       expect(feedbacks).toEqual([
         {
-          field: 'ec2',
+          serviceType: 'ec2',
+          service: 'ec2-1',
+          field: 'name',
           code: EC2ServiceFeedbackType.EC2_NAME_DUPLICATED,
-          message: '중복된 EC2 Name이 존재합니다. ec2-1',
+          message: '중복된 EC2 Name이 존재합니다.',
         },
       ]);
     });
@@ -361,13 +409,17 @@ describe('FieldValidationHandler', () => {
       expect(feedbacks).toHaveLength(2);
       expect(feedbacks).toEqual([
         {
-          field: 'ec2',
+          serviceType: 'ec2',
+          service: 'ec2-1',
+          field: 'vpcId',
           code: EC2ServiceFeedbackType.NO_VPC_EXIST,
           message:
             'EC2 ec2-1가 존재하지 않는 VPC vpc-nonexistent를 참조하고 있습니다.',
         },
         {
-          field: 'ec2',
+          serviceType: 'ec2',
+          service: 'ec2-1',
+          field: 'securityGroups',
           code: EC2ServiceFeedbackType.CANT_REF_SG_IN_OTHER_VPC,
           message:
             'EC2 ec2-1가 다른 VPC의 Security Group sg-1를 참조하고 있습니다.',
@@ -413,7 +465,9 @@ describe('FieldValidationHandler', () => {
       expect(feedbacks).toHaveLength(1);
       expect(feedbacks).toEqual([
         {
-          field: 'ec2',
+          serviceType: 'ec2',
+          service: 'ec2-1',
+          field: 'subnetId',
           code: EC2ServiceFeedbackType.NO_SUBNET_EXIST,
           message:
             'EC2 ec2-1가 존재하지 않는 Subnet subnet-nonexistent를 참조하고 있습니다.',
@@ -459,12 +513,16 @@ describe('FieldValidationHandler', () => {
       expect(feedbacks).toHaveLength(2);
       expect(feedbacks).toEqual([
         {
-          field: 'ec2',
+          serviceType: 'ec2',
+          service: 'ec2-1',
+          field: 'vpcId',
           code: EC2ServiceFeedbackType.NO_VPC_EXIST,
           message: 'EC2 ec2-1가 존재하지 않는 VPC vpc-2를 참조하고 있습니다.',
         },
         {
-          field: 'ec2',
+          serviceType: 'ec2',
+          service: 'ec2-1',
+          field: 'securityGroups',
           code: EC2ServiceFeedbackType.CANT_REF_SG_IN_OTHER_VPC,
           message:
             'EC2 ec2-1가 다른 VPC의 Security Group sg-1를 참조하고 있습니다.',
@@ -482,9 +540,11 @@ describe('FieldValidationHandler', () => {
       expect(feedbacks).toHaveLength(1);
       expect(feedbacks).toEqual([
         {
-          field: 's3',
+          serviceType: 's3',
+          service: 'bucket-1',
+          field: 'name',
           code: S3ServiceFeedbackType.BUCKET_NAME_DUPLICATED,
-          message: '중복된 S3 버킷 이름이 존재합니다. bucket-1',
+          message: '중복된 S3 버킷 이름이 존재합니다.',
         },
       ]);
     });
@@ -506,23 +566,32 @@ describe('FieldValidationHandler', () => {
       expect(feedbacks).toHaveLength(4);
       expect(feedbacks).toEqual([
         {
-          field: 's3',
+          serviceType: 's3',
+          service: 'Invalid_Bucket_Name',
+          field: 'name',
           code: S3ServiceFeedbackType.BUCKET_NAME_INVALID,
           message: 'S3 버킷 이름이 올바르지 않습니다. (Invalid_Bucket_Name)',
         },
         {
-          field: 's3',
+          serviceType: 's3',
+          service: 'another.invalid.name!',
+          field: 'name',
           code: S3ServiceFeedbackType.BUCKET_NAME_INVALID,
           message: 'S3 버킷 이름이 올바르지 않습니다. (another.invalid.name!)',
         },
         {
-          field: 's3',
+          serviceType: 's3',
+          service:
+            'another-invalid-naaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaame',
+          field: 'name',
           code: S3ServiceFeedbackType.BUCKET_NAME_INVALID,
           message:
             'S3 버킷 이름이 올바르지 않습니다. (another-invalid-naaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaame)',
         },
         {
-          field: 's3',
+          serviceType: 's3',
+          service: '-invalid-start-char',
+          field: 'name',
           code: S3ServiceFeedbackType.BUCKET_NAME_INVALID,
           message: 'S3 버킷 이름이 올바르지 않습니다. (-invalid-start-char)',
         },
@@ -564,7 +633,9 @@ describe('FieldValidationHandler', () => {
       expect(feedbacks).toHaveLength(1);
       expect(feedbacks).toEqual([
         {
-          field: 'routeTable',
+          serviceType: 'routeTable',
+          service: rtb2name,
+          field: 'name',
           code: RouteTableServiceFeedbackType.ROUTE_TABLE_NAME_INVALID,
           message: `라우트 테이블 ${rtb2name}의 이름 길이가 올바르지 않습니다.`,
         },
@@ -598,6 +669,8 @@ describe('FieldValidationHandler', () => {
       expect(feedbacks).toHaveLength(1);
       expect(feedbacks).toEqual([
         {
+          serviceType: 'routeTable',
+          service: 'rtb-1',
           field: 'routeTable',
           code: RouteTableServiceFeedbackType.TARGET_RESOURCE_NOT_EXIST,
           message: `라우트 테이블 rtb-1의 라우트가 존재하지 않는 게이트웨이 igw-2를 참조하고 있습니다.`,
