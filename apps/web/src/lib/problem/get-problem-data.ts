@@ -1,28 +1,36 @@
-import { IServiceMapper } from '@/aws-services/utils/serviceMapper'
+import { IServiceMapper } from '@/components/aws-services/utils/serviceMapper'
 
-export async function getProblemData(id: string): Promise<IServiceMapper> {
-  // TODO: 실제 API 호출로 변경
-  // const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
+interface RequiredField {
+  service: string
+  service_task: string
+  service_sections: string[]
+  // fixed_options?: Record<string, string>
+}
 
-  // if (!baseUrl) {
-  //   throw new Error('NEXT_PUBLIC_BASE_URL이 설정되지 않았습니다.')
-  // }
+export async function getProblemData(id: string): Promise<IServiceMapper[]> {
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:4000'
 
-  // const res = await fetch(`${baseUrl}/problems/${id}`, {
-  //   cache: 'no-store',
-  // })
-
-  // if (!res.ok) {
-  //   throw new Error('문제 데이터 조회 실패')
-  // }
-  //
-  // return res.json()
-
-  const result: IServiceMapper = {
-    serviceName: 'S3',
-    serviceTask: 'bucket-create',
-    inputSections: ['general', 'ownership', 'blockPublicAccess'],
+  if (!baseUrl) {
+    throw new Error('NEXT_PUBLIC_BASE_URL이 설정되지 않았습니다.')
   }
 
-  return result
+  const res = await fetch(`${baseUrl}/api/problems/${id}`, {
+    cache: 'no-store',
+  })
+
+  if (!res.ok) {
+    throw new Error('문제 상세 조회 실패')
+  }
+
+  const response = await res.json()
+
+  const problemData: IServiceMapper[] = response.required_fields.map(
+    (field: RequiredField) => ({
+      serviceName: field.service,
+      serviceTask: field.service_task,
+      inputSections: field.service_sections,
+    }),
+  )
+
+  return problemData
 }
