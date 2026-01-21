@@ -1,28 +1,35 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { UnitValidationHandler } from '../../../../src/problems/validation/handlers/unit-validation.handler';
-import { ProblemType } from '../../../../src/problems/types/problem-type.enum';
-import { UnitProblemFeedbackType } from '../../../../src/problems/types/unit-problem-feedback-types';
-import { VPCServiceFeedbackType } from '../../../../src/problems/types/field-validation-feedback-types';
-import { FieldValidationHandler } from '../../../../src/problems/validation/handlers/field-validation.handler';
+import { UnitValidationHandler } from '@/problems/validation/handlers/unit-validation.handler';
+import { ProblemType } from '@/problems/types/problem-type.enum';
+import { UnitProblemFeedbackType } from '@/problems/types/unit-problem-feedback-types';
+import { VPCServiceFeedbackType } from '@/problems/types/field-validation-feedback-types';
+import { FieldValidationHandler } from '@/problems/validation/handlers/field-validation.handler';
+import { S3ScenarioHandler } from '@/problems/validation/handlers/unit-service-specific-validation/unit-s3-scenario.handler';
+import { Ec2ScenarioHandler } from '@/problems/validation/handlers/unit-service-specific-validation/unit-ec2-scenario.handler';
+import { SgScenarioHandler } from '@/problems/validation/handlers/unit-service-specific-validation/unit-sg-scenario.handler';
+import { NetworkScenarioHandler } from '@/problems/validation/handlers/unit-service-specific-validation/unit-network-scenario.handler';
 
 describe('UnitValidationHandler', () => {
   let handler: UnitValidationHandler;
-  let fieldHandler: FieldValidationHandler;
-
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [UnitValidationHandler, FieldValidationHandler],
+      providers: [
+        UnitValidationHandler,
+        FieldValidationHandler,
+        S3ScenarioHandler,
+        Ec2ScenarioHandler,
+        SgScenarioHandler,
+        NetworkScenarioHandler,
+      ],
     }).compile();
 
     handler = module.get<UnitValidationHandler>(UnitValidationHandler);
-    fieldHandler = module.get<FieldValidationHandler>(FieldValidationHandler);
   });
 
   afterEach(() => {});
 
   it('정의되어야 한다.', () => {
     expect(handler).toBeDefined();
-    expect(fieldHandler).toBeDefined();
   });
 
   describe('isDeepEqual 메서드', () => {
@@ -154,16 +161,36 @@ describe('UnitValidationHandler', () => {
       const submitRequestDto = {
         submitConfig: {
           vpc: [
-            { name: 'vpc-1', id: '1', cidrBlock: '10.0.0.0/16' },
-            { name: 'vpc-2', id: '2', cidrBlock: '10.1.0.0/16' },
+            {
+              name: 'vpc-1',
+              id: '1',
+              cidrBlock: '10.0.0.0/16',
+              enableDnsHostnames: true,
+            },
+            {
+              name: 'vpc-2',
+              id: '2',
+              cidrBlock: '10.1.0.0/16',
+              enableDnsHostnames: true,
+            },
           ],
         },
       };
       const problemData = {
         solution: {
           vpc: [
-            { name: 'vpc-1', id: '1', cidrBlock: '10.0.0.0/16' },
-            { name: 'vpc-2', id: '2', cidrBlock: '10.1.0.0/16' },
+            {
+              name: 'vpc-1',
+              id: '1',
+              cidrBlock: '10.0.0.0/16',
+              enableDnsHostnames: true,
+            },
+            {
+              name: 'vpc-2',
+              id: '2',
+              cidrBlock: '10.1.0.0/16',
+              enableDnsHostnames: true,
+            },
           ],
         },
         problemType: ProblemType.UNIT,

@@ -3,24 +3,32 @@ import { ProblemValidationHandler, ProblemData } from './validation.handler';
 import { FieldValidationHandler } from './field-validation.handler';
 import { SubmitResponseDto } from 'src/problems/dto/submit-response.dto';
 import { SubmitRequestDto } from 'src/problems/dto/submit-request.dto';
-import { FeedbackDto } from '../../dto/submit-response.dto';
-import { ProblemType } from '../../types/problem-type.enum';
+import { FeedbackDto } from '@/problems/dto/submit-response.dto';
+import { ProblemType } from '@/problems/types/problem-type.enum';
 import {
   ServiceConfigTypes,
   SubnetConfig,
   VPCConfig,
-} from 'src/problems/types/service-config-type.enum';
-import { UnitProblemValidateResult } from '../../types/unit-problem-validate-results';
+} from '@/problems/types/service-config-type.enum';
+import { UnitProblemValidateResult } from '@/problems/types/unit-problem-validate-results';
 import {
   UnitProblemFeedbackType,
   feedbackMessages,
-} from '../../types/unit-problem-feedback-types';
+} from '@/problems/types/unit-problem-feedback-types';
 import { containsCidr } from '../utils/cidr-utils';
+import { Ec2ScenarioHandler } from './unit-service-specific-validation/unit-ec2-scenario.handler';
+import { S3ScenarioHandler } from './unit-service-specific-validation/unit-s3-scenario.handler';
+import { SgScenarioHandler } from './unit-service-specific-validation/unit-sg-scenario.handler';
+import { NetworkScenarioHandler } from './unit-service-specific-validation/unit-network-scenario.handler';
 
 @Injectable()
 export class UnitValidationHandler implements ProblemValidationHandler {
   constructor(
     private readonly fieldValidationHandler: FieldValidationHandler,
+    private readonly ec2ScenarioHandler: Ec2ScenarioHandler,
+    private readonly s3ScenarioHandler: S3ScenarioHandler,
+    private readonly sgScenarioHandler: SgScenarioHandler,
+    private readonly networkScenarioHandler: NetworkScenarioHandler,
   ) {}
 
   support(problemType: ProblemType): boolean {
@@ -42,6 +50,7 @@ export class UnitValidationHandler implements ProblemValidationHandler {
     }
 
     const solutionConfig = problemData.solution;
+    const requirements = problemData.requirements || {};
     const mismatchedConfigs: Partial<UnitProblemValidateResult> = {};
 
     // 2. 서비스별 설정 비교 (Diffing)
@@ -69,6 +78,26 @@ export class UnitValidationHandler implements ProblemValidationHandler {
     const fieldFeedbacks =
       this.fieldValidationHandler.validate(submitRequestDto);
     feedbacks.push(...fieldFeedbacks);
+
+    // 5. 문제별 시나리오 검증 (Scenario Validation)
+    feedbacks.push(
+      ...this.ec2ScenarioHandler.validate(submitConfig, requirements.ec2),
+    );
+    feedbacks.push(
+      ...this.s3ScenarioHandler.validate(submitConfig, requirements.s3),
+    );
+    feedbacks.push(
+      ...this.sgScenarioHandler.validate(
+        submitConfig,
+        requirements.securityGroup,
+      ),
+    );
+    feedbacks.push(
+      ...this.networkScenarioHandler.validate(
+        submitConfig,
+        requirements.network,
+      ),
+    );
 
     return {
       result: Object.keys(mismatchedConfigs).length === 0 ? 'PASS' : 'FAIL',
