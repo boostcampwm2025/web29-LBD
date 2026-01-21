@@ -1,5 +1,6 @@
-import { getProblemData } from './get-problem-data'
 import ProblemDetailClient from './problem-detail-client'
+
+import { getProblemData } from '@/lib/problem/get-problem-data'
 
 interface ProblemDetailPageProps {
   params: Promise<{
