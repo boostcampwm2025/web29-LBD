@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { DataSource } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
 
@@ -13,4 +14,5 @@ export default new DataSource({
   migrations: ['dist/migrations/*.js'],
   synchronize: false,
   logging: true,
+  charset: 'utf8mb4',
 });

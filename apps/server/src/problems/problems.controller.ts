@@ -5,9 +5,12 @@ import {
   Body,
   HttpCode,
   ParseIntPipe,
+  Get,
+  Query,
 } from '@nestjs/common';
 import { SubmitRequestDto } from './dto/submit-request.dto';
 import { ProblemsService } from './problems.service';
+import { ProblemType } from './types/problem-type.enum';
 
 @Controller('problems')
 export class ProblemsController {
@@ -20,5 +23,20 @@ export class ProblemsController {
     @Body() body: SubmitRequestDto,
   ) {
     return this.problemsService.submit(problemId, body);
+  }
+
+  @Get()
+  @HttpCode(200)
+  getAllProblemsByType(
+    @Query('type')
+    type: ProblemType,
+  ) {
+    return this.problemsService.findAllProblemsByType(type);
+  }
+
+  @Get(':problemId')
+  @HttpCode(200)
+  getProblemDetail(@Param('problemId', ParseIntPipe) problemId: number) {
+    return this.problemsService.findByProblemId(problemId);
   }
 }

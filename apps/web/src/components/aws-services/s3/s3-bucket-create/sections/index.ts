@@ -1,0 +1,7 @@
+export { GeneralConfiguration } from './general.section'
+export { BucketVersioning } from './bucket-versioning.section'
+export { ObjectOwnership } from './ownership.section'
+export { BlockPublicAccess } from './block-public-access.section'
+export { Tags } from './tags.section'
+export { DefaultEncryption } from './default-encryption.section'
+export { AdvancedSettings } from './advanced-settings.section'

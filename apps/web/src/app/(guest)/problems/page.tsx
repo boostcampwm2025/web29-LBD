@@ -1,17 +1,25 @@
-import { ProblemTypeTab } from './components/problem-type-tab'
+import { ProblemListSection } from './components/problem-list.section'
+import { ProblemTabSection } from './components/problem-tab.section'
 
-export default function ProblemsPage() {
+import { getProblemListByType } from '@/lib/problems'
+import { ProblemType } from '@/types/problem.type'
+
+export default async function ProblemsPage({
+  searchParams,
+}: {
+  searchParams: { type?: string }
+}) {
+  const resolvedSearchParams = await searchParams
+  const currentType = resolvedSearchParams.type as ProblemType | undefined
+
+  if (!currentType) throw new Error('문제 유형 정보가 없습니다.')
+
+  const problems = await getProblemListByType(currentType)
+
   return (
     <div className="w-full py-2">
-      <div className="flex flex-col gap-4 py-8">
-        <h2 className="text-3xl font-bold">문제 목록</h2>
-        <p className="text-foreground font-medium">
-          기초 개념부터 실전 시나리오까지, 학습 단계에 맞춰 문제를 선택할 수
-          있습니다.
-        </p>
-      </div>
-
-      <ProblemTypeTab />
+      <ProblemTabSection />
+      <ProblemListSection currentType={currentType} problems={problems} />
     </div>
   )
 }

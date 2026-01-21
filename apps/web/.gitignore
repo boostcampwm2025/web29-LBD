@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# AWS Asset Package (원본 - 선별된 아이콘만 커밋)
+public/Asset-Package/

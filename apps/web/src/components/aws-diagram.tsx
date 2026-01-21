@@ -1,80 +1,56 @@
 'use client'
 
+import { awsNodeTypes } from './diagram'
+import type {
+  AwsGroupNodeData,
+  AwsResourceNodeData,
+  AwsServiceNodeData,
+} from './diagram'
+
 import {
   Background,
-  Edge,
-  Handle,
-  Node,
-  Position,
+  type Edge,
+  type Node,
   ReactFlow,
   useEdgesState,
   useNodesState,
 } from '@xyflow/react'
 import '@xyflow/react/dist/style.css'
 
-const VpcNode = ({ data }: { data: { label: string } }) => {
-  return (
-    <div
-      style={{ width: '400px', height: '200px' }}
-      className="rounded-lg border-2 border-dashed border-blue-500 bg-blue-50/50 p-4"
-    >
-      <Handle type="target" position={Position.Top} />
-      <div className="text-sm font-semibold text-blue-700">{data.label}</div>
-      <Handle type="source" position={Position.Bottom} />
-    </div>
-  )
-}
+type AwsNode = Node<AwsServiceNodeData | AwsResourceNodeData | AwsGroupNodeData>
 
-const EC2Node = ({ data }: { data: { label: string } }) => {
-  return (
-    <div className="flex items-center gap-3 rounded-lg border-2 border-orange-500 bg-white px-4 py-3 shadow-lg">
-      <Handle type="target" position={Position.Top} />
-      <div className="h-10 w-10 rounded bg-orange-500"></div>
-      <div className="text-sm font-semibold text-gray-800">{data.label}</div>
-      <Handle type="source" position={Position.Bottom} />
-    </div>
-  )
-}
-
-const InternetNode = ({ data }: { data: { label: string } }) => {
-  return (
-    <div className="flex items-center gap-3 rounded-lg border-2 border-green-500 bg-white px-4 py-3 shadow-lg">
-      <Handle type="target" position={Position.Top} />
-      <div className="h-10 w-10 rounded-full bg-green-500"></div>
-      <div className="text-sm font-semibold text-gray-800">{data.label}</div>
-      <Handle type="source" position={Position.Bottom} />
-    </div>
-  )
-}
-
-const nodeTypes = {
-  vpc: VpcNode,
-  ec2: EC2Node,
-  internet: InternetNode,
-}
-
-const initialNodes: Node[] = [
+const initialNodes: AwsNode[] = [
   {
     id: 'vpc',
-    type: 'vpc',
+    type: 'awsGroup',
     position: { x: 0, y: 100 },
-    data: { label: 'VPC (10.0.0.0/16)' },
-    style: {
+    data: {
+      label: 'VPC (10.0.0.0/16)',
+      icon: 'vpcGroup',
+      borderColor: 'blue',
+      bgColor: 'blue',
       width: 400,
       height: 200,
     },
   },
   {
-    id: 'n1',
-    type: 'internet',
-    position: { x: 120, y: 0 },
-    data: { label: 'Internet' },
+    id: 'internet',
+    type: 'awsResource',
+    position: { x: 140, y: 0 },
+    data: {
+      label: 'Internet',
+      icon: 'internet',
+    },
   },
   {
-    id: 'n2',
-    type: 'ec2',
-    position: { x: 120, y: 80 },
-    data: { label: 'EC2 Instance' },
+    id: 'ec2',
+    type: 'awsService',
+    position: { x: 120, y: 70 },
+    data: {
+      label: 'EC2 Instance',
+      icon: 'ec2',
+      description: 'Web Server',
+    },
     parentId: 'vpc',
     extent: 'parent' as const,
   },
@@ -82,9 +58,9 @@ const initialNodes: Node[] = [
 
 const initialEdges: Edge[] = [
   {
-    id: 'n1-n2',
-    source: 'n1',
-    target: 'n2',
+    id: 'internet-ec2',
+    source: 'internet',
+    target: 'ec2',
     type: 'default',
     animated: true,
     style: { stroke: '#10b981', strokeWidth: 3 },
@@ -100,7 +76,7 @@ const initialEdges: Edge[] = [
 ]
 
 export default function AwsDiagram() {
-  const [nodes] = useNodesState<Node>(initialNodes)
+  const [nodes] = useNodesState<AwsNode>(initialNodes)
   const [edges] = useEdgesState<Edge>(initialEdges)
 
   return (
@@ -108,7 +84,7 @@ export default function AwsDiagram() {
       <ReactFlow
         nodes={nodes}
         edges={edges}
-        nodeTypes={nodeTypes}
+        nodeTypes={awsNodeTypes}
         fitView
         fitViewOptions={{ padding: 0.2 }}
         proOptions={{ hideAttribution: true }}
