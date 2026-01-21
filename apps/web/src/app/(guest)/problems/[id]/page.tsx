@@ -4,7 +4,7 @@ import React from 'react'
 import {
   IServiceMapper,
   serviceMapper,
-} from '@/aws-services/utils/serviceMapper'
+} from '@/components/aws-services/utils/serviceMapper'
 
 interface ProblemDetailPageProps {
   params: Promise<{
