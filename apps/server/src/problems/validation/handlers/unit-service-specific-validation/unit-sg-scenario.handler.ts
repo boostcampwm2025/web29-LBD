@@ -63,6 +63,7 @@ export class SgScenarioHandler {
             feedbacks.push({
               serviceType: 'securityGroup',
               service: sgName,
+              field: 'ipPermissions',
               code: SGFeedbackScenarios.SG_INBOUND_PORT_CLOSED,
               message: `보안 그룹 ${sgName}에 필수 포트(${reqPort})에 대한 인바운드 허용 규칙이 없습니다.`,
             });
@@ -91,6 +92,7 @@ export class SgScenarioHandler {
           feedbacks.push({
             serviceType: 'securityGroup',
             service: sgName,
+            field: 'ipPermissions',
             code: SGFeedbackScenarios.SG_SSH_OPEN_TO_WORLD,
             message: `보안 그룹 ${sgName}의 SSH(22) 포트가 모든 IP(0.0.0.0/0)에 개방되어 있습니다. 보안 위험이 있습니다.`,
           });
@@ -123,6 +125,7 @@ export class SgScenarioHandler {
             feedbacks.push({
               serviceType: 'securityGroup',
               service: sgName,
+              field: 'ipPermissions',
               code: SGFeedbackScenarios.SG_WRONG_SOURCE,
               message: `보안 그룹 ${sgName}의 포트 ${port}에 대한 소스 설정이 올바르지 않습니다. (현재: ${matchingRule.cidrIp}, 요구: ${source})`,
             });
@@ -155,6 +158,7 @@ export class SgScenarioHandler {
           feedbacks.push({
             serviceType: 'ec2',
             service: ec2Name,
+            field: 'securityGroups',
             code: SGFeedbackScenarios.EC2_WRONG_SG_ATTACHED,
             message: `EC2 인스턴스 ${ec2Name}에 올바른 보안 그룹이 연결되지 않았습니다. 누락된 그룹: ${missingSgs.join(', ')}`,
           });

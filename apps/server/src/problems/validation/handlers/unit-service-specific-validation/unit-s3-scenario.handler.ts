@@ -40,6 +40,7 @@ export class S3ScenarioHandler {
           feedbacks.push({
             serviceType: 's3',
             service: bucketName,
+            field: 'serverSideEncryption',
             code: S3FeedbackScenarios.BUCKET_NOT_ENCRYPTED,
             message: `S3 버킷 ${bucketName}에 기본 암호화(SSE) 설정이 되어 있지 않습니다.`,
           });
@@ -53,6 +54,7 @@ export class S3ScenarioHandler {
           feedbacks.push({
             serviceType: 's3',
             service: bucketName,
+            field: 'publicAccessBlockEnabled',
             code: S3FeedbackScenarios.BUCKET_PUBLIC_ACCESS_BLOCK_MISSING,
             message: `S3 버킷 ${bucketName}에 '퍼블릭 액세스 차단' 설정이 누락되었습니다. 보안을 위해 활성화하세요.`,
           });
@@ -65,6 +67,7 @@ export class S3ScenarioHandler {
           feedbacks.push({
             serviceType: 's3',
             service: bucketName,
+            field: 'versioningEnabled',
             code: S3FeedbackScenarios.BUCKET_VERSIONING_DISABLED,
             message: `S3 버킷 ${bucketName}의 버전 관리(Versioning) 기능이 비활성화되어 있습니다.`,
           });

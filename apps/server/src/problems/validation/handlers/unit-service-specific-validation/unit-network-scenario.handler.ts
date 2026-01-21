@@ -103,6 +103,7 @@ export class NetworkScenarioHandler {
           feedbacks.push({
             serviceType: 'routeTable',
             service: rtName,
+            field: 'routes',
             code: NetworkFeedbackScenarios.ROUTES_TO_IGW_MISSING,
             message: `라우트 테이블 ${rtName}에 인터넷 게이트웨이(IGW)로 향하는 경로가 없습니다.`,
           });
@@ -120,6 +121,7 @@ export class NetworkScenarioHandler {
           feedbacks.push({
             serviceType: 'routeTable',
             service: rtName,
+            field: 'routes',
             code: NetworkFeedbackScenarios.NAT_GW_MISSING_IN_ROUTE,
             message: `라우트 테이블 ${rtName}에 NAT 게이트웨이로 향하는 경로가 없습니다.`,
           });
@@ -154,8 +156,9 @@ export class NetworkScenarioHandler {
       if (req.requireRouteTable) {
         if (!associatedRt || associatedRt.name !== req.requireRouteTable) {
           feedbacks.push({
-            serviceType: 'subnet',
-            service: subnetName,
+            serviceType: 'routeTable',
+            service: associatedRt?.name,
+            field: 'associations',
             code: NetworkFeedbackScenarios.SUBNET_RT_ASSOCIATION_MISSING,
             message: `서브넷 ${subnetName}이(가) 올바른 라우트 테이블(${req.requireRouteTable})과 연결되지 않았습니다.`,
           });
@@ -172,8 +175,9 @@ export class NetworkScenarioHandler {
 
         if (hasIgwRoute) {
           feedbacks.push({
-            serviceType: 'subnet',
-            service: subnetName,
+            serviceType: 'routeTable',
+            service: associatedRt?.name,
+            field: 'associations',
             code: NetworkFeedbackScenarios.PRIVATE_SUBNET_HAS_IGW_ROUTE,
             message: `프라이빗 서브넷 ${subnetName}에 인터넷 게이트웨이로 향하는 경로가 설정되어 있습니다. (보안 위배)`,
           });
@@ -214,6 +218,7 @@ export class NetworkScenarioHandler {
           feedbacks.push({
             serviceType: 'natGateway',
             service: natName,
+            field: 'subnetName',
             code: NetworkFeedbackScenarios.NAT_GW_IN_WRONG_SUBNET,
             message: `NAT 게이트웨이 ${natName}가 프라이빗 서브넷(${placedSubnet})에 배치되었습니다. 퍼블릭 서브넷으로 이동하세요.`,
           });
@@ -253,6 +258,7 @@ export class NetworkScenarioHandler {
           feedbacks.push({
             serviceType: 'networkAcl',
             service: naclName,
+            field: 'entries',
             code: NetworkFeedbackScenarios.NACL_DENY_TRAFFIC,
             message: `네트워크 ACL ${naclName}이(가) 모든 트래픽을 허용하지 않습니다. 연결 문제가 발생할 수 있습니다.`,
           });

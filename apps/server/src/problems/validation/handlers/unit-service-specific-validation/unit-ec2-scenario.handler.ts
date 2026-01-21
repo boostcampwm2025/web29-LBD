@@ -39,6 +39,7 @@ export class Ec2ScenarioHandler {
           feedbacks.push({
             serviceType: 'ec2',
             service: ec2Name,
+            field: 'subnetName',
             code: EC2FeedbackScenarios.EC2_IN_WRONG_SUBNET,
             message: `EC2 인스턴스 ${ec2Name}이(가) 잘못된 서브넷(${instance.subnetName})에 배치되었습니다. 요구사항: ${req.expectedSubnet}`,
           });
@@ -52,6 +53,7 @@ export class Ec2ScenarioHandler {
           feedbacks.push({
             serviceType: 'ec2',
             service: ec2Name,
+            field: 'publicIpAddress',
             code: EC2FeedbackScenarios.EC2_PUBLIC_IP_MISSING,
             message: `EC2 인스턴스 ${ec2Name}에 퍼블릭 IP 자동 할당 설정이 누락되었습니다.`,
           });
@@ -64,6 +66,7 @@ export class Ec2ScenarioHandler {
           feedbacks.push({
             serviceType: 'ec2',
             service: ec2Name,
+            field: 'ami',
             code: EC2FeedbackScenarios.EC2_WRONG_AMI,
             message: `EC2 인스턴스 ${ec2Name}의 AMI가 올바르지 않습니다. (현재: ${instance.ami}, 요구: ${req.expectedAmi})`,
           });
@@ -76,6 +79,7 @@ export class Ec2ScenarioHandler {
           feedbacks.push({
             serviceType: 'ec2',
             service: ec2Name,
+            field: 'instanceType',
             code: EC2FeedbackScenarios.EC2_WRONG_INSTANCE_TYPE,
             message: `EC2 인스턴스 ${ec2Name}의 인스턴스 타입이 올바르지 않습니다. (현재: ${instance.instanceType}, 요구: ${req.expectedInstanceType})`,
           });
