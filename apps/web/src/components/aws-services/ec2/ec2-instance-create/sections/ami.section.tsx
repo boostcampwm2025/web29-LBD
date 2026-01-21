@@ -45,7 +45,7 @@ export function Ami({ control }: EC2SectionProps) {
                   />
                   <Label
                     htmlFor={ami.value}
-                    className="bg-card hover:bg-accent peer-data-[state=checked]:border-primary peer-data-[state=checked]:ring-primary flex h-20 cursor-pointer flex-col items-center justify-center rounded-lg border-2 p-4 transition-all peer-data-[state=checked]:ring-2"
+                    className="bg-card hover:bg-accent peer-data-[state=checked]:border-primary peer-data-[state=checked]:ring-primary flex h-20 cursor-pointer flex-col items-center justify-center rounded-lg border-2 p-4 transition-all peer-data-[state=checked]:ring-1"
                   >
                     <span className="text-center text-sm font-medium">
                       {ami.label}
