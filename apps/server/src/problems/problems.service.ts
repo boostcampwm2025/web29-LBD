@@ -27,7 +27,7 @@ export class ProblemsService {
 
   private async findUnitProblems(): Promise<UnitProblemItemResponseDto[]> {
     const units = await this.problemRepository.find({
-      where: { problem_type: ProblemType.UNIT },
+      where: { problemType: ProblemType.UNIT },
       relations: ['tags'],
     });
 
@@ -51,8 +51,8 @@ export class ProblemsService {
       title: cookbook.title,
       description: cookbook.description,
       tags: cookbook.tags?.map((tag) => tag.name) ?? [],
-      problems: cookbook.cookbook_problems
-        .sort((a, b) => a.order_number - b.order_number)
+      problems: cookbook.cookbookProblems
+        .sort((a, b) => a.orderNumber - b.orderNumber)
         .map((cp) => ({
           id: cp.problem.id,
           title: cp.problem.title,
@@ -89,11 +89,11 @@ export class ProblemsService {
 
     return {
       id: problem.id,
-      problemType: problem.problem_type,
+      problemType: problem.problemType,
       title: problem.title,
       description: problem.description,
-      descDetail: problem.desc_detail,
-      requiredFields: problem.required_fields,
+      descDetail: problem.descDetail,
+      requiredFields: problem.requiredFields,
       tags: problem.tags.map((tag) => tag.name),
     };
   }

@@ -27,14 +27,14 @@ export class CookbooksService {
       id: cookbook.id,
       title: cookbook.title,
       description: cookbook.description,
-      descDetail: cookbook.desc_detail,
+      descDetail: cookbook.descDetail,
       tags: cookbook.tags.map((tag) => tag.name),
-      problems: cookbook.cookbook_problems
-        .sort((a, b) => a.order_number - b.order_number)
+      problems: cookbook.cookbookProblems
+        .sort((a, b) => a.orderNumber - b.orderNumber)
         .map((cp) => ({
           id: cp.problem.id,
           title: cp.problem.title,
-          orderNumber: cp.order_number,
+          orderNumber: cp.orderNumber,
         })),
     };
   }
