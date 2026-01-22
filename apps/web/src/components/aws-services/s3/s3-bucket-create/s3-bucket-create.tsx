@@ -10,7 +10,7 @@ import {
   Tags,
 } from './sections'
 
-import { useForm } from 'react-hook-form'
+import type { Control, UseFormSetValue } from 'react-hook-form'
 
 import { Separator } from '@/components/ui/separator'
 import type {
@@ -20,29 +20,15 @@ import type {
 
 interface S3BucketCreateProps {
   config: S3BucketCreateConfig
+  control: Control<S3BucketFormData>
+  setValue: UseFormSetValue<S3BucketFormData>
 }
 
-const defaultValues: S3BucketFormData = {
-  general: { bucketName: '', region: 'ap-northeast-2' },
-  ownership: { aclEnabled: 'disabled' },
-  blockPublicAccess: {
-    blockAll: true,
-    blockPublicAcls: true,
-    ignorePublicAcls: true,
-    blockPublicPolicy: true,
-    restrictPublicBuckets: true,
-  },
-  versioning: { enabled: false },
-  encryption: { type: 'sse-s3' },
-  advancedSettings: { objectLockEnabled: false },
-  tags: [],
-}
-
-export default function S3BucketCreate({ config }: S3BucketCreateProps) {
-  const { control, setValue } = useForm<S3BucketFormData>({
-    defaultValues,
-  })
-
+export default function S3BucketCreate({
+  config,
+  control,
+  setValue,
+}: S3BucketCreateProps) {
   return (
     <div className="mx-auto max-w-4xl space-y-6 p-6">
       {/* Header Section */}

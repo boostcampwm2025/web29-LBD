@@ -1,34 +1,23 @@
 'use client'
 
-import { useForm } from 'react-hook-form'
-
 import {
-  IServiceMapper,
-  serviceMapper,
-} from '@/components/aws-services/utils/serviceMapper'
+  type IRendererMapper,
+  rendererMapper,
+} from '@/components/service-renderer'
 
 interface ProblemDetailClientProps {
-  problemData: IServiceMapper[]
+  problemData: IRendererMapper[]
 }
 
 export default function ProblemDetailClient({
   problemData,
 }: ProblemDetailClientProps) {
-  const { control, setValue } = useForm()
-
   return (
-    <>
+    <div>
       {problemData.map((mapper, index) => {
-        const { Component, config } = serviceMapper(mapper)
-        return (
-          <Component
-            key={index}
-            control={control}
-            config={config}
-            setValue={setValue}
-          />
-        )
+        const { Renderer, config } = rendererMapper(mapper)
+        return <Renderer key={index} config={config} />
       })}
-    </>
+    </div>
   )
 }

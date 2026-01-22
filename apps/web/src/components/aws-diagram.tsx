@@ -17,9 +17,11 @@ import {
 } from '@xyflow/react'
 import '@xyflow/react/dist/style.css'
 
-type AwsNode = Node<AwsServiceNodeData | AwsResourceNodeData | AwsGroupNodeData>
+export type AwsNode = Node<
+  AwsServiceNodeData | AwsResourceNodeData | AwsGroupNodeData
+>
 
-const initialNodes: AwsNode[] = [
+const defaultNodes: AwsNode[] = [
   {
     id: 'vpc',
     type: 'awsGroup',
@@ -56,7 +58,7 @@ const initialNodes: AwsNode[] = [
   },
 ]
 
-const initialEdges: Edge[] = [
+const defaultEdges: Edge[] = [
   {
     id: 'internet-ec2',
     source: 'internet',
@@ -75,9 +77,20 @@ const initialEdges: Edge[] = [
   },
 ]
 
-export default function AwsDiagram() {
-  const [nodes] = useNodesState<AwsNode>(initialNodes)
-  const [edges] = useEdgesState<Edge>(initialEdges)
+interface AwsDiagramProps {
+  nodes?: AwsNode[]
+  edges?: Edge[]
+}
+
+export default function AwsDiagram({
+  nodes: externalNodes,
+  edges: externalEdges,
+}: AwsDiagramProps = {}) {
+  const [internalNodes] = useNodesState<AwsNode>(defaultNodes)
+  const [internalEdges] = useEdgesState<Edge>(defaultEdges)
+
+  const nodes = externalNodes ?? internalNodes
+  const edges = externalEdges ?? internalEdges
 
   return (
     <div className="h-[500px] w-full rounded-lg border border-gray-200 bg-gray-50 shadow-sm">
