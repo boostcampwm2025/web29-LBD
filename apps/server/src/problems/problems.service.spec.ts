@@ -19,16 +19,17 @@ describe('ProblemsService', () => {
     problem_type: ProblemType.UNIT,
     title: 'VPC 만들기',
     description: 'VPC를 생성하는 문제입니다',
+    desc_detail: 'VPC 상세 설명',
     required_fields: [
       {
         service: 'VPC',
-        service_task: 'vpc-create',
-        service_sections: ['general'],
-        fixed_options: {
+        serviceTask: 'vpc-create',
+        serviceSections: ['general'],
+        fixedOptions: {
           general: {
-            cidr_block: {
+            cidrBlock: {
               placeholder: '10.0.0.0/16',
-              helper_text: 'VPC CIDR 블록',
+              helperText: 'VPC CIDR 블록',
               required: true,
             },
           },
@@ -96,10 +97,11 @@ describe('ProblemsService', () => {
       });
       expect(result).toEqual({
         id: 1,
-        problem_type: ProblemType.UNIT,
+        problemType: ProblemType.UNIT,
         title: 'VPC 만들기',
         description: 'VPC를 생성하는 문제입니다',
-        required_fields: MOCK_PROBLEM_WITH_TAGS.required_fields,
+        descDetail: 'VPC 상세 설명',
+        requiredFields: MOCK_PROBLEM_WITH_TAGS.required_fields,
         tags: ['VPC', 'CIDR'],
       });
     });

@@ -16,6 +16,7 @@ describe('CookbooksService', () => {
     id: 1,
     title: 'VPC 네트워킹 기초',
     description: 'VPC부터 시작해서 완전한 네트워크 구성까지',
+    desc_detail: 'VPC 네트워킹 상세 설명',
     tags: [
       { id: 1, name: 'VPC' },
       { id: 2, name: '네트워크' },
@@ -96,11 +97,12 @@ describe('CookbooksService', () => {
         id: 1,
         title: 'VPC 네트워킹 기초',
         description: 'VPC부터 시작해서 완전한 네트워크 구성까지',
+        descDetail: 'VPC 네트워킹 상세 설명',
         tags: ['VPC', '네트워크', '기초'],
         problems: [
-          { id: 1, title: 'VPC 만들기', order_number: 1 },
-          { id: 2, title: 'Subnet 만들기', order_number: 2 },
-          { id: 3, title: 'IGW 연결하기', order_number: 3 },
+          { id: 1, title: 'VPC 만들기', orderNumber: 1 },
+          { id: 2, title: 'Subnet 만들기', orderNumber: 2 },
+          { id: 3, title: 'IGW 연결하기', orderNumber: 3 },
         ],
       });
     });
@@ -146,9 +148,9 @@ describe('CookbooksService', () => {
       const result = await service.findByCookbookId(cookbookId);
 
       // Then: order_number 기준 오름차순 정렬
-      expect(result.problems[0].order_number).toBe(1);
-      expect(result.problems[1].order_number).toBe(2);
-      expect(result.problems[2].order_number).toBe(3);
+      expect(result.problems[0].orderNumber).toBe(1);
+      expect(result.problems[1].orderNumber).toBe(2);
+      expect(result.problems[2].orderNumber).toBe(3);
       expect(result.problems[0].title).toBe('VPC 만들기');
       expect(result.problems[1].title).toBe('Subnet 만들기');
       expect(result.problems[2].title).toBe('IGW 연결하기');
