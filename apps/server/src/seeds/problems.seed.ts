@@ -218,6 +218,53 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
         tagMap.get('네트워크')!,
       ],
     },
+    {
+      problem_type: ProblemType.UNIT,
+      title: 'test unit',
+      description: 'test용 문제',
+      desc_detail: 'test용 문제입니다.',
+      required_fields: [
+        {
+          service: 'CloudFront',
+          service_task: 'origin-settings',
+          fixed_options: {},
+          service_sections: ['originDomain', 'originAccessControl'],
+        },
+      ],
+      tags: [
+        tagMap.get('VPC')!,
+        tagMap.get('CIDR')!,
+        tagMap.get('네트워크')!,
+        tagMap.get('기초')!,
+      ],
+    },
+    {
+      problem_type: ProblemType.UNIT,
+      title: 'test unit 2',
+      description: '서비스 2개 테스트용',
+      desc_detail: '서비스 2개 테스트용입니다.',
+      required_fields: [
+        {
+          service: 'CloudFront',
+          service_task: 'origin-settings',
+          fixed_options: {},
+          service_sections: ['originDomain', 'originAccessControl'],
+        },
+        {
+          service: 'S3',
+          service_task: 'bucket-create',
+          fixed_options: {},
+          service_sections: ['ownership', 'versioning'],
+        },
+      ],
+
+      tags: [
+        tagMap.get('VPC')!,
+        tagMap.get('CIDR')!,
+        tagMap.get('네트워크')!,
+        tagMap.get('기초')!,
+      ],
+    },
   ];
 
   for (const problemData of problems) {

@@ -1,7 +1,7 @@
 import { ProblemListSection } from './components/problem-list.section'
 import { ProblemTabSection } from './components/problem-tab.section'
 
-import { getProblemListByType } from '@/lib/problems'
+import { getProblemListByType } from '@/lib/problem'
 import { ProblemType } from '@/types/problem.type'
 
 export default async function ProblemsPage({

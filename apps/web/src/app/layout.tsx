@@ -4,7 +4,6 @@ import type { Metadata, Viewport } from 'next'
 
 import { Footer, Header } from '@/components/layout'
 import { cn } from '@/lib/utils'
-import { MSWProvider } from '@/mock/msw-provider'
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -31,11 +30,9 @@ export default function RootLayout({
           'selection:bg-primary/30 selection:text-foreground',
         )}
       >
-        <MSWProvider>
-          <Header />
-          <main className="h-full min-h-[calc(100vh)] py-20">{children}</main>
-          <Footer />
-        </MSWProvider>
+        <Header />
+        <main className="h-full min-h-[calc(100vh)] pt-18">{children}</main>
+        <Footer />
       </body>
     </html>
   )

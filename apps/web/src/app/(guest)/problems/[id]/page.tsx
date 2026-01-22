@@ -1,10 +1,10 @@
+import { FeedbackDetailCard } from '../components/feedback-detail-card'
+import ProblemDetailClient from './problem-detail-client'
+
 import React from 'react'
 
-// import { API_URL } from '@/app/api/api'
-import {
-  IServiceMapper,
-  serviceMapper,
-} from '@/components/aws-services/utils/serviceMapper'
+import { Button } from '@/components/ui/button'
+import { getProblemData } from '@/lib/problem/get-problem-data'
 
 interface ProblemDetailPageProps {
   params: Promise<{
@@ -15,17 +15,26 @@ interface ProblemDetailPageProps {
   }>
 }
 
-const getData = (_id: string) => {
-  // const response = await fetch(`${API_URL}/problems/${id}`)
-  // return await response.json()
-
-  const result: IServiceMapper = {
-    serviceName: 'S3',
-    serviceTask: 'bucket-create',
-    inputSections: ['general', 'ownership', 'blockPublicAccess'],
-  }
-  return result
-}
+const mockFeedbackMessages = [
+  {
+    service: 'S3',
+    field: '',
+    message:
+      '버킷 이름은 전역적으로 고유해야 합니다. 다른 이름을 시도해 주세요.',
+  },
+  {
+    service: 'S3',
+    field: 'blockPublicAccess',
+    message:
+      '퍼블릭 액세스 차단 설정이 권장됩니다. 보안 위험을 줄이기 위해 모든 퍼블릭 액세스를 차단하는 것이 좋습니다.',
+  },
+  {
+    service: 'S3',
+    field: 'encryption',
+    message:
+      '버킷 암호화를 활성화하여 저장된 데이터를 보호하는 것이 좋습니다. SSE-S3 또는 SSE-KMS를 사용하는 것을 고려해 보세요.',
+  },
+]
 
 export default async function ProblemDetailPage({
   params,
@@ -33,7 +42,22 @@ export default async function ProblemDetailPage({
 }: ProblemDetailPageProps) {
   const { id } = await params
   const { type: _type } = await searchParams
-  const problemData = getData(id)
-  const { Component, config } = serviceMapper(problemData)
-  return <Component config={config} />
+
+  const problemData = await getProblemData(id)
+
+  return (
+    <React.Fragment>
+      <ProblemDetailClient problemData={problemData} />
+
+      <div className="relative h-full">
+        <div className="sticky top-24 space-y-4">
+          <Button className="ml-auto block">제출하기</Button>
+
+          <div className="rounded-xl border p-4">다이어그램</div>
+
+          <FeedbackDetailCard feedback={mockFeedbackMessages} />
+        </div>
+      </div>
+    </React.Fragment>
+  )
 }
