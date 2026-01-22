@@ -1,9 +1,5 @@
-import { FeedbackDetailCard } from '../components/feedback-detail-card'
 import ProblemDetailClient from './problem-detail-client'
 
-import React from 'react'
-
-import { Button } from '@/components/ui/button'
 import { getProblemData } from '@/lib/problem/get-problem-data'
 
 interface ProblemDetailPageProps {
@@ -43,21 +39,13 @@ export default async function ProblemDetailPage({
   const { id } = await params
   const { type: _type } = await searchParams
 
-  const problemData = await getProblemData(id)
+  const { serviceMappers, diagram } = await getProblemData(id)
 
   return (
-    <React.Fragment>
-      <ProblemDetailClient problemData={problemData} />
-
-      <div className="relative h-full">
-        <div className="sticky top-24 space-y-4">
-          <Button className="ml-auto block">제출하기</Button>
-
-          <div className="rounded-xl border p-4">다이어그램</div>
-
-          <FeedbackDetailCard feedback={mockFeedbackMessages} />
-        </div>
-      </div>
-    </React.Fragment>
+    <ProblemDetailClient
+      problemData={serviceMappers}
+      diagramData={diagram}
+      feedbackMessages={mockFeedbackMessages}
+    />
   )
 }

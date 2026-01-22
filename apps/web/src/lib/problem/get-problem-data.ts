@@ -1,4 +1,7 @@
+import { mockDiagramData } from './mock-diagram-data'
+
 import { IServiceMapper } from '@/components/aws-services/utils/serviceMapper'
+import type { DiagramData } from '@/types/diagram'
 
 interface RequiredField {
   service: string
@@ -7,7 +10,12 @@ interface RequiredField {
   // fixed_options?: Record<string, string>
 }
 
-export async function getProblemData(id: string): Promise<IServiceMapper[]> {
+export interface ProblemData {
+  serviceMappers: IServiceMapper[]
+  diagram: DiagramData
+}
+
+export async function getProblemData(id: string): Promise<ProblemData> {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:4000'
 
   if (!baseUrl) {
@@ -24,7 +32,7 @@ export async function getProblemData(id: string): Promise<IServiceMapper[]> {
 
   const response = await res.json()
 
-  const problemData: IServiceMapper[] = response.required_fields.map(
+  const serviceMappers: IServiceMapper[] = response.required_fields.map(
     (field: RequiredField) => ({
       serviceName: field.service,
       serviceTask: field.service_task,
@@ -32,5 +40,9 @@ export async function getProblemData(id: string): Promise<IServiceMapper[]> {
     }),
   )
 
-  return problemData
+  // Backend에서 diagram_template 반환 시 아래 코드로 대체
+  // const diagram: DiagramData = response.diagram_template ?? mockDiagramData
+  const diagram: DiagramData = mockDiagramData
+
+  return { serviceMappers, diagram }
 }
