@@ -44,13 +44,13 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
       required_fields: [
         {
           service: 'VPC',
-          service_task: 'vpc-create',
-          service_sections: ['general'],
-          fixed_options: {
+          serviceTask: 'vpc-create',
+          serviceSections: ['general'],
+          fixedOptions: {
             general: {
-              cidr_block: {
+              cidrBlock: {
                 placeholder: '10.0.0.0/16',
-                helper_text:
+                helperText:
                   'VPC는 여러 Subnet을 담기 위해 넓은 네트워크 범위가 필요합니다.',
                 required: true,
               },
@@ -75,18 +75,18 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
       required_fields: [
         {
           service: 'Subnet',
-          service_task: 'subnet-create',
-          service_sections: ['general'],
-          fixed_options: {
+          serviceTask: 'subnet-create',
+          serviceSections: ['general'],
+          fixedOptions: {
             general: {
-              vpc_id: {
+              vpcId: {
                 placeholder: 'VPC를 선택하세요',
-                helper_text: 'Subnet CIDR은 VPC CIDR 범위 안에 있어야 합니다.',
+                helperText: 'Subnet CIDR은 VPC CIDR 범위 안에 있어야 합니다.',
                 required: true,
               },
-              cidr_block: {
+              cidrBlock: {
                 placeholder: 'x.x.x.x/x',
-                helper_text: 'VPC CIDR 범위 안에 포함되어야 합니다.',
+                helperText: 'VPC CIDR 범위 안에 포함되어야 합니다.',
                 required: true,
               },
             },
@@ -110,25 +110,25 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
       required_fields: [
         {
           service: 'Subnet',
-          service_task: 'public-subnet-create',
-          service_sections: ['general', 'public_access'],
-          fixed_options: {
+          serviceTask: 'public-subnet-create',
+          serviceSections: ['general', 'publicAccess'],
+          fixedOptions: {
             general: {
-              vpc_id: {
+              vpcId: {
                 placeholder: '서브넷을 생성할 VPC를 선택하세요.',
-                helper_text: '서브넷은 반드시 하나의 VPC에 속해야 합니다.',
+                helperText: '서브넷은 반드시 하나의 VPC에 속해야 합니다.',
                 required: true,
               },
-              cidr_block: {
+              cidrBlock: {
                 placeholder: 'x.x.x.x/x',
-                helper_text: 'VPC CIDR 범위 안에 포함되어야 합니다.',
+                helperText: 'VPC CIDR 범위 안에 포함되어야 합니다.',
                 required: true,
               },
             },
-            public_access: {
-              map_public_ip_on_launch: {
+            publicAccess: {
+              mapPublicIpOnLaunch: {
                 value: true,
-                helper_text: '퍼블릭 IP 자동 할당을 활성화합니다.',
+                helperText: '퍼블릭 IP 자동 할당을 활성화합니다.',
               },
             },
           },
@@ -150,13 +150,13 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
       required_fields: [
         {
           service: 'InternetGateway',
-          service_task: 'igw-attach',
-          service_sections: ['general'],
-          fixed_options: {
+          serviceTask: 'igw-attach',
+          serviceSections: ['general'],
+          fixedOptions: {
             general: {
-              vpc_id: {
+              vpcId: {
                 placeholder: 'Internet Gateway를 연결할 VPC를 선택하세요',
-                helper_text: 'Internet Gateway는 VPC 단위로 연결됩니다',
+                helperText: 'Internet Gateway는 VPC 단위로 연결됩니다',
                 required: true,
               },
             },
@@ -180,31 +180,31 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
       required_fields: [
         {
           service: 'RouteTable',
-          service_task: 'route-table-configure',
-          service_sections: ['general', 'routes', 'subnet_associations'],
-          fixed_options: {
+          serviceTask: 'route-table-configure',
+          serviceSections: ['general', 'routes', 'subnetAssociations'],
+          fixedOptions: {
             general: {
-              vpc_id: {
+              vpcId: {
                 placeholder: '라우팅 테이블을 생성할 VPC를 선택하세요.',
-                helper_text: '라우팅 테이블은 VPC 단위로 관리됩니다.',
+                helperText: '라우팅 테이블은 VPC 단위로 관리됩니다.',
                 required: true,
               },
             },
             routes: {
-              destination_cidr_block: {
+              destinationCidrBlock: {
                 placeholder: '예: 0.0.0.0/0',
-                helper_text: '모든 외부 트래픽을 의미하는 기본 경로입니다',
+                helperText: '모든 외부 트래픽을 의미하는 기본 경로입니다',
                 required: true,
               },
-              gateway_id: {
+              gatewayId: {
                 placeholder: 'Internet Gateway 선택',
-                helper_text: '외부 인터넷으로 나가기 위한 대상입니다',
+                helperText: '외부 인터넷으로 나가기 위한 대상입니다',
                 required: true,
               },
             },
-            subnet_associations: {
-              subnet_id: {
-                helper_text: '이 라우팅 테이블을 적용할 서브넷을 선택하세요',
+            subnetAssociations: {
+              subnetId: {
+                helperText: '이 라우팅 테이블을 적용할 서브넷을 선택하세요',
                 required: true,
               },
             },
@@ -226,9 +226,9 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
       required_fields: [
         {
           service: 'CloudFront',
-          service_task: 'origin-settings',
-          fixed_options: {},
-          service_sections: ['originDomain', 'originAccessControl'],
+          serviceTask: 'origin-settings',
+          fixedOptions: {},
+          serviceSections: ['originDomain', 'originAccessControl'],
         },
       ],
       tags: [
@@ -246,15 +246,15 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
       required_fields: [
         {
           service: 'CloudFront',
-          service_task: 'origin-settings',
-          fixed_options: {},
-          service_sections: ['originDomain', 'originAccessControl'],
+          serviceTask: 'origin-settings',
+          fixedOptions: {},
+          serviceSections: ['originDomain', 'originAccessControl'],
         },
         {
           service: 'S3',
-          service_task: 'bucket-create',
-          fixed_options: {},
-          service_sections: ['ownership', 'versioning'],
+          serviceTask: 'bucket-create',
+          fixedOptions: {},
+          serviceSections: ['ownership', 'versioning'],
         },
       ],
 
