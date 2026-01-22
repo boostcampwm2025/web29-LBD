@@ -55,7 +55,7 @@ export function Ami({ control }: EC2SectionProps) {
                       width={30}
                       height={30}
                     />
-                    <span className="text-center text-sm font-medium">
+                    <span className="text-center text-xs font-medium">
                       {ami.label}
                     </span>
                   </Label>
