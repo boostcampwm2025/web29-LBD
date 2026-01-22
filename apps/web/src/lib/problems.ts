@@ -1,7 +1,7 @@
 import { ProblemType } from '@/types/problem.type'
 
 export async function getProblemListByType(type: ProblemType) {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3001'
 
   if (!baseUrl) {
     throw new Error('NEXT_PUBLIC_BASE_URL이 설정되지 않았습니다.')

@@ -11,7 +11,11 @@ export default new DataSource({
   password: configService.get('DB_PASSWORD') || 'boostcamp123',
   database: configService.get('DB_DATABASE') || 'boostcamp_dev',
   entities: ['dist/**/*.entity.js'],
-  migrations: ['dist/migrations/*.js'],
+  migrations: [
+    process.env.NODE_ENV === 'production'
+      ? 'dist/migrations/*.js'
+      : 'src/migrations/*.ts',
+  ],
   synchronize: false,
   logging: true,
   charset: 'utf8mb4',

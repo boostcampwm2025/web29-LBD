@@ -1,4 +1,4 @@
-version: "3.8"
+version: '3.8'
 
 services:
   mysql:
@@ -11,15 +11,18 @@ services:
       MYSQL_USER: boostcamp
       MYSQL_PASSWORD: boostcamp123
     ports:
-      - "3306:3306"
+      - '3307:3306'
     volumes:
       - mysql_dev_data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
       interval: 10s
       timeout: 5s
       retries: 5
-
+    command: 
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --skip-character-set-client-handshake
   server:
     build:
       context: ../..
@@ -28,10 +31,10 @@ services:
     container_name: cloud-craft-server-dev
     restart: unless-stopped
     ports:
-      - "3000:3000"
+      - '3001:3001'
     environment:
       NODE_ENV: development
-      PORT: 3000
+      PORT: 3001
       DB_HOST: mysql
       DB_PORT: 3306
       DB_USERNAME: boostcamp
@@ -43,6 +46,9 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
+
+    command: >
+      sh -c "pnpm run migration:run && pnpm run seed && pnpm run start:dev"
 
 volumes:
   mysql_dev_data:
