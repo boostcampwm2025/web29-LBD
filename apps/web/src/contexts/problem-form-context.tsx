@@ -3,8 +3,10 @@
 import {
   type PropsWithChildren,
   createContext,
+  useCallback,
   useContext,
   useMemo,
+  useState,
 } from 'react'
 import {
   type Control,
@@ -17,12 +19,17 @@ import {
   useForm,
 } from 'react-hook-form'
 
+import type { FeedbackDetail } from '@/app/(guest)/problems/components/feedback-detail-card'
+
 interface ProblemFormContextValue<T extends FieldValues = FieldValues> {
   control: Control<T>
   setValue: UseFormSetValue<T>
   watch: UseFormWatch<T>
   getValues: UseFormGetValues<T>
   formState: FormState<T>
+  feedback: FeedbackDetail[]
+  isSubmitting: boolean
+  submitProblem: () => Promise<void>
 }
 
 const ProblemFormContext = createContext<ProblemFormContextValue | null>(null)
@@ -31,13 +38,33 @@ interface ProblemFormProviderProps<
   T extends FieldValues,
 > extends PropsWithChildren {
   defaultValues: DefaultValues<T>
+  problemId: string
+  initialFeedback?: FeedbackDetail[]
 }
 
 export function ProblemFormProvider<T extends FieldValues>({
   children,
   defaultValues,
+  problemId,
+  initialFeedback = [],
 }: ProblemFormProviderProps<T>) {
   const methods = useForm<T>({ defaultValues })
+  const [feedback, setFeedback] = useState<FeedbackDetail[]>(initialFeedback)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const submitProblem = useCallback(async () => {
+    setIsSubmitting(true)
+
+    // TODO: 실제 API 호출로 교체
+    // const response = await fetch(`/api/problems/${problemId}/submit`, { ... })
+    void problemId // 향후 API 호출 시 사용 예정
+    await new Promise((resolve) => setTimeout(resolve, 1000))
+
+    // Mock: 기존 feedback 유지 (실제로는 API 응답으로 교체)
+    setFeedback(initialFeedback)
+
+    setIsSubmitting(false)
+  }, [problemId, initialFeedback])
 
   const contextValue = useMemo(
     () => ({
@@ -46,6 +73,9 @@ export function ProblemFormProvider<T extends FieldValues>({
       watch: methods.watch,
       getValues: methods.getValues,
       formState: methods.formState,
+      feedback,
+      isSubmitting,
+      submitProblem,
     }),
     [
       methods.control,
@@ -53,6 +83,9 @@ export function ProblemFormProvider<T extends FieldValues>({
       methods.watch,
       methods.getValues,
       methods.formState,
+      feedback,
+      isSubmitting,
+      submitProblem,
     ],
   )
 

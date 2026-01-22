@@ -43,9 +43,10 @@ export default async function ProblemDetailPage({
 
   return (
     <ProblemDetailClient
+      problemId={id}
       problemData={serviceMappers}
       diagramData={diagram}
-      feedbackMessages={mockFeedbackMessages}
+      initialFeedback={mockFeedbackMessages}
     />
   )
 }

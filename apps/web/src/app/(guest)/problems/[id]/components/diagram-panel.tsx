@@ -1,9 +1,6 @@
 'use client'
 
-import {
-  type FeedbackDetail,
-  FeedbackDetailCard,
-} from '../../components/feedback-detail-card'
+import { FeedbackDetailCard } from '../../components/feedback-detail-card'
 
 import { awsNodeTypes } from '@/components/diagram'
 import { Button } from '@/components/ui/button'
@@ -20,14 +17,11 @@ import '@xyflow/react/dist/style.css'
 
 interface DiagramPanelProps {
   diagramData: DiagramData
-  feedbackMessages: FeedbackDetail[]
 }
 
-export function DiagramPanel({
-  diagramData,
-  feedbackMessages,
-}: DiagramPanelProps) {
-  const { watch } = useProblemForm<S3BucketFormData>()
+export function DiagramPanel({ diagramData }: DiagramPanelProps) {
+  const { watch, feedback, isSubmitting, submitProblem } =
+    useProblemForm<S3BucketFormData>()
   const formData = watch()
 
   const [nodes, , onNodesChange] = useNodesState(diagramData.nodes)
@@ -39,7 +33,13 @@ export function DiagramPanel({
   return (
     <div className="relative h-full">
       <div className="sticky top-24 space-y-4">
-        <Button className="ml-auto block">제출하기</Button>
+        <Button
+          className="ml-auto block"
+          onClick={submitProblem}
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? '제출 중...' : '제출하기'}
+        </Button>
 
         <div className="h-[400px] rounded-xl border">
           <ReactFlow
@@ -55,7 +55,7 @@ export function DiagramPanel({
           </ReactFlow>
         </div>
 
-        <FeedbackDetailCard feedback={feedbackMessages} />
+        <FeedbackDetailCard feedback={feedback} />
       </div>
     </div>
   )

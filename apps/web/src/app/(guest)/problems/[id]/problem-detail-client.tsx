@@ -9,9 +9,10 @@ import type { S3BucketFormData } from '@/types/aws-services/s3/bucket-create'
 import type { DiagramData } from '@/types/diagram'
 
 interface ProblemDetailClientProps {
+  problemId: string
   problemData: IServiceMapper[]
   diagramData: DiagramData
-  feedbackMessages: FeedbackDetail[]
+  initialFeedback: FeedbackDetail[]
 }
 
 const s3DefaultValues: S3BucketFormData = {
@@ -31,17 +32,19 @@ const s3DefaultValues: S3BucketFormData = {
 }
 
 export default function ProblemDetailClient({
+  problemId,
   problemData,
   diagramData,
-  feedbackMessages,
+  initialFeedback,
 }: ProblemDetailClientProps) {
   return (
-    <ProblemFormProvider defaultValues={s3DefaultValues}>
+    <ProblemFormProvider
+      defaultValues={s3DefaultValues}
+      problemId={problemId}
+      initialFeedback={initialFeedback}
+    >
       <ProblemFormContent problemData={problemData} />
-      <DiagramPanel
-        diagramData={diagramData}
-        feedbackMessages={feedbackMessages}
-      />
+      <DiagramPanel diagramData={diagramData} />
     </ProblemFormProvider>
   )
 }
