@@ -27,7 +27,7 @@ WORKDIR /app/apps/server
 EXPOSE 3000
 
 # Start in dev mode with hot-reload
-CMD ["pnpm", "start:dev"]
+# CMD ["pnpm", "start:dev"]
 
 # Build stage
 FROM base AS build

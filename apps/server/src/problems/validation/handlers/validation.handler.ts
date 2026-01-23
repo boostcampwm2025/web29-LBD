@@ -1,16 +1,31 @@
 import {
   SubmitRequestDto,
   SubmitConfig,
-} from 'src/problems/dto/submit-request.dto';
-import { SubmitResponseDto } from 'src/problems/dto/submit-response.dto';
-import { ProblemType } from 'src/problems/types/problem-type.enum';
+} from '@/problems/dto/submit-request.dto';
+import { SubmitResponseDto } from '@/problems/dto/submit-response.dto';
+import { ProblemType } from '@/problems/types/problem-type.enum';
+import { FeedbackDto } from '@/problems/dto/submit-response.dto';
+import {
+  Ec2Requirements,
+  S3Requirements,
+  SgRequirements,
+  NetworkRequirements,
+} from '@/problems/types/requirements-types';
+
+export type Requirements = {
+  ec2?: Ec2Requirements;
+  s3?: S3Requirements;
+  securityGroup?: SgRequirements;
+  network?: NetworkRequirements;
+};
 
 export type ProblemData = {
   solution: SubmitConfig;
   problemType: ProblemType;
+  requirements?: Requirements;
 };
 
-export interface ValidationHandler {
+export interface ProblemValidationHandler {
   /**
    * 문제 타입(ex. unit)에 대해 핸들러가 지원되는지 여부를 반환하는 메서드
    * @param problemType 문제 타입
@@ -28,4 +43,8 @@ export interface ValidationHandler {
     submitRequsestDto: SubmitRequestDto,
     problemData: ProblemData,
   ): SubmitResponseDto;
+}
+
+export interface ValidationHandler {
+  validate(submitRequsestDto: SubmitRequestDto): FeedbackDto[];
 }

@@ -21,6 +21,42 @@ export class SubmitConfig {
   @ValidateNested({ each: true })
   @Type(() => ServiceConfigType.SubnetConfig)
   subnet?: ServiceConfigType.SubnetConfig[];
+
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ServiceConfigType.RouteTableConfig)
+  routeTable?: ServiceConfigType.RouteTableConfig[];
+
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ServiceConfigType.SecurityGroupsConfig)
+  securityGroups?: ServiceConfigType.SecurityGroupsConfig[];
+
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ServiceConfigType.S3Config)
+  s3?: ServiceConfigType.S3Config[];
+
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ServiceConfigType.InternetGatewayConfig)
+  internetGateway?: ServiceConfigType.InternetGatewayConfig[];
+
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ServiceConfigType.NATGatewayConfig)
+  natGateway?: ServiceConfigType.NATGatewayConfig[];
+
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ServiceConfigType.NACLConfig)
+  nacl?: ServiceConfigType.NACLConfig[];
 }
 
 // TODO: NetworkTask 구체화하기

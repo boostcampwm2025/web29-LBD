@@ -1,0 +1,5 @@
+export { ViewerProtocolSection } from './viewer-protocol.section'
+export { HttpMethodsSection } from './http-methods.section'
+export { CachePolicySection } from './cache-policy.section'
+export { CompressionSection } from './compression.section'
+export { FunctionAssociationsSection } from './function-associations.section'

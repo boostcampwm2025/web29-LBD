@@ -42,6 +42,8 @@ coverage/
 # Temporary files
 *.tmp
 .cache/
+.claude/
+CLAUDE.md
 
 # Docker
 .dockerignore

@@ -1,0 +1,6 @@
+export { NameTag } from './name-tag.section'
+export { Ami } from './ami.section'
+export { InstanceType } from './instance-type.section'
+export { KeyPair } from './key-pair.section'
+export { NetworkSetting } from './network-setting.section'
+export { Storage } from './storage.section'

@@ -108,6 +108,7 @@ CREATE TABLE `problem` (
   `service_type` varchar(50) NOT NULL COMMENT 'AWS 서비스 종류',
   `title` varchar(255) NOT NULL,
   `description` text NOT NULL,
+  `desc_detail` text NOT NULL,
   `difficulty` ENUM('beginner', 'intermediate', 'advanced') NOT NULL,
   `estimated_time` int COMMENT '예상 소요 시간(분)',
   `created_at` datetime DEFAULT (CURRENT_TIMESTAMP),
@@ -392,31 +393,31 @@ CREATE TABLE `user_submission` (
 
 ```
 ┌─────────────┐
-│   user      │
+│     user    │
 └──────┬──────┘
        │ 1
        │
        │ N
 ┌──────┴──────────┐         ┌─────────────────┐
 │  user_progress  │         │    problem      │
-│  user_submission│         │  (unit/cookbook)│
+│ user_submission │         │ (unit/cookbook) │
 └─────────────────┘         └────────┬────────┘
                                      │ 1
                     ┌────────────────┼────────────────┐
                     │                │                │
                     │ N              │ 1              │ N
-            ┌───────┴────────┐  ┌───┴────────┐  ┌────┴─────────────┐
+            ┌───────┴────────┐  ┌───┴────────┐  ┌────┴───────────────┐
             │ problem_field  │  │  solution  │  │cookbook_composition│
-            └───────┬────────┘  └────────────┘  └────┬─────────────┘
+            └───────┬────────┘  └────────────┘  └────┬───────────────┘
                     │ 1                              │
                     │                                │ N
                     │ N                     ┌────────┴─────────┐
-            ┌───────┴──────────┐            │ problem (unit)   │
-            │field_validation  │            └──────────────────┘
+            ┌───────┴──────────┐            │  problem (unit)  │
+            │ field_validation │            └──────────────────┘
             └──────────────────┘
 
 ┌──────────────────┐
-│diagram_template  │ (독립적, service_type 기준)
+│ diagram_template │ (독립적, service_type 기준)
 └──────────────────┘
 ```
 

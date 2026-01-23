@@ -20,6 +20,9 @@ export class Cookbook {
   @Column({ type: 'text' })
   description: string;
 
+  @Column({ type: 'text' })
+  desc_detail: string;
+
   @ManyToMany(() => Tag, (tag) => tag.cookbooks)
   @JoinTable({
     name: 'cookbook_tag',

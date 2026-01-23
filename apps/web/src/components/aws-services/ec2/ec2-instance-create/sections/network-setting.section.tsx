@@ -1,0 +1,102 @@
+import { AlertTriangle } from 'lucide-react'
+
+import { Controller } from 'react-hook-form'
+
+import { TooltipBox } from '@/components/aws-services/common/tooltip-box'
+import { SectionContainer } from '@/components/section-container'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Label } from '@/components/ui/label'
+import { Switch } from '@/components/ui/switch'
+import { EC2_TOOLTIPS } from '@/constants/aws-services/ec2'
+import { FIREWALL_OPTIONS } from '@/constants/aws-services/ec2'
+import type { EC2SectionProps } from '@/types/aws-services/ec2/ec2-instance-create'
+
+export function NetworkSetting({ control }: EC2SectionProps) {
+  return (
+    <SectionContainer
+      title={
+        <div className="flex items-center gap-2">
+          네트워크 설정
+          <TooltipBox content={EC2_TOOLTIPS.networkSetting} />
+        </div>
+      }
+      description="인스턴스의 네트워크 및 보안 설정을 구성하세요"
+    >
+      <div className="space-y-6">
+        {/* 퍼블릭 IP 자동 할당 */}
+        <div className="flex items-center justify-between">
+          <div className="space-y-1">
+            <Label htmlFor="auto-assign-ip">퍼블릭 IP 자동 할당</Label>
+            <p className="text-muted-foreground text-sm">
+              인터넷에서 인스턴스에 접근할 수 있도록 퍼블릭 IP를 할당합니다
+            </p>
+          </div>
+          <Controller
+            name="networkSetting.autoAssignPublicIp"
+            control={control}
+            render={({ field }) => (
+              <div className="flex items-center gap-3">
+                <span
+                  className={`text-sm font-medium whitespace-nowrap ${field.value ? 'text-primary' : 'text-muted-foreground'}`}
+                >
+                  {field.value ? '활성화' : '비활성화'}
+                </span>
+                <Switch
+                  id="auto-assign-ip"
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </div>
+            )}
+          />
+        </div>
+
+        {/* 방화벽(보안 그룹) */}
+        <div className="space-y-4">
+          <div className="space-y-1">
+            <Label>방화벽(보안 그룹)</Label>
+            <p className="text-muted-foreground text-sm">
+              보안 그룹은 인스턴스에 대한 트래픽을 제어하는 가상 방화벽 규칙
+              세트입니다
+            </p>
+          </div>
+          {FIREWALL_OPTIONS.map((option) => (
+            <div key={option.id} className="flex items-start gap-3">
+              <Controller
+                name={option.name}
+                control={control}
+                render={({ field }) => (
+                  <Checkbox
+                    id={option.id}
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                )}
+              />
+              <div className="space-y-1">
+                <Label htmlFor={option.id} className="font-medium">
+                  {option.label}
+                </Label>
+                <p className="text-muted-foreground text-sm">
+                  {option.description}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* 경고 메시지 */}
+        <div className="bg-primary/10 border-primary/20 rounded-md border p-3">
+          <div className="flex items-start gap-2">
+            <AlertTriangle className="text-primary mt-0.5 h-4 w-4 shrink-0" />
+            <p className="text-primary text-sm">
+              0.0.0.0/0 규칙은 모든 IP 주소에서 인스턴스에 액세스하도록
+              허용합니다. 보안 그룹 설정 후 실제 서비스를 접근할 수 있는 IP
+              주소로만 제한하는 것이 좋습니다.
+            </p>
+          </div>
+        </div>
+      </div>
+    </SectionContainer>
+  )
+}

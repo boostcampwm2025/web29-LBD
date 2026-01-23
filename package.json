@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "pnpm --filter './apps/*' dev",
+    "dev:web": "pnpm --filter web dev",
     "build": "pnpm --filter './apps/*' build",
     "clean": "pnpm --filter './apps/*' clean",
     "prepare": "husky"
