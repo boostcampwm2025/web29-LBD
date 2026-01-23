@@ -11,7 +11,7 @@ on:
 jobs:
   deploy:
     name: Deploy to Production
-    runs-on: [self-hosted, Linux]
+    runs-on: ubuntu-latest
     environment: production
 
     steps:
