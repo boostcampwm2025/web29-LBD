@@ -12,6 +12,7 @@ import {
   UnitProblemItemResponseDto,
 } from './dto/problem-list-response.dto';
 import { Cookbook } from 'src/entities/cookbook.entity';
+import { Solution } from '@/entities/solution.entity';
 
 @Injectable()
 export class ProblemsService {
@@ -23,6 +24,9 @@ export class ProblemsService {
 
     @InjectRepository(Cookbook)
     private readonly cookbookRepository: Repository<Cookbook>,
+
+    @InjectRepository(Solution)
+    private readonly solutionRepository: Repository<Solution>,
   ) {}
 
   private async findUnitProblems(): Promise<UnitProblemItemResponseDto[]> {
@@ -98,14 +102,35 @@ export class ProblemsService {
     };
   }
 
-  submit(problemId: number, body: SubmitRequestDto): SubmitResponseDto {
+  async submit(
+    problemId: number,
+    body: SubmitRequestDto,
+  ): Promise<SubmitResponseDto> {
     // MOCK 문제 데이터
-    const problemData = {
-      problemType: ProblemType.UNIT,
-      solution: {},
-    };
+    // const problemData = {
+    //   problemType: ProblemType.UNIT,
+    //   solution: {},
+    // };
 
     // TODO: problemId로 문제 데이터를 조회하는 로직 추후 구현 필요
+
+    const problemEntity = await this.problemRepository.findOne({
+      where: { id: problemId },
+      relations: {
+        solution: true,
+      },
+    });
+
+    if (!problemEntity) {
+      throw new NotFoundException(
+        `문제 ID ${problemId}을(를) 찾을 수 없습니다.`,
+      );
+    }
+
+    const problemData = {
+      problemType: problemEntity.problem_type,
+      solution: problemEntity.solution.answer_config,
+    };
 
     const result = this.validationService.validate(body, problemData);
     return result;

@@ -13,9 +13,12 @@ import { NetworkScenarioHandler } from './validation/handlers/unit-service-speci
 import { S3ScenarioHandler } from './validation/handlers/unit-service-specific-validation/unit-s3-scenario.handler';
 import { Cookbook } from 'src/entities/cookbook.entity';
 import { CookbookProblem } from 'src/entities/cookbook-problem.entity';
+import { Solution } from '@/entities/solution.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Problem, Cookbook, CookbookProblem])],
+  imports: [
+    TypeOrmModule.forFeature([Problem, Cookbook, CookbookProblem, Solution]),
+  ],
   controllers: [ProblemsController],
   providers: [
     ProblemsService,
