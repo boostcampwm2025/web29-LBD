@@ -26,42 +26,42 @@ export interface ServicePage {
 }
 
 const S3: Record<string, ServicePage> = {
-  'bucket-create': {
+  bucketCreate: {
     component: S3BucketCreate,
     sections: S3_BUCKET_CREATE_SECTIONS,
   },
-  'bucket-list': {
+  bucketList: {
     component: S3BucketList,
     sections: S3_BUCKET_LIST_SECTIONS,
   },
-  'bucket-detail': {
+  bucketDetail: {
     component: S3BucketDetail,
     sections: S3_BUCKET_DETAIL_SECTIONS,
   },
-  'file-upload': {
+  fileUpload: {
     component: S3FileUpload,
     sections: S3_FILE_UPLOAD_SECTIONS,
   },
 }
 
 const CloudFront: Record<string, ServicePage> = {
-  'distribution-list': {
+  distributionList: {
     component: CloudFrontDistributionList,
     sections: CLOUDFRONT_DISTRIBUTION_LIST_SECTIONS,
   },
-  'origin-settings': {
+  originSettings: {
     component: CloudFrontOriginSettings,
     sections: CLOUDFRONT_ORIGIN_SETTINGS_SECTIONS,
   },
-  'distribution-settings': {
+  distributionSettings: {
     component: CloudFrontDistributionSettings,
     sections: CLOUDFRONT_DISTRIBUTION_SETTINGS_SECTIONS,
   },
-  'cache-behavior': {
+  cacheBehavior: {
     component: CloudFrontCacheBehavior,
     sections: CLOUDFRONT_CACHE_BEHAVIOR_SECTIONS,
   },
-  'website-settings': {
+  websiteSettings: {
     component: CloudFrontWebsiteSettings,
     sections: CLOUDFRONT_WEBSITE_SETTINGS_SECTIONS,
   },
