@@ -149,7 +149,7 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
         'VPC와 서브넷을 생성했다고 해서 자동으로 인터넷과 통신할 수 있는 것은 아닙니다. VPC 내부의 리소스가 외부와 통신하려면 인터넷으로 나가는 출입구 역할을 하는 리소스가 필요합니다. Internet Gateway는 VPC 단위로 연결되는 리소스로, 외부 인터넷과 VPC를 연결하는 필수 전제 조건입니다. 기존 VPC에 Internet Gateway를 하나 생성하고 연결하세요.',
       requiredFields: [
         {
-          serviceName: 'InternetGateway',
+          serviceName: 'internetGateway',
           serviceTask: 'igwAttach',
           serviceSections: ['general'],
           fixedOptions: {
