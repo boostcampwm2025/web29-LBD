@@ -68,6 +68,6 @@ const CloudFront: Record<string, ServicePage> = {
 }
 
 export const AWS_SERVICE_REGISTRY = {
-  S3,
-  CloudFront,
+  s3: S3,
+  cloudFront: CloudFront,
 }

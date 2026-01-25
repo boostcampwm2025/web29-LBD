@@ -43,7 +43,7 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
         'VPC는 여러 Subnet을 담는 가장 큰 네트워크 단위입니다. 너무 작은 네트워크 범위를 설정하면 이후에 Subnet을 추가하거나 확장하기 어렵습니다. 이를 방지하기 위해 충분히 넓은 네트워크 대역을 먼저 설정해야 합니다. 여러 Subnet을 생성할 수 있도록 /16 대역의 VPC를 하나 생성하세요.',
       requiredFields: [
         {
-          serviceName: 'VPC',
+          serviceName: 'vpc',
           serviceTask: 'vpcCreate',
           serviceSections: ['general'],
           fixedOptions: {
@@ -74,7 +74,7 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
         'Subnet은 반드시 VPC의 네트워크 범위 안에 포함되어야 합니다. VPC보다 넓거나 겹치지 않는 CIDR을 사용하면 Subnet은 정상적으로 동작하지 않습니다. 생성한 VPC의 네트워크 범위 안에 포함되는 Subnet을 하나 생성하세요.',
       requiredFields: [
         {
-          serviceName: 'Subnet',
+          serviceName: 'subnet',
           serviceTask: 'subnetCreate',
           serviceSections: ['general'],
           fixedOptions: {
@@ -109,7 +109,7 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
         'EC2 인스턴스를 외부에서 접근 가능하게 만들기 위해서는 단순히 인스턴스를 생성하는 것만으로는 부족합니다. 인스턴스가 위치한 네트워크 공간이 외부 트래픽을 받을 수 있도록 설계된 서브넷이어야 합니다. 이 문제에서는, 이후 웹 서버를 배치하기 위한 준비 단계로 VPC 내부에 퍼블릭 서브넷을 하나 생성합니다.',
       requiredFields: [
         {
-          serviceName: 'Subnet',
+          serviceName: 'subnet',
           serviceTask: 'publicSubnetCreate',
           serviceSections: ['general', 'publicAccess'],
           fixedOptions: {
@@ -179,7 +179,7 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
         '퍼블릭 서브넷과 Internet Gateway를 생성했더라도, 아직 외부 인터넷과 실제로 통신할 수 있는 상태는 아닙니다. 네트워크 트래픽은 명시된 경로(Route)가 없으면 어디로 가야 할지 알 수 없습니다. 라우팅 테이블은 이 서브넷에서 발생한 트래픽을 어디로 보낼 것인가를 정의하는 설정입니다. 퍼블릭 서브넷의 기본 트래픽이 Internet Gateway로 향하도록 라우팅 테이블을 설정하세요.',
       requiredFields: [
         {
-          serviceName: 'RouteTable',
+          serviceName: 'routeTable',
           serviceTask: 'routeTableConfigure',
           serviceSections: ['general', 'routes', 'subnetAssociations'],
           fixedOptions: {
@@ -225,7 +225,7 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
       descDetail: 'test용 문제입니다.',
       requiredFields: [
         {
-          serviceName: 'CloudFront',
+          serviceName: 'cloudFront',
           serviceTask: 'originSettings',
           fixedOptions: {},
           serviceSections: ['originDomain', 'originAccessControl'],
@@ -245,13 +245,13 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
       descDetail: '서비스 2개 테스트용입니다.',
       requiredFields: [
         {
-          serviceName: 'CloudFront',
+          serviceName: 'cloudFront',
           serviceTask: 'originSettings',
           fixedOptions: {},
           serviceSections: ['originDomain', 'originAccessControl'],
         },
         {
-          serviceName: 'S3',
+          serviceName: 's3',
           serviceTask: 'bucketCreate',
           fixedOptions: {},
           serviceSections: ['ownership', 'versioning'],
