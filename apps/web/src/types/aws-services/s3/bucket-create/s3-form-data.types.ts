@@ -1,29 +1,29 @@
 export interface S3BucketFormData {
-  general: {
-    bucketName: string
-    region: string
+  general?: {
+    name?: string
+    region?: string
   }
-  ownership: {
-    aclEnabled: 'disabled' | 'enabled'
+  ownership?: {
+    aclEnabled?: 'disabled' | 'enabled'
     ownershipModel?: 'bucket-owner-preferred' | 'object-writer'
   }
-  blockPublicAccess: {
-    blockAll: boolean
-    blockPublicAcls: boolean
-    ignorePublicAcls: boolean
-    blockPublicPolicy: boolean
-    restrictPublicBuckets: boolean
+  blockPublicAccess?: {
+    blockAll?: boolean
+    blockPublicAcls?: boolean
+    ignorePublicAcls?: boolean
+    blockPublicPolicy?: boolean
+    restrictPublicBuckets?: boolean
   }
-  versioning: {
-    enabled: boolean
+  versioning?: {
+    versioningEnabled?: boolean
   }
-  encryption: {
+  encryption?: {
     type: 'sse-s3' | 'sse-kms'
   }
-  advancedSettings: {
-    objectLockEnabled: boolean
+  advancedSettings?: {
+    objectLockEnabled?: boolean
   }
-  tags: Array<{
+  tags?: Array<{
     key: string
     value: string
   }>

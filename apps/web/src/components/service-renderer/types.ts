@@ -1,7 +1,10 @@
 import type { ComponentType } from 'react'
 import type { Control, UseFormSetValue, UseFormWatch } from 'react-hook-form'
 
+import { S3BucketFormData } from '@/types/aws-services/s3/bucket-create/s3-form-data.types'
 import type { Edge, Node } from '@xyflow/react'
+
+export type FormData = S3BucketFormData
 
 /**
  * Base props that all Renderer components receive
