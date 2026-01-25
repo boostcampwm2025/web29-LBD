@@ -5,10 +5,12 @@ import CloudFrontDistributionList from '@/components/aws-services/cloudfront/clo
 import CloudFrontDistributionSettings from '@/components/aws-services/cloudfront/cloudfront-distribution-settings/cloudfront-distribution-settings'
 import CloudFrontOriginSettings from '@/components/aws-services/cloudfront/cloudfront-origin-settings/cloudfront-origin-settings'
 import CloudFrontWebsiteSettings from '@/components/aws-services/cloudfront/cloudfront-website-settings/cloudfront-website-settings'
+import EC2InstanceCreate from '@/components/aws-services/ec2/ec2-instance-create/ec2-instance-create'
 import S3BucketCreate from '@/components/aws-services/s3/s3-bucket-create/s3-bucket-create'
 import S3BucketDetail from '@/components/aws-services/s3/s3-bucket-detail/s3-bucket-detail'
 import S3BucketList from '@/components/aws-services/s3/s3-bucket-list/s3-bucket-list'
 import S3FileUpload from '@/components/aws-services/s3/s3-file-upload/s3-file-upload'
+import { EC2_INSTANCE_CREATE_SECTIONS } from '@/constants/aws-services/ec2'
 import { CLOUDFRONT_CACHE_BEHAVIOR_SECTIONS } from '@/types/aws-services/cloudfront/cache-behavior/constants'
 import { CLOUDFRONT_DISTRIBUTION_LIST_SECTIONS } from '@/types/aws-services/cloudfront/distribution-list/constants'
 import { CLOUDFRONT_DISTRIBUTION_SETTINGS_SECTIONS } from '@/types/aws-services/cloudfront/distribution-settings/constants'
@@ -67,7 +69,15 @@ const CloudFront: Record<string, ServicePage> = {
   },
 }
 
+const EC2: Record<string, ServicePage> = {
+  instanceCreate: {
+    component: EC2InstanceCreate,
+    sections: EC2_INSTANCE_CREATE_SECTIONS,
+  },
+}
+
 export const AWS_SERVICE_REGISTRY = {
   s3: S3,
   cloudFront: CloudFront,
+  ec2: EC2,
 }
