@@ -1,5 +1,3 @@
-// import { ProblemDetailProvider } from './provider'
-
 export default function ProblemDetailLayout({
   children,
 }: Readonly<{
@@ -7,7 +5,7 @@ export default function ProblemDetailLayout({
 }>) {
   return (
     <>
-      <div className="grid grid-cols-2 gap-2">{children}</div>
+      <div className="">{children}</div>
     </>
   )
 }
