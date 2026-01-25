@@ -39,11 +39,15 @@ export default async function ProblemDetailPage({
   const { id } = await params
   const { type: _type } = await searchParams
 
-  const { serviceMappers, diagram } = await getProblemData(id)
+  const { title, description, tags, serviceMappers, diagram } =
+    await getProblemData(id)
 
   return (
     <ProblemDetailClient
       problemId={id}
+      title={title}
+      description={description}
+      tags={tags}
       problemData={serviceMappers}
       diagramData={diagram}
       initialFeedback={mockFeedbackMessages}
