@@ -67,6 +67,24 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
         },
       },
     },
+    {
+      problem: problems[7], // S3 버킷 생성하기
+      answer_config: {
+        s3: [
+          {
+            id: 'my-first-bucket',
+            name: 'my-first-bucket',
+            region: 'ap-northeast-2',
+            aclEnabled: 'disabled',
+            blockAll: true,
+            blockPublicAcls: true,
+            ignorePublicAcls: true,
+            blockPublicPolicy: true,
+            restrictPublicBuckets: true,
+          },
+        ],
+      },
+    },
   ];
 
   for (const solutionData of solutions) {
