@@ -148,10 +148,13 @@ export function ProblemFormProvider<T extends FieldValues>({
       submitConfig: Object.fromEntries(
         Object.entries(submitConfig).map(([serviceKey, items]) => [
           serviceKey,
-          (items || []).map((item: ServiceConfigItem<ServiceConfig>) => ({
-            ...item.data,
-            id: item.data.name,
-          })),
+          (items || []).map((item: ServiceConfigItem<ServiceConfig>) => {
+            const { _type, ...rest } = item.data
+            return {
+              ...rest,
+              id: item.data.name,
+            }
+          }),
         ]),
       ),
     }
