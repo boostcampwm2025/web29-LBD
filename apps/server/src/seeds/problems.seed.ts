@@ -185,17 +185,17 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
       requiredFields: [
         {
           serviceName: 's3',
-          serviceTask: 'bucket-create',
+          serviceTask: 'bucketCreate',
           serviceSections: ['general', 'ownership', 'blockPublicAccess'],
         },
         {
           serviceName: 's3',
-          serviceTask: 'bucket-list',
+          serviceTask: 'bucketList',
           serviceSections: ['header', 'bucketTable', 'searchBar'],
         },
         {
-          serviceName: 'cloudfront',
-          serviceTask: 'website-settings',
+          serviceName: 'cloudFront',
+          serviceTask: 'websiteSettings',
           serviceSections: ['defaultRootObject'],
         },
       ],
