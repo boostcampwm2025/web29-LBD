@@ -17,9 +17,9 @@ export class User {
   @Column({ type: 'varchar', length: 100 })
   password: string;
 
-  @CreateDateColumn({ type: 'timestamp' })
-  created_at: Date;
+  @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
+  createdAt: Date;
 
-  @UpdateDateColumn({ type: 'timestamp' })
-  updated_at: Date;
+  @UpdateDateColumn({ name: 'updated_at', type: 'timestamp' })
+  updatedAt: Date;
 }

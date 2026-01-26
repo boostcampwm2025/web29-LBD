@@ -5,7 +5,7 @@ import { SectionContainer } from '@/components/section-container'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { EC2_TOOLTIPS } from '@/constants/aws-services/ec2'
-import type { EC2SectionProps } from '@/types/aws-services/ec2/ec2-instance-create'
+import type { EC2SectionProps } from '@/types/aws-services/ec2/instance-create'
 
 export function NameTag({ control }: EC2SectionProps) {
   return (

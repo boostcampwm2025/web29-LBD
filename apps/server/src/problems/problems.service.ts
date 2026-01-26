@@ -12,6 +12,7 @@ import {
   UnitProblemItemResponseDto,
 } from './dto/problem-list-response.dto';
 import { Cookbook } from 'src/entities/cookbook.entity';
+import { Solution } from '@/entities/solution.entity';
 
 @Injectable()
 export class ProblemsService {
@@ -23,11 +24,14 @@ export class ProblemsService {
 
     @InjectRepository(Cookbook)
     private readonly cookbookRepository: Repository<Cookbook>,
+
+    @InjectRepository(Solution)
+    private readonly solutionRepository: Repository<Solution>,
   ) {}
 
   private async findUnitProblems(): Promise<UnitProblemItemResponseDto[]> {
     const units = await this.problemRepository.find({
-      where: { problem_type: ProblemType.UNIT },
+      where: { problemType: ProblemType.UNIT },
       relations: ['tags'],
     });
 
@@ -43,7 +47,7 @@ export class ProblemsService {
     CookbookProblemItemResponseDto[]
   > {
     const cookbooks = await this.cookbookRepository.find({
-      relations: ['tags', 'cookbook_problems', 'cookbook_problems.problem'],
+      relations: ['tags', 'cookbookProblems', 'cookbookProblems.problem'],
     });
 
     return cookbooks.map((cookbook) => ({
@@ -51,8 +55,8 @@ export class ProblemsService {
       title: cookbook.title,
       description: cookbook.description,
       tags: cookbook.tags?.map((tag) => tag.name) ?? [],
-      problems: cookbook.cookbook_problems
-        .sort((a, b) => a.order_number - b.order_number)
+      problems: cookbook.cookbookProblems
+        .sort((a, b) => a.orderNumber - b.orderNumber)
         .map((cp) => ({
           id: cp.problem.id,
           title: cp.problem.title,
@@ -89,23 +93,44 @@ export class ProblemsService {
 
     return {
       id: problem.id,
-      problem_type: problem.problem_type,
+      problemType: problem.problemType,
       title: problem.title,
       description: problem.description,
-      desc_detail: problem.desc_detail,
-      required_fields: problem.required_fields,
+      descDetail: problem.descDetail,
+      requiredFields: problem.requiredFields,
       tags: problem.tags.map((tag) => tag.name),
     };
   }
 
-  submit(problemId: number, body: SubmitRequestDto): SubmitResponseDto {
+  async submit(
+    problemId: number,
+    body: SubmitRequestDto,
+  ): Promise<SubmitResponseDto> {
     // MOCK 문제 데이터
-    const problemData = {
-      problemType: ProblemType.UNIT,
-      solution: {},
-    };
+    // const problemData = {
+    //   problemType: ProblemType.UNIT,
+    //   solution: {},
+    // };
 
     // TODO: problemId로 문제 데이터를 조회하는 로직 추후 구현 필요
+
+    const problemEntity = await this.problemRepository.findOne({
+      where: { id: problemId },
+      relations: {
+        solution: true,
+      },
+    });
+
+    if (!problemEntity) {
+      throw new NotFoundException(
+        `문제 ID ${problemId}을(를) 찾을 수 없습니다.`,
+      );
+    }
+
+    const problemData = {
+      problemType: problemEntity.problemType,
+      solution: problemEntity.solution.answerConfig,
+    };
 
     const result = this.validationService.validate(body, problemData);
     return result;

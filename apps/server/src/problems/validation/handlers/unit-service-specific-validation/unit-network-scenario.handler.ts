@@ -3,6 +3,7 @@ import { SubmitConfig } from '@/problems/dto/submit-request.dto';
 import { FeedbackDto } from '@/problems/dto/submit-response.dto';
 import { NetworkRequirements } from '@/problems/types/requirements-types';
 import { NetworkFeedbackScenarios } from '@/problems/types/unit-problem-feedback-types';
+import { removeUndefined } from '../../utils/refine-request';
 
 @Injectable()
 export class NetworkScenarioHandler {
@@ -61,11 +62,12 @@ export class NetworkScenarioHandler {
   ): FeedbackDto[] {
     const feedbacks: FeedbackDto[] = [];
     const igws = config.internetGateway || [];
+    const refinedIgws = igws.map((igw) => removeUndefined(igw));
 
     for (const [vpcName, req] of Object.entries(reqs ?? {})) {
       // 1. IGW_NOT_ATTACHED
       if (req.requireIgwAttached) {
-        const attachedIgw = igws.find((igw) => igw.vpcName === vpcName);
+        const attachedIgw = refinedIgws.find((igw) => igw.vpcName === vpcName);
         if (!attachedIgw) {
           feedbacks.push({
             serviceType: 'vpc',
@@ -87,9 +89,10 @@ export class NetworkScenarioHandler {
   ): FeedbackDto[] {
     const feedbacks: FeedbackDto[] = [];
     const rts = config.routeTable || [];
+    const refinedRts = rts.map((rt) => removeUndefined(rt));
 
     for (const [rtName, req] of Object.entries(reqs ?? {})) {
-      const rt = rts.find((r) => r.name === rtName);
+      const rt = refinedRts.find((r) => r.name === rtName);
       if (!rt) continue; // 존재 여부는 UnitValidation에서 처리
 
       // 2. ROUTES_TO_IGW_MISSING
@@ -139,9 +142,10 @@ export class NetworkScenarioHandler {
     const feedbacks: FeedbackDto[] = [];
     const subnets = config.subnet || [];
     const rts = config.routeTable || [];
+    const refinedRts = rts.map((rt) => removeUndefined(rt));
 
     const getRtForSubnet = (subnetName: string) => {
-      return rts.find(
+      return refinedRts.find(
         (rt) => rt.associations?.some((assoc) => assoc.subnetId === subnetName), // subnetId가 name이라고 가정
       );
     };
@@ -195,9 +199,11 @@ export class NetworkScenarioHandler {
     const feedbacks: FeedbackDto[] = [];
     const nats = config.natGateway || [];
     const rts = config.routeTable || [];
+    const refinedRts = rts.map((rt) => removeUndefined(rt));
+    const refinedNats = nats.map((nat) => removeUndefined(nat));
 
     const isPublicSubnet = (subnetName: string): boolean => {
-      const rt = rts.find((rt) =>
+      const rt = refinedRts.find((rt) =>
         rt.associations?.some((assoc) => assoc.subnetId === subnetName),
       );
       return !!rt?.routes?.some(
@@ -208,7 +214,7 @@ export class NetworkScenarioHandler {
     };
 
     for (const [natName, req] of Object.entries(reqs ?? {})) {
-      const nat = nats.find((n) => n.name === natName);
+      const nat = refinedNats.find((n) => n.name === natName);
       if (!nat) continue;
 
       // 4. NAT_GW_IN_WRONG_SUBNET
@@ -235,9 +241,10 @@ export class NetworkScenarioHandler {
   ): FeedbackDto[] {
     const feedbacks: FeedbackDto[] = [];
     const nacls = config.nacl || [];
+    const refinedNacls = nacls.map((nacl) => removeUndefined(nacl));
 
     for (const [naclName, req] of Object.entries(reqs ?? {})) {
-      const nacl = nacls.find((n) => n.name === naclName);
+      const nacl = refinedNacls.find((n) => n.name === naclName);
       if (!nacl) continue;
 
       // 5. NACL_DENY_TRAFFIC

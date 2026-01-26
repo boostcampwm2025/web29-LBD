@@ -18,8 +18,8 @@ export class Problem {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'enum', enum: ProblemType })
-  problem_type: ProblemType;
+  @Column({ name: 'problem_type', type: 'enum', enum: ProblemType })
+  problemType: ProblemType;
 
   @Column({ type: 'varchar', length: 255 })
   title: string;
@@ -27,11 +27,11 @@ export class Problem {
   @Column({ type: 'text', nullable: false })
   description: string;
 
-  @Column({ type: 'text', nullable: true })
-  desc_detail: string;
+  @Column({ name: 'desc_detail', type: 'text', nullable: true })
+  descDetail: string;
 
-  @Column({ type: 'json', nullable: false })
-  required_fields: TServiceConfigMap[];
+  @Column({ name: 'required_fields', type: 'json', nullable: false })
+  requiredFields: TServiceConfigMap[];
 
   @ManyToMany(() => Tag, (tag) => tag.problems)
   @JoinTable({
@@ -41,11 +41,11 @@ export class Problem {
   })
   tags: Tag[];
 
-  @CreateDateColumn({ type: 'timestamp' })
-  created_at: Date;
+  @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
+  createdAt: Date;
 
-  @UpdateDateColumn({ type: 'timestamp' })
-  updated_at: Date;
+  @UpdateDateColumn({ name: 'updated_at', type: 'timestamp' })
+  updatedAt: Date;
 
   @OneToOne(() => Solution, (solution) => solution.problem, {
     cascade: true,
@@ -61,5 +61,5 @@ export class Problem {
       referencedColumnName: 'id',
     },
   })
-  related_problems: Problem[];
+  relatedProblems: Problem[];
 }

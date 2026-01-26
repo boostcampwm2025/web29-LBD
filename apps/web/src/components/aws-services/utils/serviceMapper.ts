@@ -13,11 +13,15 @@ export const serviceMapper = ({
 }: IServiceMapper) => {
   const service = AWS_SERVICE_REGISTRY[serviceName]
   if (!service) {
-    throw new Error('service component is not found')
+    throw new Error(
+      'service(ex. s3, ec2... "serviceName") component is not found',
+    )
   }
   const page = service[serviceTask]
   if (!page) {
-    throw new Error('page component is not found')
+    throw new Error(
+      'page(ex. bucketCreate, bucketList... "serviceTask") component is not found',
+    )
   }
 
   const inputSet = new Set(inputSections)

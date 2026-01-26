@@ -16,19 +16,20 @@ describe('ProblemsService', () => {
   // Mock 데이터
   const MOCK_PROBLEM_WITH_TAGS = {
     id: 1,
-    problem_type: ProblemType.UNIT,
+    problemType: ProblemType.UNIT,
     title: 'VPC 만들기',
     description: 'VPC를 생성하는 문제입니다',
-    required_fields: [
+    descDetail: 'VPC 상세 설명',
+    requiredFields: [
       {
-        service: 'VPC',
-        service_task: 'vpc-create',
-        service_sections: ['general'],
-        fixed_options: {
+        serviceName: 'vpc',
+        serviceTask: 'vpcCreate',
+        serviceSections: ['general'],
+        fixedOptions: {
           general: {
-            cidr_block: {
+            cidrBlock: {
               placeholder: '10.0.0.0/16',
-              helper_text: 'VPC CIDR 블록',
+              helperText: 'VPC CIDR 블록',
               required: true,
             },
           },
@@ -96,10 +97,11 @@ describe('ProblemsService', () => {
       });
       expect(result).toEqual({
         id: 1,
-        problem_type: ProblemType.UNIT,
+        problemType: ProblemType.UNIT,
         title: 'VPC 만들기',
         description: 'VPC를 생성하는 문제입니다',
-        required_fields: MOCK_PROBLEM_WITH_TAGS.required_fields,
+        descDetail: 'VPC 상세 설명',
+        requiredFields: MOCK_PROBLEM_WITH_TAGS.requiredFields,
         tags: ['VPC', 'CIDR'],
       });
     });

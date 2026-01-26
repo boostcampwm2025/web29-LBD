@@ -7,7 +7,7 @@ import { SectionContainer } from '@/components/section-container'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { AMI_OPTIONS, EC2_TOOLTIPS } from '@/constants/aws-services/ec2'
-import type { EC2SectionProps } from '@/types/aws-services/ec2/ec2-instance-create'
+import type { EC2SectionProps } from '@/types/aws-services/ec2/instance-create'
 
 export function Ami({ control }: EC2SectionProps) {
   const selectedOsType = useWatch({

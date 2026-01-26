@@ -1,4 +1,10 @@
-import { IsArray, IsBoolean, IsOptional, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsBoolean,
+  IsEnum,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 // TODO: 각 서비스별 Config 타입 구체화하기
 
@@ -95,15 +101,44 @@ export class S3Config {
 
   @IsString()
   name: string;
+
+  @IsString()
+  region: string;
+
+  @IsEnum(['disabled', 'enabled'])
+  @IsOptional()
+  aclEnabled?: 'disabled' | 'enabled';
+
+  @IsEnum(['bucket-owner-preferred', 'object-writer'])
+  @IsOptional()
+  ownershipModel?: 'bucket-owner-preferred' | 'object-writer';
   @IsBoolean()
   @IsOptional()
-  serverSideEncryption?: boolean; // 암호화 설정 여부
+  blockAll?: boolean;
   @IsBoolean()
   @IsOptional()
-  publicAccessBlockEnabled?: boolean; // 퍼블릭 액세스 차단 설정 여부
+  ignorePublicAcls?: boolean;
   @IsBoolean()
   @IsOptional()
-  versioningEnabled?: boolean; // 버전 관리 활성화 여부
+  blockPublicPolicy?: boolean;
+  @IsBoolean()
+  @IsOptional()
+  blockPublicAcls?: boolean;
+  @IsBoolean()
+  @IsOptional()
+  restrictPublicBuckets?: boolean;
+  @IsEnum(['sse-s3', 'sse-kms'])
+  @IsOptional()
+  encryptionType?: 'sse-s3' | 'sse-kms';
+  @IsBoolean()
+  @IsOptional()
+  versioningEnabled?: boolean;
+  @IsOptional()
+  @IsArray()
+  tags?: Array<{
+    key: string;
+    value: string;
+  }>;
 }
 
 export class InternetGatewayConfig {

@@ -1,5 +1,5 @@
-import { ProblemListSection } from './components/problem-list.section'
-import { ProblemTabSection } from './components/problem-tab.section'
+import { ProblemListSection } from '../components/problem-list.section'
+import { ProblemTabSection } from '../components/problem-tab.section'
 
 import { getProblemListByType } from '@/lib/problem'
 import { TProblemType } from '@/types/problem.type'

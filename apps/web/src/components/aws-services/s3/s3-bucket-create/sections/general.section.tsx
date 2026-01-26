@@ -47,7 +47,7 @@ export const GeneralConfiguration = ({
         <div className="space-y-2">
           <Label htmlFor="bucket-name">버킷 이름</Label>
           <Controller
-            name="general.bucketName"
+            name="general.name"
             control={control}
             render={({ field }) => (
               <Input

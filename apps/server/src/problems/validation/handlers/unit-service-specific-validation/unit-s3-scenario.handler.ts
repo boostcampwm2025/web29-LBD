@@ -36,11 +36,11 @@ export class S3ScenarioHandler {
 
       // 1. BUCKET_NOT_ENCRYPTED
       if (req.requireEncryption) {
-        if (!bucket.serverSideEncryption) {
+        if (!bucket.encryptionType) {
           feedbacks.push({
             serviceType: 's3',
             service: bucketName,
-            field: 'serverSideEncryption',
+            field: 'encryptionType',
             code: S3FeedbackScenarios.BUCKET_NOT_ENCRYPTED,
             message: `S3 버킷 ${bucketName}에 기본 암호화(SSE) 설정이 되어 있지 않습니다.`,
           });
@@ -50,11 +50,11 @@ export class S3ScenarioHandler {
       // 2. BUCKET_PUBLIC_ACCESS_BLOCK_MISSING
       if (req.requirePublicAccessBlock) {
         // 보통 4가지 차단 옵션(BlockPublicAcls 등)을 모두 켜야 안전하다고 판단
-        if (!bucket.publicAccessBlockEnabled) {
+        if (!bucket.blockAll) {
           feedbacks.push({
             serviceType: 's3',
             service: bucketName,
-            field: 'publicAccessBlockEnabled',
+            field: 'blockAll',
             code: S3FeedbackScenarios.BUCKET_PUBLIC_ACCESS_BLOCK_MISSING,
             message: `S3 버킷 ${bucketName}에 '퍼블릭 액세스 차단' 설정이 누락되었습니다. 보안을 위해 활성화하세요.`,
           });

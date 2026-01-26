@@ -14,7 +14,7 @@ import {
   EC2_TOOLTIPS,
   INSTANCE_TYPE_OPTIONS,
 } from '@/constants/aws-services/ec2'
-import type { EC2SectionProps } from '@/types/aws-services/ec2/ec2-instance-create'
+import type { EC2SectionProps } from '@/types/aws-services/ec2/instance-create'
 
 export function InstanceType({ control }: EC2SectionProps) {
   return (

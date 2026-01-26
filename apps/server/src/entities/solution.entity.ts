@@ -18,6 +18,6 @@ export class Solution {
   @JoinColumn({ name: 'problem_id' })
   problem: Problem;
 
-  @Column({ type: 'json' })
-  answer_config: Record<string, any>;
+  @Column({ name: 'answer_config', type: 'json' })
+  answerConfig: Record<string, any>;
 }

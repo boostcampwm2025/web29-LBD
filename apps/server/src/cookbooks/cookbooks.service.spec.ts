@@ -16,40 +16,41 @@ describe('CookbooksService', () => {
     id: 1,
     title: 'VPC 네트워킹 기초',
     description: 'VPC부터 시작해서 완전한 네트워크 구성까지',
+    descDetail: 'VPC 네트워킹 상세 설명',
     tags: [
       { id: 1, name: 'VPC' },
       { id: 2, name: '네트워크' },
       { id: 3, name: '기초' },
     ],
-    cookbook_problems: [
+    cookbookProblems: [
       {
-        cookbook_id: 1,
-        problem_id: 2,
-        order_number: 2,
+        cookbookId: 1,
+        problemId: 2,
+        orderNumber: 2,
         problem: {
           id: 2,
           title: 'Subnet 만들기',
-          problem_type: ProblemType.UNIT,
+          problemType: ProblemType.UNIT,
         },
       },
       {
-        cookbook_id: 1,
-        problem_id: 1,
-        order_number: 1,
+        cookbookId: 1,
+        problemId: 1,
+        orderNumber: 1,
         problem: {
           id: 1,
           title: 'VPC 만들기',
-          problem_type: ProblemType.UNIT,
+          problemType: ProblemType.UNIT,
         },
       },
       {
-        cookbook_id: 1,
-        problem_id: 3,
-        order_number: 3,
+        cookbookId: 1,
+        problemId: 3,
+        orderNumber: 3,
         problem: {
           id: 3,
           title: 'IGW 연결하기',
-          problem_type: ProblemType.UNIT,
+          problemType: ProblemType.UNIT,
         },
       },
     ],
@@ -96,11 +97,12 @@ describe('CookbooksService', () => {
         id: 1,
         title: 'VPC 네트워킹 기초',
         description: 'VPC부터 시작해서 완전한 네트워크 구성까지',
+        descDetail: 'VPC 네트워킹 상세 설명',
         tags: ['VPC', '네트워크', '기초'],
         problems: [
-          { id: 1, title: 'VPC 만들기', order_number: 1 },
-          { id: 2, title: 'Subnet 만들기', order_number: 2 },
-          { id: 3, title: 'IGW 연결하기', order_number: 3 },
+          { id: 1, title: 'VPC 만들기', orderNumber: 1 },
+          { id: 2, title: 'Subnet 만들기', orderNumber: 2 },
+          { id: 3, title: 'IGW 연결하기', orderNumber: 3 },
         ],
       });
     });
@@ -126,7 +128,7 @@ describe('CookbooksService', () => {
       const cookbookId = 1;
       const cookbookWithoutProblems = {
         ...MOCK_COOKBOOK_WITH_PROBLEMS,
-        cookbook_problems: [],
+        cookbookProblems: [],
       } as unknown as Cookbook;
       cookbookRepository.findOne.mockResolvedValue(cookbookWithoutProblems);
 
@@ -146,9 +148,9 @@ describe('CookbooksService', () => {
       const result = await service.findByCookbookId(cookbookId);
 
       // Then: order_number 기준 오름차순 정렬
-      expect(result.problems[0].order_number).toBe(1);
-      expect(result.problems[1].order_number).toBe(2);
-      expect(result.problems[2].order_number).toBe(3);
+      expect(result.problems[0].orderNumber).toBe(1);
+      expect(result.problems[1].orderNumber).toBe(2);
+      expect(result.problems[2].orderNumber).toBe(3);
       expect(result.problems[0].title).toBe('VPC 만들기');
       expect(result.problems[1].title).toBe('Subnet 만들기');
       expect(result.problems[2].title).toBe('IGW 연결하기');

@@ -20,8 +20,8 @@ export class Cookbook {
   @Column({ type: 'text' })
   description: string;
 
-  @Column({ type: 'text' })
-  desc_detail: string;
+  @Column({ name: 'desc_detail', type: 'text' })
+  descDetail: string;
 
   @ManyToMany(() => Tag, (tag) => tag.cookbooks)
   @JoinTable({
@@ -38,5 +38,5 @@ export class Cookbook {
       cascade: true,
     },
   )
-  cookbook_problems: CookbookProblem[];
+  cookbookProblems: CookbookProblem[];
 }

@@ -20,7 +20,7 @@ interface S3BucketCreateAdapterProps {
 // S3 버킷 생성 폼 기본값
 const DEFAULT_VALUES: S3BucketFormData = {
   general: {
-    bucketName: '',
+    name: '',
     region: 'us-east-1',
   },
   ownership: {
@@ -34,7 +34,7 @@ const DEFAULT_VALUES: S3BucketFormData = {
     restrictPublicBuckets: true,
   },
   versioning: {
-    enabled: false,
+    versioningEnabled: false,
   },
   encryption: {
     type: 'sse-s3',
@@ -56,7 +56,7 @@ export function S3BucketCreateAdapter({ config }: S3BucketCreateAdapterProps) {
   // useWatch를 사용하여 버킷 이름 감시
   const bucketName = useWatch({
     control: localForm.control,
-    name: 'general.bucketName',
+    name: 'general.name',
   })
 
   const onSubmit = (data: S3BucketFormData) => {
@@ -66,8 +66,8 @@ export function S3BucketCreateAdapter({ config }: S3BucketCreateAdapterProps) {
     ) as S3SubmitConfig
 
     // name 필드 추가
-    flattenedData.name = data.general.bucketName
-    flattenedData.region = data.general.region
+    flattenedData.name = data.general?.name || ''
+    flattenedData.region = data.general?.region || ''
 
     handleAddItem('s3', flattenedData)
     localForm.reset() // 다음 리소스 생성 준비

@@ -6,6 +6,7 @@ import CloudFrontDistributionList from '@/components/aws-services/cloudfront/clo
 import CloudFrontDistributionSettings from '@/components/aws-services/cloudfront/cloudfront-distribution-settings/cloudfront-distribution-settings'
 import CloudFrontOriginSettings from '@/components/aws-services/cloudfront/cloudfront-origin-settings/cloudfront-origin-settings'
 import CloudFrontWebsiteSettings from '@/components/aws-services/cloudfront/cloudfront-website-settings/cloudfront-website-settings'
+import EC2InstanceCreate from '@/components/aws-services/ec2/ec2-instance-create/ec2-instance-create'
 import S3BucketCreate from '@/components/aws-services/s3/s3-bucket-create/s3-bucket-create'
 import S3BucketDetail from '@/components/aws-services/s3/s3-bucket-detail/s3-bucket-detail'
 import S3BucketList from '@/components/aws-services/s3/s3-bucket-list/s3-bucket-list'
@@ -20,6 +21,7 @@ import type { CloudFrontOriginFormData } from '@/types/aws-services/cloudfront/o
 import { CLOUDFRONT_ORIGIN_SETTINGS_SECTIONS } from '@/types/aws-services/cloudfront/origin-settings/constants'
 import type { CloudFrontWebsiteFormData } from '@/types/aws-services/cloudfront/website-settings'
 import { CLOUDFRONT_WEBSITE_SETTINGS_SECTIONS } from '@/types/aws-services/cloudfront/website-settings/constants'
+import { EC2_INSTANCE_CREATE_SECTIONS } from '@/types/aws-services/ec2/instance-create'
 import type { S3BucketFormData } from '@/types/aws-services/s3/bucket-create'
 import { S3_BUCKET_CREATE_SECTIONS } from '@/types/aws-services/s3/bucket-create/'
 import { S3_BUCKET_DETAIL_SECTIONS } from '@/types/aws-services/s3/bucket-detail/'
@@ -37,11 +39,11 @@ export interface ServicePage<T extends FieldValues = FieldValues> {
 }
 
 const S3: Record<string, ServicePage> = {
-  'bucket-create': {
+  bucketCreate: {
     component: S3BucketCreate,
     sections: S3_BUCKET_CREATE_SECTIONS,
     defaultValues: {
-      general: { bucketName: '', region: 'ap-northeast-2' },
+      general: { name: '', region: 'ap-northeast-2' },
       ownership: { aclEnabled: 'disabled' },
       blockPublicAccess: {
         blockAll: true,
@@ -50,13 +52,13 @@ const S3: Record<string, ServicePage> = {
         blockPublicPolicy: true,
         restrictPublicBuckets: true,
       },
-      versioning: { enabled: false },
+      versioning: { versioningEnabled: false },
       encryption: { type: 'sse-s3' },
       advancedSettings: { objectLockEnabled: false },
       tags: [],
     } satisfies S3BucketFormData,
   },
-  'bucket-list': {
+  bucketList: {
     component: S3BucketList,
     sections: S3_BUCKET_LIST_SECTIONS,
     defaultValues: {
@@ -65,7 +67,7 @@ const S3: Record<string, ServicePage> = {
       buckets: [],
     } satisfies S3ListFormData,
   },
-  'bucket-detail': {
+  bucketDetail: {
     component: S3BucketDetail,
     sections: S3_BUCKET_DETAIL_SECTIONS,
     defaultValues: {
@@ -75,7 +77,7 @@ const S3: Record<string, ServicePage> = {
       objects: [],
     } satisfies S3DetailFormData,
   },
-  'file-upload': {
+  fileUpload: {
     component: S3FileUpload,
     sections: S3_FILE_UPLOAD_SECTIONS,
     defaultValues: {
@@ -88,7 +90,7 @@ const S3: Record<string, ServicePage> = {
 }
 
 const CloudFront: Record<string, ServicePage> = {
-  'distribution-list': {
+  distributionList: {
     component: CloudFrontDistributionList,
     sections: CLOUDFRONT_DISTRIBUTION_LIST_SECTIONS,
     defaultValues: {
@@ -96,7 +98,7 @@ const CloudFront: Record<string, ServicePage> = {
       selectedDistributions: [],
     } satisfies CloudFrontListFormData,
   },
-  'origin-settings': {
+  originSettings: {
     component: CloudFrontOriginSettings,
     sections: CLOUDFRONT_ORIGIN_SETTINGS_SECTIONS,
     defaultValues: {
@@ -109,7 +111,7 @@ const CloudFront: Record<string, ServicePage> = {
       customHeaders: [],
     } satisfies CloudFrontOriginFormData,
   },
-  'distribution-settings': {
+  distributionSettings: {
     component: CloudFrontDistributionSettings,
     sections: CLOUDFRONT_DISTRIBUTION_SETTINGS_SECTIONS,
     defaultValues: {
@@ -124,7 +126,7 @@ const CloudFront: Record<string, ServicePage> = {
       ipv6Enabled: true,
     } satisfies CloudFrontDistributionSettingsFormData,
   },
-  'cache-behavior': {
+  cacheBehavior: {
     component: CloudFrontCacheBehavior,
     sections: CLOUDFRONT_CACHE_BEHAVIOR_SECTIONS,
     defaultValues: {
@@ -138,7 +140,7 @@ const CloudFront: Record<string, ServicePage> = {
       viewerResponseFunction: '',
     } satisfies CloudFrontCacheFormData,
   },
-  'website-settings': {
+  websiteSettings: {
     component: CloudFrontWebsiteSettings,
     sections: CLOUDFRONT_WEBSITE_SETTINGS_SECTIONS,
     defaultValues: {
@@ -153,7 +155,18 @@ const CloudFront: Record<string, ServicePage> = {
   },
 }
 
+const EC2: Record<string, ServicePage> = {
+  instanceCreate: {
+    component: EC2InstanceCreate,
+    sections: EC2_INSTANCE_CREATE_SECTIONS,
+    defaultValues: {
+      nameTag: { name: '' },
+    },
+  },
+}
+
 export const AWS_SERVICE_REGISTRY = {
-  S3,
-  CloudFront,
+  s3: S3,
+  cloudFront: CloudFront,
+  ec2: EC2,
 }

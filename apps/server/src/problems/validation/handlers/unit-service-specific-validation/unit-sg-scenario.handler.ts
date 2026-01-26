@@ -3,6 +3,7 @@ import { SubmitConfig } from '@/problems/dto/submit-request.dto';
 import { FeedbackDto } from '@/problems/dto/submit-response.dto';
 import { SgRequirements } from '@/problems/types/requirements-types';
 import { SGFeedbackScenarios } from '@/problems/types/unit-problem-feedback-types';
+import { removeUndefined } from '../../utils/refine-request';
 
 @Injectable()
 export class SgScenarioHandler {
@@ -36,9 +37,9 @@ export class SgScenarioHandler {
   ): FeedbackDto[] {
     const feedbacks: FeedbackDto[] = [];
     const sgs = config.securityGroups || [];
-
+    const refinedSgs = sgs.map((sg) => removeUndefined(sg));
     for (const [sgName, req] of Object.entries(reqs ?? {})) {
-      const sg = sgs.find((s) => s.name === sgName);
+      const sg = refinedSgs.find((s) => s.name === sgName);
       if (!sg) continue;
 
       const rules = sg.ipPermissions || [];
@@ -142,9 +143,10 @@ export class SgScenarioHandler {
   ): FeedbackDto[] {
     const feedbacks: FeedbackDto[] = [];
     const ec2s = config.ec2 || [];
+    const refinedEc2s = ec2s.map((ec2) => removeUndefined(ec2));
 
     for (const [ec2Name, req] of Object.entries(reqs ?? {})) {
-      const ec2 = ec2s.find((i) => i.name === ec2Name);
+      const ec2 = refinedEc2s.find((i) => i.name === ec2Name);
       if (!ec2) continue;
 
       const attachedSgs = ec2.securityGroups || [];

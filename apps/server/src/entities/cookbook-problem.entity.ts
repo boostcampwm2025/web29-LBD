@@ -4,16 +4,16 @@ import { Problem } from './problem.entity';
 
 @Entity('cookbook_problem')
 export class CookbookProblem {
-  @PrimaryColumn({ type: 'int' })
-  cookbook_id: number;
+  @PrimaryColumn({ name: 'cookbook_id', type: 'int' })
+  cookbookId: number;
 
-  @PrimaryColumn({ type: 'int' })
-  problem_id: number;
+  @PrimaryColumn({ name: 'problem_id', type: 'int' })
+  problemId: number;
 
-  @Column({ type: 'int' })
-  order_number: number;
+  @Column({ name: 'order_number', type: 'int' })
+  orderNumber: number;
 
-  @ManyToOne(() => Cookbook, (cookbook) => cookbook.cookbook_problems, {
+  @ManyToOne(() => Cookbook, (cookbook) => cookbook.cookbookProblems, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'cookbook_id' })

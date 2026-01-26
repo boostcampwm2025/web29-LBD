@@ -11,7 +11,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { EC2_TOOLTIPS, VOLUME_TYPE_OPTIONS } from '@/constants/aws-services/ec2'
-import type { EC2SectionProps } from '@/types/aws-services/ec2/ec2-instance-create'
+import type { EC2SectionProps } from '@/types/aws-services/ec2/instance-create'
 
 export function Storage({ control }: EC2SectionProps) {
   // 현재 선택된 볼륨 타입 감시

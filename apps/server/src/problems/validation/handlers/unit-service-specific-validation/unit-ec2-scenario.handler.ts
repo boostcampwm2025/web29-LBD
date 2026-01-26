@@ -3,6 +3,7 @@ import { SubmitConfig } from '@/problems/dto/submit-request.dto';
 import { FeedbackDto } from '@/problems/dto/submit-response.dto';
 import { Ec2Requirements } from '@/problems/types/requirements-types';
 import { EC2FeedbackScenarios } from '@/problems/types/unit-problem-feedback-types';
+import { removeUndefined } from '@/problems/validation/utils/refine-request';
 
 @Injectable()
 export class Ec2ScenarioHandler {
@@ -28,9 +29,14 @@ export class Ec2ScenarioHandler {
   ): FeedbackDto[] {
     const feedbacks: FeedbackDto[] = [];
     const instances = config.ec2 || [];
+
+    const refinedInstances = instances.map((instance) =>
+      removeUndefined(instance),
+    );
+
     // 1. EC2_IN_WRONG_SUBNET
     for (const [ec2Name, req] of Object.entries(reqs ?? {})) {
-      const instance = instances.find((i) => i.name === ec2Name);
+      const instance = refinedInstances.find((i) => i.name === ec2Name);
 
       if (!instance) continue;
 

@@ -12,6 +12,7 @@ import {
 
 import type { Control, UseFormSetValue } from 'react-hook-form'
 
+import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import type {
   S3BucketCreateConfig,
@@ -30,13 +31,18 @@ export default function S3BucketCreate({
   setValue,
 }: S3BucketCreateProps) {
   return (
-    <div className="mx-auto max-w-4xl space-y-6 p-6">
+    <form className="mx-auto max-w-4xl space-y-6 p-6">
       {/* Header Section */}
-      <div className="space-y-2">
-        <h2 className="text-3xl font-bold">버킷 생성</h2>
-        <p className="text-muted-foreground">S3 버킷 설정을 구성하세요</p>
-      </div>
+      <div className="flex items-center justify-between">
+        <div className="space-y-2">
+          <h2 className="text-3xl font-bold">버킷 생성</h2>
+          <p className="text-muted-foreground">S3 버킷 설정을 구성하세요</p>
+        </div>
 
+        <Button type="submit" size="lg">
+          변경사항 적용
+        </Button>
+      </div>
       {/* Section 1: General Configuration */}
       {config.general && (
         <>
@@ -93,6 +99,6 @@ export default function S3BucketCreate({
       {config.advancedSettings && (
         <AdvancedSettings control={control} config={config} />
       )}
-    </div>
+    </form>
   )
 }

@@ -20,9 +20,10 @@ import { Ec2ScenarioHandler } from './unit-service-specific-validation/unit-ec2-
 import { S3ScenarioHandler } from './unit-service-specific-validation/unit-s3-scenario.handler';
 import { SgScenarioHandler } from './unit-service-specific-validation/unit-sg-scenario.handler';
 import { NetworkScenarioHandler } from './unit-service-specific-validation/unit-network-scenario.handler';
+import { removeUndefined } from '../utils/refine-request';
 
 function hasCidrBlock(
-  config: ServiceConfigTypes,
+  config: Partial<ServiceConfigTypes>,
 ): config is VPCConfig | SubnetConfig {
   return 'cidrBlock' in config;
 }
@@ -61,6 +62,7 @@ export class UnitValidationHandler implements ProblemValidationHandler {
 
     const solutionConfig = problemData.solution;
     const requirements = problemData.requirements || {};
+
     const mismatchedConfigs: Partial<UnitProblemValidateResult> = {};
 
     // 2. 서비스별 설정 비교 (Diffing)
@@ -121,16 +123,24 @@ export class UnitValidationHandler implements ProblemValidationHandler {
     onlyInAnswer: ServiceConfigTypes[];
     onlyInSolution: ServiceConfigTypes[];
   } {
+    const refinedAnswerConfigs = answerConfigs.map((config) =>
+      removeUndefined(config),
+    );
+
     const matchedAnswerIndices = new Set<number>();
     const matchedSolutionIndices = new Set<number>();
 
-    for (let i = 0; i < answerConfigs.length; i++) {
+    for (let i = 0; i < refinedAnswerConfigs.length; i++) {
       for (let j = 0; j < solutionConfigs.length; j++) {
         if (matchedAnswerIndices.has(i)) break;
         if (matchedSolutionIndices.has(j)) continue;
 
         if (
-          this.isConfigMatch(answerConfigs[i], solutionConfigs[j], serviceKey)
+          this.isConfigMatch(
+            refinedAnswerConfigs[i],
+            solutionConfigs[j],
+            serviceKey,
+          )
         ) {
           matchedAnswerIndices.add(i);
           matchedSolutionIndices.add(j);
@@ -139,7 +149,7 @@ export class UnitValidationHandler implements ProblemValidationHandler {
     }
 
     return {
-      onlyInAnswer: answerConfigs.filter(
+      onlyInAnswer: refinedAnswerConfigs.filter(
         (_, i) => !matchedAnswerIndices.has(i),
       ),
       onlyInSolution: solutionConfigs.filter(
@@ -170,6 +180,13 @@ export class UnitValidationHandler implements ProblemValidationHandler {
     const { cidrBlock: answerCidr, ...answerRest } = answer;
     const { cidrBlock: solutionCidr, ...solutionRest } = solution;
 
+    if (!answerCidr) {
+      return false;
+    }
+    if (!solutionCidr) {
+      return false;
+    }
+
     // 1. CIDR 검증 (포함 관계 확인)
     if (
       solutionCidr !== 'DONT_CARE' &&
@@ -183,10 +200,9 @@ export class UnitValidationHandler implements ProblemValidationHandler {
   }
 
   private generateFeedbacks(
-    validationInfo: Partial<UnitProblemValidateResult>,
+    validationInfo: UnitProblemValidateResult,
   ): FeedbackDto[] {
     const feedbacks: FeedbackDto[] = [];
-
     for (const [serviceKey, entry] of Object.entries(validationInfo)) {
       if (!entry) continue;
       const { onlyInAnswer, onlyInSolution } = entry;
@@ -210,6 +226,7 @@ export class UnitValidationHandler implements ProblemValidationHandler {
       for (const submittedConfig of onlyInAnswer) {
         if (!hasName(submittedConfig)) continue;
         const matchedSolution = solutionMap.get(submittedConfig.name);
+        // TODO: 여기서 이름을 확인해달라는 피드백 보내기. 일단 이름은 다 맞는 것으로 가정.
         if (!matchedSolution) continue;
 
         // 2. 필드 누락 (Field Missing)
@@ -248,7 +265,10 @@ export class UnitValidationHandler implements ProblemValidationHandler {
     onlyInSolution: ServiceConfigTypes[],
     serviceKey: string,
   ): FeedbackDto[] {
-    const count = onlyInSolution.length - onlyInAnswer.length;
+    const refinedAnswerConfigs = onlyInAnswer.map((config) =>
+      removeUndefined(config),
+    );
+    const count = onlyInSolution.length - refinedAnswerConfigs.length;
     if (count <= 0) return [];
 
     return [
@@ -268,25 +288,28 @@ export class UnitValidationHandler implements ProblemValidationHandler {
     solution: ServiceConfigTypes,
     serviceKey: string,
   ): FeedbackDto[] {
-    const submittedKeys = Object.keys(submitted);
     const solutionKeys = Object.keys(solution);
 
-    if (solutionKeys.length <= submittedKeys.length) return [];
+    const refinedSubmitted: ServiceConfigTypes = removeUndefined(submitted);
+    const refinedSubmittedKeys = Object.keys(refinedSubmitted);
+
+    const onlyInSolutionKeys = solutionKeys.filter(
+      (key) => !refinedSubmittedKeys.includes(key),
+    );
+    if (onlyInSolutionKeys.length === 0) return [];
 
     const serviceName = hasName(submitted) ? submitted.name : undefined;
 
-    return solutionKeys
-      .filter((key) => !submittedKeys.includes(key))
-      .map((field) => ({
-        serviceType: serviceKey,
-        service: serviceName,
+    return onlyInSolutionKeys.map((field) => ({
+      serviceType: serviceKey,
+      service: serviceName,
+      field,
+      code: UnitProblemFeedbackType.FIELD_MISSING,
+      message: feedbackMessages[UnitProblemFeedbackType.FIELD_MISSING](
+        serviceKey,
         field,
-        code: UnitProblemFeedbackType.FIELD_MISSING,
-        message: feedbackMessages[UnitProblemFeedbackType.FIELD_MISSING](
-          serviceKey,
-          field,
-        ),
-      }));
+      ),
+    }));
   }
 
   private createUnnecessaryFieldFeedbacks(
@@ -294,25 +317,28 @@ export class UnitValidationHandler implements ProblemValidationHandler {
     solution: ServiceConfigTypes,
     serviceKey: string,
   ): FeedbackDto[] {
-    const submittedKeys = Object.keys(submitted);
+    const refindedSubmitted: ServiceConfigTypes = removeUndefined(submitted);
+    const refindedSubmittedKeys = Object.keys(refindedSubmitted);
     const solutionKeys = Object.keys(solution);
 
-    if (submittedKeys.length <= solutionKeys.length) return [];
+    const onlyInSumbittedKeys = refindedSubmittedKeys.filter(
+      (key) => !solutionKeys.includes(key),
+    );
+
+    if (onlyInSumbittedKeys.length === 0) return [];
 
     const serviceName = hasName(submitted) ? submitted.name : undefined;
 
-    return submittedKeys
-      .filter((key) => !solutionKeys.includes(key))
-      .map((field) => ({
-        serviceType: serviceKey,
-        service: serviceName,
+    return onlyInSumbittedKeys.map((field) => ({
+      serviceType: serviceKey,
+      service: serviceName,
+      field,
+      code: UnitProblemFeedbackType.UNNECESSARY,
+      message: feedbackMessages[UnitProblemFeedbackType.UNNECESSARY](
+        serviceKey,
         field,
-        code: UnitProblemFeedbackType.UNNECESSARY,
-        message: feedbackMessages[UnitProblemFeedbackType.UNNECESSARY](
-          serviceKey,
-          field,
-        ),
-      }));
+      ),
+    }));
   }
 
   private createIncorrectValueFeedbacks(
@@ -320,9 +346,10 @@ export class UnitValidationHandler implements ProblemValidationHandler {
     solution: ServiceConfigTypes,
     serviceKey: string,
   ): FeedbackDto[] {
-    const submittedKeys = Object.keys(submitted);
+    const refindedSubmitted: ServiceConfigTypes = removeUndefined(submitted);
+    const refindedSubmittedKeys = Object.keys(refindedSubmitted);
     const solutionKeys = Object.keys(solution);
-    const commonKeys = submittedKeys.filter((key) =>
+    const commonKeys = refindedSubmittedKeys.filter((key) =>
       solutionKeys.includes(key),
     );
     const incorrectFields: string[] = [];
@@ -333,10 +360,10 @@ export class UnitValidationHandler implements ProblemValidationHandler {
       if (
         isNetworkResource &&
         key === 'cidrBlock' &&
-        hasCidrBlock(submitted) &&
+        hasCidrBlock(refindedSubmitted) &&
         hasCidrBlock(solution)
       ) {
-        const subCidr = submitted.cidrBlock;
+        const subCidr = refindedSubmitted.cidrBlock;
         const solCidr = solution.cidrBlock;
 
         if (solCidr === 'DONT_CARE' || containsCidr(solCidr, subCidr)) {
@@ -344,12 +371,14 @@ export class UnitValidationHandler implements ProblemValidationHandler {
         }
       }
 
-      if (!this.isDeepEqual(submitted[key], solution[key])) {
+      if (!this.isDeepEqual(refindedSubmitted[key], solution[key])) {
         incorrectFields.push(key);
       }
     }
 
-    const serviceName = hasName(submitted) ? submitted.name : undefined;
+    const serviceName = hasName(refindedSubmitted)
+      ? refindedSubmitted.name
+      : undefined;
 
     return incorrectFields.map((field) => ({
       serviceType: serviceKey,

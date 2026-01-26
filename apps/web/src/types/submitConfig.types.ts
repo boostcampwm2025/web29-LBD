@@ -1,8 +1,5 @@
 import type { S3SubmitConfig } from './aws-services/s3/bucket-create'
 
-// 가정
-
-// 서비스 타입 키 정의
 export type ServiceType = 's3'
 
 export type ServiceConfig = S3SubmitConfig
