@@ -52,7 +52,7 @@ const S3: Record<string, ServicePage> = {
         blockPublicPolicy: true,
         restrictPublicBuckets: true,
       },
-      versioning: { versioningEnabled: false },
+      versioning: { enabled: false },
       encryption: { type: 'sse-s3' },
       advancedSettings: { objectLockEnabled: false },
       tags: [],
