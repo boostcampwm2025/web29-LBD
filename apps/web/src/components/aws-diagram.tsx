@@ -21,16 +21,19 @@ export type AwsNode = Node<
 >
 
 interface AwsDiagramProps {
-  nodes: AwsNode[] | Node[]
-  edges: Edge[]
+  nodes?: AwsNode[] | Node[]
+  edges?: Edge[]
 }
 
-export default function AwsDiagram(props: AwsDiagramProps) {
+export default function AwsDiagram({
+  nodes = [],
+  edges = [],
+}: AwsDiagramProps) {
   return (
     <div className="relative h-full w-full rounded-lg border border-gray-200 bg-gray-50 shadow-sm">
       <ReactFlow
-        nodes={props.nodes}
-        edges={props.edges}
+        nodes={nodes}
+        edges={edges}
         nodeTypes={awsNodeTypes}
         fitView
         fitViewOptions={{ padding: 0.2 }}
