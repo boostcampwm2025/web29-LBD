@@ -15,7 +15,7 @@ import {
   useForm,
 } from 'react-hook-form'
 
-import type { FeedbackDetail } from '@/app/(guest)/problems/components/feedback-detail-card'
+import { FeedbackDetail } from '@/types/feedback.type'
 
 interface ProblemFormContextValue<T extends FieldValues = FieldValues> {
   form: UseFormReturn<T>
@@ -39,23 +39,23 @@ export function ProblemFormProvider<T extends FieldValues>({
   defaultValues,
   problemId,
   initialFeedback = [],
+  // initialSubmitConfigs = [] -> 서비스 구성 정보를 관리하려면 이것도 추가해야하지 않을까요?
+  // initialNodes = [] -> 노드도 관리하려면 이것도 추가해야할 것 같읍니다.
 }: ProblemFormProviderProps<T>) {
   const methods = useForm<T>({ defaultValues })
+  const {
+    formState: { isSubmitting },
+  } = methods
   const [feedback, setFeedback] = useState<FeedbackDetail[]>(initialFeedback)
-  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const submitProblem = useCallback(async () => {
-    setIsSubmitting(true)
-
     // TODO: 실제 API 호출로 교체
     // const response = await fetch(`/api/problems/${problemId}/submit`, { ... })
     void problemId // 향후 API 호출 시 사용 예정
     await new Promise((resolve) => setTimeout(resolve, 1000))
 
-    // Mock: 기존 feedback 유지 (실제로는 API 응답으로 교체)
+    // TODO: 기존 feedback 유지 (실제로는 API 응답으로 교체)
     setFeedback(initialFeedback)
-
-    setIsSubmitting(false)
   }, [problemId, initialFeedback])
 
   const contextValue = useMemo(

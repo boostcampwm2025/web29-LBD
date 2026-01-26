@@ -1,6 +1,8 @@
-import { AwsGroupNode } from './nodes/aws-group-node'
-import { AwsResourceNode } from './nodes/aws-resource-node'
-import { AwsServiceNode } from './nodes/aws-service-node'
+import {
+  AwsGroupNode,
+  AwsResourceNode,
+  AwsServiceNode,
+} from '../components/diagram/nodes'
 
 export const awsNodeTypes = {
   awsService: AwsServiceNode,

@@ -1,11 +1,11 @@
 'use client'
 
-import { awsNodeTypes } from '@/components/diagram'
 import type {
   AwsGroupNodeData,
   AwsResourceNodeData,
   AwsServiceNodeData,
 } from '@/components/diagram'
+import { awsNodeTypes } from '@/types/node.type'
 import {
   Background,
   type Edge,

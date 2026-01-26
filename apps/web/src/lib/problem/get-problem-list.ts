@@ -1,7 +1,7 @@
-import { ProblemType } from '@/types/problem.type'
+import { TProblemType } from '@/types/problem.type'
 
 // 문제 유형에 따른 문제 목록 조회
-export async function getProblemListByType(type: ProblemType) {
+export async function getProblemListByType(type: TProblemType) {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3001'
 
   if (!baseUrl) {

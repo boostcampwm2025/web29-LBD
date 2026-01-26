@@ -1,9 +1,6 @@
 // AWS Icons
 export { AWS_ICONS, type AwsIconKey } from './aws-icons'
 
-// Node Types
-export { type AwsNodeType, awsNodeTypes } from './node-types'
-
 // Node Components
 export {
   AwsServiceNode,

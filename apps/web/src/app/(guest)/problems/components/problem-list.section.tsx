@@ -4,10 +4,15 @@ import { CompactUnitCard, UnitCard } from './unit'
 import React from 'react'
 
 import { cn } from '@/lib/utils'
-import { CookbookProblem, ProblemType, UnitProblem } from '@/types/problem.type'
+import {
+  CookbookProblem,
+  type TProblemType,
+  UnitProblem,
+  problemType,
+} from '@/types/problem.type'
 
 interface ProblemListSectionProps {
-  currentType: ProblemType
+  currentType: TProblemType
   problems: UnitProblem[] | CookbookProblem[]
 }
 
@@ -18,11 +23,11 @@ export const ProblemListSection = ({
   return (
     <section
       className={cn(
-        currentType === ProblemType.UNIT && 'grid-cols-3',
+        currentType === problemType.UNIT && 'grid-cols-3',
         'grid gap-4',
       )}
     >
-      {currentType === ProblemType.UNIT ? (
+      {currentType === problemType.UNIT ? (
         <UnitProblemList data={problems as UnitProblem[]} />
       ) : (
         <CookbookProblemList data={problems as CookbookProblem[]} />

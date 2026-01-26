@@ -1,18 +1,26 @@
 import { mockDiagramData } from './mock-diagram-data'
 
 import { IServiceMapper } from '@/components/aws-services/utils/serviceMapper'
-import type { DiagramData } from '@/types/diagram'
+import { DiagramData } from '@/types/diagram.type'
+
+/*
+  2026-01-26 17:02
+  Kim Y.J.의 변경.
+  통일된 DTO 네이밍 컨벤선에 따라 필드 값 이름 변경.
+*/
 
 interface RequiredField {
-  service: string
-  service_task: string
-  service_sections: string[]
+  serviceName: string
+  serviceTask: string
+  serviceSections: string[]
   // fixed_options?: Record<string, string>
 }
 
 export interface ProblemData {
+  problemType: string
   title: string
   description: string
+  descDetail: string
   tags: string[]
   serviceMappers: IServiceMapper[]
   diagram: DiagramData
@@ -35,11 +43,11 @@ export async function getProblemData(id: string): Promise<ProblemData> {
 
   const response = await res.json()
 
-  const serviceMappers: IServiceMapper[] = response.required_fields.map(
+  const serviceMappers: IServiceMapper[] = response.requiredFields.map(
     (field: RequiredField) => ({
-      serviceName: field.service,
-      serviceTask: field.service_task,
-      inputSections: field.service_sections,
+      serviceName: field.serviceName,
+      serviceTask: field.serviceTask,
+      inputSections: field.serviceSections,
     }),
   )
 
@@ -48,8 +56,10 @@ export async function getProblemData(id: string): Promise<ProblemData> {
   const diagram: DiagramData = mockDiagramData
 
   return {
+    problemType: response.problemType,
     title: response.title ?? '문제',
     description: response.description ?? '',
+    descDetail: response.descDetail,
     tags: response.tags ?? [],
     serviceMappers,
     diagram,

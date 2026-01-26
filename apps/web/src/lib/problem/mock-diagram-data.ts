@@ -1,4 +1,4 @@
-import type { DiagramData } from '@/types/diagram'
+import { DiagramData } from '@/types/diagram.type'
 
 // Backend API가 diagram_template을 반환하기 전까지 사용할 mock 데이터
 export const mockDiagramData: DiagramData = {

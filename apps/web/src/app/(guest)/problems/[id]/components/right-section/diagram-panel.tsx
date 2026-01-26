@@ -1,9 +1,9 @@
 'use client'
 
-import { awsNodeTypes } from '@/components/diagram'
 import { useProblemForm } from '@/contexts/problem-form-context'
 import type { S3BucketFormData } from '@/types/aws-services/s3/bucket-create'
-import type { DiagramData } from '@/types/diagram'
+import type { DiagramData } from '@/types/diagram.type'
+import { awsNodeTypes } from '@/types/node.type'
 import {
   Background,
   ReactFlow,

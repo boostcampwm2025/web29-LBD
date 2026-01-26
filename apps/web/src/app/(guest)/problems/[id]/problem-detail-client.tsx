@@ -1,15 +1,19 @@
 'use client'
 
-import type { FeedbackDetail } from '../components/feedback-detail-card'
-import { DiagramPanel, ProblemFormContent, ProblemHeader } from './components'
-import { FeedbackPanel, SubmitButton } from './components/sticky'
+import { ProblemFormContent, ProblemHeader } from './components/left-section'
+import {
+  DiagramPanel,
+  FeedbackPanel,
+  SubmitButton,
+} from './components/right-section'
 
 import { useMemo } from 'react'
 
 import { mergeServiceDefaultValues } from '@/components/aws-services/registry/form-defaults-factory'
 import type { IServiceMapper } from '@/components/aws-services/utils/serviceMapper'
 import { ProblemFormProvider } from '@/contexts/problem-form-context'
-import type { DiagramData } from '@/types/diagram'
+import type { DiagramData } from '@/types/diagram.type'
+import { FeedbackDetail } from '@/types/feedback.type'
 
 interface ProblemDetailClientProps {
   problemId: string

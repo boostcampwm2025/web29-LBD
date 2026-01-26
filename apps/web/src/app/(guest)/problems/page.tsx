@@ -2,15 +2,15 @@ import { ProblemListSection } from './components/problem-list.section'
 import { ProblemTabSection } from './components/problem-tab.section'
 
 import { getProblemListByType } from '@/lib/problem'
-import { ProblemType } from '@/types/problem.type'
+import { TProblemType } from '@/types/problem.type'
 
 export default async function ProblemsPage({
   searchParams,
 }: {
-  searchParams: { type?: string }
+  searchParams: { type?: TProblemType }
 }) {
   const resolvedSearchParams = await searchParams
-  const currentType = resolvedSearchParams.type as ProblemType | undefined
+  const currentType = resolvedSearchParams.type
 
   if (!currentType) throw new Error('문제 유형 정보가 없습니다.')
 
