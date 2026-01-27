@@ -17,3 +17,5 @@ export type S3SubmitConfig = {
     value: string
   }>
 }
+
+export type S3ServerPayload = Omit<S3SubmitConfig, '_type'>
