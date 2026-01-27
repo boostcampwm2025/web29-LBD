@@ -11,7 +11,6 @@ import {
 import { useForm } from 'react-hook-form'
 
 import { Button } from '@/components/ui/button'
-import { Separator } from '@/components/ui/separator'
 import type { CloudFrontSubmitConfig } from '@/types/aws-services/cloudfront/cloudfront-submit-config.types'
 import type {
   CloudFrontWebsiteFormData,
@@ -81,10 +80,7 @@ export default function CloudFrontWebsiteSettings({
       </div>
 
       {config.defaultRootObject && (
-        <>
-          <DefaultRootObjectSection control={control} config={config} />
-          <Separator />
-        </>
+        <DefaultRootObjectSection control={control} config={config} />
       )}
 
       {config.customErrorPages && (
@@ -100,10 +96,7 @@ export default function CloudFrontWebsiteSettings({
       {config.waf && <WafSection control={control} config={config} />}
 
       {config.reviewSummary && (
-        <>
-          <Separator />
-          <ReviewSummarySection control={control} config={config} />
-        </>
+        <ReviewSummarySection control={control} config={config} />
       )}
     </form>
   )

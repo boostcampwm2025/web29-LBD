@@ -11,7 +11,6 @@ import {
 import { useForm } from 'react-hook-form'
 
 import { Button } from '@/components/ui/button'
-import { Separator } from '@/components/ui/separator'
 import type { CloudFrontSubmitConfig } from '@/types/aws-services/cloudfront/cloudfront-submit-config.types'
 import type { CloudFrontDistributionSettingsFormData } from '@/types/aws-services/cloudfront/distribution-settings/cloudfront-settings-form-data.types'
 import type { CloudFrontDistributionSettingsConfig } from '@/types/aws-services/cloudfront/distribution-settings/constants'
@@ -87,17 +86,11 @@ export default function CloudFrontDistributionSettings({
       </div>
 
       {config.generalConfig && (
-        <>
-          <GeneralConfigSection control={control} config={config} />
-          <Separator />
-        </>
+        <GeneralConfigSection control={control} config={config} />
       )}
 
       {config.priceClass && (
-        <>
-          <PriceClassSection control={control} config={config} />
-          <Separator />
-        </>
+        <PriceClassSection control={control} config={config} />
       )}
 
       {config.cname && (
@@ -106,12 +99,7 @@ export default function CloudFrontDistributionSettings({
 
       {config.sslTls && <SslTlsSection control={control} config={config} />}
 
-      {config.network && (
-        <>
-          <Separator />
-          <NetworkSection control={control} config={config} />
-        </>
-      )}
+      {config.network && <NetworkSection control={control} config={config} />}
     </form>
   )
 }

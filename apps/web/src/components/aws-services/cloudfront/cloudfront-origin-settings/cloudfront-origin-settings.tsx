@@ -10,7 +10,6 @@ import {
 import { useForm } from 'react-hook-form'
 
 import { Button } from '@/components/ui/button'
-import { Separator } from '@/components/ui/separator'
 import type { CloudFrontSubmitConfig } from '@/types/aws-services/cloudfront/cloudfront-submit-config.types'
 import type { CloudFrontOriginFormData } from '@/types/aws-services/cloudfront/origin-settings/cloudfront-origin-form-data.types'
 import type { CloudFrontOriginSettingsConfig } from '@/types/aws-services/cloudfront/origin-settings/constants'
@@ -91,21 +90,15 @@ export default function CloudFrontOriginSettings({
       </div>
 
       {config.originDomain && (
-        <>
-          <OriginDomainSection
-            control={control}
-            config={config}
-            setValue={setValue}
-          />
-          <Separator />
-        </>
+        <OriginDomainSection
+          control={control}
+          config={config}
+          setValue={setValue}
+        />
       )}
 
       {config.originPath && (
-        <>
-          <OriginPathSection control={control} config={config} />
-          <Separator />
-        </>
+        <OriginPathSection control={control} config={config} />
       )}
 
       {config.originAccessControl && (

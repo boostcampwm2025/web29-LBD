@@ -38,5 +38,3 @@ export const serviceMapper = ({
     config,
   }
 }
-
-// === 기존 코드 (주석 처리) ===

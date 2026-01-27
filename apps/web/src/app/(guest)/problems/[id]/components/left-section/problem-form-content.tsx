@@ -36,7 +36,7 @@ export function ProblemFormContent({ problemData }: ProblemFormContentProps) {
         const createdItems = submitConfig[serviceType] || []
 
         return (
-          <div key={`${formKey}-${index}`} className="space-y-6">
+          <div key={`${formKey}-${index}`} className="space-y-6 border">
             <Component
               config={config}
               onSubmit={(data: ServiceConfig) =>

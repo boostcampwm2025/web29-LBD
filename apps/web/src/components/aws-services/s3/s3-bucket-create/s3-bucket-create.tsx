@@ -14,7 +14,6 @@ import { useForm } from 'react-hook-form'
 
 import { flattenObject } from '@/components/aws-services/utils/flattenObject'
 import { Button } from '@/components/ui/button'
-import { Separator } from '@/components/ui/separator'
 import type {
   S3BucketCreateConfig,
   S3BucketFormData,
@@ -83,54 +82,34 @@ export default function S3BucketCreate({
       </div>
       {/* Section 1: bucket create region */}
       {config.general && (
-        <>
-          <GeneralConfiguration control={control} config={config} />
-          <Separator />
-        </>
+        <GeneralConfiguration control={control} config={config} />
       )}
 
       {/* Section 2: Object Ownership */}
       {config.ownership && (
-        <>
-          <ObjectOwnership control={control} config={config} />
-          <Separator />
-        </>
+        <ObjectOwnership control={control} config={config} />
       )}
 
       {/* Section 3: Block Public Access */}
       {config.blockPublicAccess && (
-        <>
-          <BlockPublicAccess
-            control={control}
-            config={config}
-            setValue={setValue}
-          />
-          <Separator />
-        </>
+        <BlockPublicAccess
+          control={control}
+          config={config}
+          setValue={setValue}
+        />
       )}
 
       {/* Section 4: Bucket Versioning */}
       {config.versioning && (
-        <>
-          <BucketVersioning control={control} config={config} />
-          <Separator />
-        </>
+        <BucketVersioning control={control} config={config} />
       )}
 
       {/* Section 5: Tags (Optional) */}
-      {config.tags && (
-        <>
-          <Tags control={control} config={config} />
-          <Separator />
-        </>
-      )}
+      {config.tags && <Tags control={control} config={config} />}
 
       {/* Section 6: Default Encryption */}
       {config.encryption && (
-        <>
-          <DefaultEncryption control={control} config={config} />
-          <Separator />
-        </>
+        <DefaultEncryption control={control} config={config} />
       )}
 
       {/* Section 7: Advanced Settings */}

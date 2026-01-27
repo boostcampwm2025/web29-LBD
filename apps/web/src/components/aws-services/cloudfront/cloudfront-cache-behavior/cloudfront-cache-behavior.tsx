@@ -11,7 +11,6 @@ import {
 import { useForm } from 'react-hook-form'
 
 import { Button } from '@/components/ui/button'
-import { Separator } from '@/components/ui/separator'
 import type { CloudFrontCacheFormData } from '@/types/aws-services/cloudfront/cache-behavior/cloudfront-cache-form-data.types'
 import type { CloudFrontCacheBehaviorConfig } from '@/types/aws-services/cloudfront/cache-behavior/constants'
 import type { CloudFrontSubmitConfig } from '@/types/aws-services/cloudfront/cloudfront-submit-config.types'
@@ -80,24 +79,15 @@ export default function CloudFrontCacheBehavior({
       </div>
 
       {config.viewerProtocol && (
-        <>
-          <ViewerProtocolSection control={control} config={config} />
-          <Separator />
-        </>
+        <ViewerProtocolSection control={control} config={config} />
       )}
 
       {config.httpMethods && (
-        <>
-          <HttpMethodsSection control={control} config={config} />
-          <Separator />
-        </>
+        <HttpMethodsSection control={control} config={config} />
       )}
 
       {config.cachePolicy && (
-        <>
-          <CachePolicySection control={control} config={config} />
-          <Separator />
-        </>
+        <CachePolicySection control={control} config={config} />
       )}
 
       {config.compression && (

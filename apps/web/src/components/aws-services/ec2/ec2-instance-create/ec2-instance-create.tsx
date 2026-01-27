@@ -12,7 +12,6 @@ import {
 import { useForm } from 'react-hook-form'
 
 import { Button } from '@/components/ui/button'
-import { Separator } from '@/components/ui/separator'
 import type { EC2SubmitConfig } from '@/types/aws-services/ec2/ec2-submit-config.types'
 import type {
   EC2InstanceCreateConfig,
@@ -89,47 +88,21 @@ export default function EC2InstanceCreate({
         </Button>
       </div>
 
-      {config.nameTag && (
-        <>
-          <NameTag control={control} config={config} />
-          <Separator />
-        </>
-      )}
+      {config.nameTag && <NameTag control={control} config={config} />}
 
-      {config.ami && (
-        <>
-          <Ami control={control} config={config} />
-          <Separator />
-        </>
-      )}
+      {config.ami && <Ami control={control} config={config} />}
 
       {config.instanceType && (
-        <>
-          <InstanceType control={control} config={config} />
-          <Separator />
-        </>
+        <InstanceType control={control} config={config} />
       )}
 
-      {config.keyPair && (
-        <>
-          <KeyPair control={control} config={config} />
-          <Separator />
-        </>
-      )}
+      {config.keyPair && <KeyPair control={control} config={config} />}
 
       {config.networkSetting && (
-        <>
-          <NetworkSetting control={control} config={config} />
-          <Separator />
-        </>
+        <NetworkSetting control={control} config={config} />
       )}
 
-      {config.storage && (
-        <>
-          <Storage control={control} config={config} />
-          <Separator />
-        </>
-      )}
+      {config.storage && <Storage control={control} config={config} />}
     </form>
   )
 }
