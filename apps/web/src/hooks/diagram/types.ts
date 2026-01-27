@@ -1,4 +1,4 @@
-import type { S3SubmitConfig } from '@/types/aws-services/s3/bucket-create/s3-submit-config.type'
+import type { S3SubmitConfig } from '@/types/aws-services/s3/bucket-create'
 
 export const LAYOUT_CONFIG = {
   PADDING: 40,

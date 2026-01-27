@@ -1,7 +1,5 @@
 import ProblemDetailClient from './problem-detail-client'
 
-import React from 'react'
-
 import { getProblemData } from '@/lib/problem/get-problem-data'
 
 interface ProblemDetailPageProps {
@@ -20,11 +18,24 @@ export default async function ProblemDetailPage({
   const { id } = await params
   const { type: _type } = await searchParams
 
-  const problemData = await getProblemData(id)
+  const { title, description, tags, serviceMappers } = await getProblemData(id)
+
+  const mockFeedbackMessages = [
+    {
+      service: 'mockservice',
+      field: 'mockfield',
+      message: 'mockMessage',
+    },
+  ]
 
   return (
-    <React.Fragment>
-      <ProblemDetailClient problemData={problemData} problemId={id} />
-    </React.Fragment>
+    <ProblemDetailClient
+      problemId={id}
+      title={title}
+      description={description}
+      tags={tags}
+      problemData={serviceMappers}
+      initialFeedback={mockFeedbackMessages}
+    />
   )
 }

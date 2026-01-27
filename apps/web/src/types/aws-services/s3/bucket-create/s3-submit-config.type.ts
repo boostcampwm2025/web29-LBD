@@ -1,4 +1,5 @@
 export type S3SubmitConfig = {
+  _type: 's3'
   id: string
   name: string
   region: string

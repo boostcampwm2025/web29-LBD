@@ -8,12 +8,12 @@ import {
 
 import { useCallback } from 'react'
 
-import { Edge, type Node, useNodesState } from '@xyflow/react'
+import type { Edge, Node } from '@xyflow/react'
 
 export function useAwsDiagramLogic(
-  nodes: Node[],
+  _nodes: Node[],
   setNodes: React.Dispatch<React.SetStateAction<Node[]>>,
-  setEdges: React.Dispatch<React.SetStateAction<Edge[]>>,
+  _setEdges: React.Dispatch<React.SetStateAction<Edge[]>>,
 ) {
   const nodeExists = useCallback((id: string, currentNodes: Node[]) => {
     return currentNodes.some((n) => n.id === id)

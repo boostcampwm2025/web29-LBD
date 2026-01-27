@@ -10,10 +10,11 @@ import {
 } from './sections'
 
 import { useMemo } from 'react'
-import { useWatch } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 
 import type {
   Bucket,
+  S3ListFormData,
   S3ListWithSetValueSectionProps,
 } from '@/types/aws-services/s3/bucket-list'
 
@@ -24,15 +25,20 @@ interface S3BucketListProps extends S3ListWithSetValueSectionProps {
 }
 
 export default function S3BucketList({
-  control,
   config,
   setValue,
   onCreateBucket,
   onBucketClick,
   onRefresh,
 }: S3BucketListProps) {
-  const buckets = useWatch({ control, name: 'buckets' })
-  const searchQuery = useWatch({ control, name: 'searchQuery' })
+  const { watch, control } = useForm<S3ListFormData>({
+    defaultValues: {
+      searchQuery: '',
+      buckets: [],
+    },
+  })
+  const buckets = watch('buckets')
+  const searchQuery = watch('searchQuery')
 
   const filteredBuckets = useMemo(() => {
     if (!searchQuery) return buckets

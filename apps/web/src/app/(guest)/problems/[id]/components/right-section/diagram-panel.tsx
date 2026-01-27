@@ -1,40 +1,35 @@
 'use client'
 
-import type {
-  AwsGroupNodeData,
-  AwsResourceNodeData,
-  AwsServiceNodeData,
-} from './diagram'
+import { useCallback } from 'react'
 
+import { useProblemForm } from '@/contexts/problem-form-context'
 import { awsNodeTypes } from '@/types/node.type'
 import {
   Background,
-  Controls,
-  type Edge,
-  type Node,
+  type NodeChange,
   ReactFlow,
+  applyNodeChanges,
 } from '@xyflow/react'
 import '@xyflow/react/dist/style.css'
 
-export type AwsNode = Node<
-  AwsServiceNodeData | AwsResourceNodeData | AwsGroupNodeData
->
+export function DiagramPanel() {
+  const { nodes, edges, setNodes } = useProblemForm()
 
-interface AwsDiagramProps {
-  nodes?: AwsNode[] | Node[]
-  edges?: Edge[]
-}
+  // 노드 변경 핸들러 (드래그, 선택 등)
+  const onNodesChange = useCallback(
+    (changes: NodeChange[]) => {
+      setNodes((nds) => applyNodeChanges(changes, nds))
+    },
+    [setNodes],
+  )
 
-export default function AwsDiagram({
-  nodes = [],
-  edges = [],
-}: AwsDiagramProps) {
   return (
-    <div className="relative h-full w-full rounded-lg border border-gray-200 bg-gray-50 shadow-sm">
+    <div className="h-[400px] rounded-xl border">
       <ReactFlow
         nodes={nodes}
         edges={edges}
         nodeTypes={awsNodeTypes}
+        onNodesChange={onNodesChange}
         fitView
         fitViewOptions={{ padding: 0.2 }}
         zoomOnScroll={true}
@@ -46,8 +41,7 @@ export default function AwsDiagram({
         elementsSelectable={true}
         proOptions={{ hideAttribution: true }}
       >
-        <Background gap={12} size={1} />
-        <Controls position="bottom-left" />
+        <Background />
       </ReactFlow>
     </div>
   )

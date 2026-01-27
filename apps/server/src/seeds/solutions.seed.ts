@@ -79,8 +79,8 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
       },
     },
     {
-      problem: problems[7], // S3 버킷 생성하기
-      answer_config: {
+      problem: problems[5], // S3 버킷 생성하기
+      answerConfig: {
         s3: [
           {
             id: 'my-first-bucket',

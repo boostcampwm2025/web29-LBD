@@ -177,26 +177,26 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
       ],
     },
     {
-      problem_type: ProblemType.UNIT,
+      problemType: ProblemType.UNIT,
       title: 'S3 버킷 생성하기',
       description: '기본 설정으로 S3 버킷을 하나 생성하세요',
-      desc_detail:
+      descDetail:
         'S3는 객체 스토리지 서비스로, 데이터를 파일 단위로 저장하고 관리할 수 있습니다. 이 문제에서는 특별한 설정 없이 기본 구성으로 S3 버킷을 하나 생성하는 것이 목표입니다. 생성한 버킷은 이후 문제에서 사용될 수 있습니다.',
-      required_fields: [
+      requiredFields: [
         {
-          service: 's3',
-          service_task: 'bucket-create',
-          service_sections: ['general', 'ownership', 'blockPublicAccess'],
+          serviceName: 's3',
+          serviceTask: 'bucketCreate',
+          serviceSections: ['general', 'ownership', 'blockPublicAccess'],
         },
         {
-          service: 's3',
-          service_task: 'bucket-list',
-          service_sections: ['header', 'bucketTable', 'searchBar'],
+          serviceName: 's3',
+          serviceTask: 'bucketList',
+          serviceSections: ['header', 'bucketTable', 'searchBar'],
         },
         {
-          service: 'cloudfront',
-          service_task: 'website-settings',
-          service_sections: ['defaultRootObject'],
+          serviceName: 'cloudFront',
+          serviceTask: 'websiteSettings',
+          serviceSections: ['defaultRootObject'],
         },
       ],
     },

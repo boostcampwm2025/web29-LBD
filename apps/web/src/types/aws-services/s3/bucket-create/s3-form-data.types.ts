@@ -15,7 +15,7 @@ export interface S3BucketFormData {
     restrictPublicBuckets?: boolean
   }
   versioning?: {
-    versioningEnabled?: boolean
+    enabled?: boolean
   }
   encryption?: {
     type: 'sse-s3' | 'sse-kms'

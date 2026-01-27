@@ -1,13 +1,28 @@
 import { IServiceMapper } from '@/components/aws-services/utils/serviceMapper'
 
+/*
+  2026-01-26 17:02
+  Kim Y.J.의 변경.
+  통일된 DTO 네이밍 컨벤선에 따라 필드 값 이름 변경.
+*/
+
 interface RequiredField {
   serviceName: string
   serviceTask: string
   serviceSections: string[]
-  // fixedOptions?: Record<string, string>
+  // fixed_options?: Record<string, string>
 }
 
-export async function getProblemData(id: string): Promise<IServiceMapper[]> {
+export interface ProblemData {
+  problemType: string
+  title: string
+  description: string
+  descDetail: string
+  tags: string[]
+  serviceMappers: IServiceMapper[]
+}
+
+export async function getProblemData(id: string): Promise<ProblemData> {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3001'
 
   if (!baseUrl) {
@@ -24,7 +39,7 @@ export async function getProblemData(id: string): Promise<IServiceMapper[]> {
 
   const response = await res.json()
 
-  const problemData: IServiceMapper[] = response.requiredFields.map(
+  const serviceMappers: IServiceMapper[] = response.requiredFields.map(
     (field: RequiredField) => ({
       serviceName: field.serviceName,
       serviceTask: field.serviceTask,
@@ -32,5 +47,15 @@ export async function getProblemData(id: string): Promise<IServiceMapper[]> {
     }),
   )
 
-  return problemData
+  // Backend에서 diagram_template 반환 시 아래 코드로 대체
+  // const diagram: DiagramData = response.diagram_template ?? mockDiagramData
+
+  return {
+    problemType: response.problemType,
+    title: response.title ?? '문제',
+    description: response.description ?? '',
+    descDetail: response.descDetail,
+    tags: response.tags ?? [],
+    serviceMappers,
+  }
 }

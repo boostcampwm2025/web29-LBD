@@ -1,6 +1,7 @@
-import type { EC2InstanceCreateConfig } from '@/constants/aws-services/ec2'
+import type { EC2InstanceCreateConfig } from './constants'
+import type { EC2InstanceFormData } from './ec2-form-data.types'
+
 import type { AwsServiceSectionTypes } from '@/types/aws-services/aws-general-types'
-import type { EC2InstanceFormData } from '@/types/aws-services/ec2/instance-create'
 
 type EC2InstanceCreateTypes = AwsServiceSectionTypes<
   EC2InstanceFormData,
