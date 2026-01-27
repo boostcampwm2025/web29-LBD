@@ -3,6 +3,7 @@ import {
   IsArray,
   IsBoolean,
   IsEnum,
+  IsNumber,
   IsOptional,
   IsString,
   ValidateNested,
@@ -17,30 +18,49 @@ export class EC2Config {
   @IsString()
   name: string;
 
-  @IsString()
-  vpcId: string;
+  @IsEnum([
+    'amazon-linux',
+    'mac-os',
+    'ubuntu',
+    'windows',
+    'red-hat',
+    'suse-linux',
+    'debian',
+  ])
+  @IsOptional()
+  osType?: string;
 
   @IsString()
-  vpcName: string;
+  @IsOptional()
+  instanceType?: string;
 
   @IsString()
-  subnetId: string;
-  @IsString()
-  subnetName: string;
+  @IsOptional()
+  keyName?: string;
+
+  @IsBoolean()
+  @IsOptional()
+  autoAssignPublicIp?: boolean;
+
+  @IsBoolean()
+  @IsOptional()
+  allowSSH?: boolean;
+
+  @IsBoolean()
+  @IsOptional()
+  allowHTTPS?: boolean;
+
+  @IsBoolean()
+  @IsOptional()
+  allowHTTP?: boolean;
+
+  @IsNumber()
+  @IsOptional()
+  storageSize?: number;
 
   @IsString()
-  instanceType: string;
-
-  @IsString({ each: true })
-  securityGroups: string[]; // Security Group names
-
-  @IsString()
-  privateIpAddress: string;
-  @IsString()
-  publicIpAddress?: string;
-
-  @IsString()
-  ami: string;
+  @IsOptional()
+  volumeType?: string;
 }
 
 export class VPCConfig {
@@ -74,12 +94,16 @@ export class SubnetConfig {
 export class SGRules {
   @IsString()
   ipProtocol: string;
+
   @IsString()
   fromPort: string;
+
   @IsString()
   toPort: string;
+
   @IsString()
   cidrIp: string;
+
   @IsBoolean()
   isInbound: boolean;
 }
@@ -87,12 +111,16 @@ export class SGRules {
 export class SecurityGroupsConfig {
   @IsString()
   id: string;
+
   @IsString()
   vpcId: string;
+
   @IsString()
   vpcName: string;
+
   @IsString()
   name: string;
+
   @IsArray()
   ipPermissions: SGRules[];
 }
@@ -114,27 +142,35 @@ export class S3Config {
   @IsEnum(['bucket-owner-preferred', 'object-writer'])
   @IsOptional()
   ownershipModel?: 'bucket-owner-preferred' | 'object-writer';
+
   @IsBoolean()
   @IsOptional()
   blockAll?: boolean;
+
   @IsBoolean()
   @IsOptional()
   ignorePublicAcls?: boolean;
+
   @IsBoolean()
   @IsOptional()
   blockPublicPolicy?: boolean;
+
   @IsBoolean()
   @IsOptional()
   blockPublicAcls?: boolean;
+
   @IsBoolean()
   @IsOptional()
   restrictPublicBuckets?: boolean;
+
   @IsEnum(['sse-s3', 'sse-kms'])
   @IsOptional()
   encryptionType?: 'sse-s3' | 'sse-kms';
+
   @IsBoolean()
   @IsOptional()
   versioningEnabled?: boolean;
+
   @IsOptional()
   @IsArray()
   tags?: Array<{
@@ -146,10 +182,13 @@ export class S3Config {
 export class InternetGatewayConfig {
   @IsString()
   id: string;
+
   @IsString()
   vpcId: string;
+
   @IsString()
   vpcName: string;
+
   @IsString()
   name: string;
 }
@@ -159,6 +198,7 @@ export type GatewayTypes = InternetGatewayConfig;
 export class RouteTableEntry {
   @IsString()
   destinationCidr: string;
+
   @IsString()
   targetGatewayId: string;
 }
@@ -171,14 +211,19 @@ export class RouteTableAssociation {
 export class RouteTableConfig {
   @IsString()
   id: string;
+
   @IsString()
   vpcId: string;
+
   @IsString()
   vpcName: string;
+
   @IsString()
   name: string;
+
   @IsArray()
   routes: RouteTableEntry[];
+
   @IsArray()
   associations: RouteTableAssociation[]; // Subnet IDs
 }
@@ -186,14 +231,19 @@ export class RouteTableConfig {
 export class NATGatewayConfig {
   @IsString()
   id: string;
+
   @IsString()
   name: string;
+
   @IsString()
   vpcId: string;
+
   @IsString()
   subnetId: string;
+
   @IsString()
   vpcName: string;
+
   @IsString()
   subnetName: string;
 }
@@ -201,14 +251,19 @@ export class NATGatewayConfig {
 export class NACLRule {
   @IsString()
   ruleNumber: string;
+
   @IsString()
   protocol: string;
+
   @IsString()
   ruleAction: string;
+
   @IsBoolean()
   egress: boolean;
+
   @IsString()
   cidrBlock: string;
+
   @IsString()
   portRange: string;
 }
@@ -216,12 +271,16 @@ export class NACLRule {
 export class NACLConfig {
   @IsString()
   id: string;
+
   @IsString()
   name: string;
+
   @IsString()
   vpcId: string;
+
   @IsString()
   vpcName: string;
+
   @IsArray()
   entries: NACLRule[];
 }
@@ -229,10 +288,13 @@ export class NACLConfig {
 export class ErrorResponse {
   @IsString()
   errorCode: string;
+
   @IsString()
   responsePagePath: string;
+
   @IsString()
   responseCode: string;
+
   @IsString()
   ttl: string;
 }
