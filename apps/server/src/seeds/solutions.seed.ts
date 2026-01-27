@@ -22,7 +22,8 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
       answerConfig: {
         s3: [
           {
-            bucketName: 'my-log-bucket',
+            name: 'my-log-bucket',
+            region: 'DONT_CARE',
           },
         ],
       },
@@ -32,9 +33,9 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
       answerConfig: {
         s3: [
           {
-            versioning: {
-              status: 'Enabled',
-            },
+            name: 'DONT_CARE',
+            region: 'DONT_CARE',
+            versioningEnabled: true,
           },
         ],
       },
@@ -44,12 +45,13 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
       answerConfig: {
         cloudFront: [
           {
-            originDomain: {
-              domainName: 'my-bucket.s3.amazonaws.com',
-            },
-            originAccessControl: {
-              signingBehavior: 'always',
-            },
+            // 현재 타입 정의가 없음
+            // originDomain: {
+            //   domainName: 'my-bucket.s3.amazonaws.com',
+            // },
+            // originAccessControl: {
+            //   signingBehavior: 'always',
+            // },
           },
         ],
       },
@@ -59,13 +61,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
       answerConfig: {
         ec2: [
           {
-            instanceType: {
-              type: 't2.micro',
-            },
-            images: {
-              // 실제 검증 시에는 AMI ID가 리전에 따라 다르므로 주의해야 하지만, 여기선 예시값으로 둡니다.
-              ami: 'ami-0230bd60aa48260c6',
-            },
+            instanceType: 't2.micro',
           },
         ],
       },
@@ -75,18 +71,12 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
       answerConfig: {
         s3: [
           {
-            bucketName: 'my-global-site',
+            name: 'DONT_CARE',
+            region: 'DONT_CARE',
           },
         ],
         cloudFront: [
-          {
-            originDomain: {
-              domainName: 'my-global-site.s3.amazonaws.com',
-            },
-            originAccessControl: {
-              signingBehavior: 'always',
-            },
-          },
+          // 타입 정의 후 추가
         ],
       },
     },
