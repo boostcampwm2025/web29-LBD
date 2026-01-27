@@ -11,6 +11,7 @@ import { ProblemFormProvider } from '@/contexts/problem-form-context'
 import { FeedbackDetail } from '@/types/feedback.type'
 
 interface ProblemDetailClientProps {
+  type: string
   problemId: string
   title: string
   description: string
@@ -20,6 +21,7 @@ interface ProblemDetailClientProps {
 }
 
 export default function ProblemDetailClient({
+  type,
   problemId,
   title,
   description,
@@ -39,6 +41,7 @@ export default function ProblemDetailClient({
       initialFeedback={initialFeedback}
     >
       <ProblemLeftSection
+        type={type}
         title={title}
         description={description}
         tags={tags}

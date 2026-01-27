@@ -16,7 +16,7 @@ export default async function ProblemDetailPage({
   searchParams,
 }: ProblemDetailPageProps) {
   const { id } = await params
-  const { type: _type } = await searchParams
+  const { type } = await searchParams
 
   const { title, description, tags, serviceMappers } = await getProblemData(id)
 
@@ -30,6 +30,7 @@ export default async function ProblemDetailPage({
 
   return (
     <ProblemDetailClient
+      type={type!}
       problemId={id}
       title={title}
       description={description}
