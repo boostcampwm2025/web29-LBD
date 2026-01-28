@@ -21,6 +21,7 @@ import {
 
 import { LAYOUT_CONFIG, useAwsDiagramLogic } from '@/hooks/diagram'
 import { useBuildDefaultNodes } from '@/lib/buildInitialNodes'
+import { submitProblemSolution } from '@/lib/problem/submit-problem'
 import type { FeedbackDetail } from '@/types/feedback.type'
 import type {
   FinalSubmitConfig,
@@ -187,15 +188,14 @@ export function ProblemFormProvider<T extends FieldValues>({
       ),
     }
 
-    // TODO: 실제 API 호출로 교체
-    console.log('Submitting config:', finalConfig)
-    void problemId
+    try {
+      const result = await submitProblemSolution(String(problemId), finalConfig)
 
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-
-    // TODO: 기존 feedback 유지 (실제로는 API 응답으로 교체)
-    setFeedback(initialFeedback)
-  }, [problemId, initialFeedback, submitConfig])
+      setFeedback(result)
+    } catch (error) {
+      console.error('Failed to submit problem:', error)
+    }
+  }, [problemId, submitConfig])
 
   const contextValue = useMemo(
     () => ({

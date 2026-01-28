@@ -22,6 +22,7 @@ export async function submitProblemSolution(
   if (!res.ok) {
     throw new Error('문제 제출 실패')
   }
+  const data = await res.json()
 
-  return res.json()
+  return data.feedback || []
 }
