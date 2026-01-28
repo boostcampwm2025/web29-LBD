@@ -10,6 +10,7 @@ import type {
   S3ServerPayload,
   S3SubmitConfig,
 } from './aws-services/s3/bucket-create'
+import { VpcSubmitConfig } from './aws-services/vpc/vpc-submit-config.types'
 
 export type ServiceType = 's3' | 'cloudFront' | 'ec2' | 'vpc' | 'subnet'
 
@@ -18,7 +19,7 @@ export type ServiceConfig =
   | S3SubmitConfig
   | CloudFrontSubmitConfig
   | EC2SubmitConfig
-  | { _type: 'vpc'; id: string; name: string }
+  | VpcSubmitConfig
   | { _type: 'subnet'; id: string; name: string; vpcId: string }
   | { _type: 'rds'; id: string; name: string; subnetId: string }
 
@@ -34,6 +35,7 @@ export interface GlobalSubmitConfig {
   s3?: ServiceConfigItem<S3SubmitConfig>[]
   cloudFront?: ServiceConfigItem<CloudFrontSubmitConfig>[]
   ec2?: ServiceConfigItem<EC2SubmitConfig>[]
+  vpc?: ServiceConfigItem<VpcSubmitConfig>[]
 }
 
 // 서버 제출용 payload 유니온
@@ -41,6 +43,7 @@ export type ServerPayload =
   | S3ServerPayload
   | CloudFrontServerPayload
   | EC2ServerPayload
+  | VpcSubmitConfig
 
 // 최종 제출
 export interface FinalSubmitConfig {
@@ -48,5 +51,6 @@ export interface FinalSubmitConfig {
     s3?: S3ServerPayload[]
     cloudFront?: CloudFrontServerPayload[]
     ec2?: EC2ServerPayload[]
+    vpc?: VpcSubmitConfig[]
   }
 }
