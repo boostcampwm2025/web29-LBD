@@ -19,6 +19,8 @@ export interface EC2InstanceFormData {
     keyName: string
   }
   networkSetting: {
+    vpcName?: string
+    subnetName?: string
     autoAssignPublicIp: boolean
     allowSSH: boolean
     allowHTTPS: boolean

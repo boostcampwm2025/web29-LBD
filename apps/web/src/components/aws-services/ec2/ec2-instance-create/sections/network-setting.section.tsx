@@ -6,9 +6,20 @@ import { TooltipBox } from '@/components/aws-services/common/tooltip-box'
 import { SectionContainer } from '@/components/section-container'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
-import { EC2_TOOLTIPS } from '@/constants/aws-services/ec2'
-import { FIREWALL_OPTIONS } from '@/constants/aws-services/ec2'
+import {
+  EC2_TOOLTIPS,
+  FIREWALL_OPTIONS,
+  SUBNET_OPTIONS,
+  VPC_OPTIONS,
+} from '@/constants/aws-services/ec2'
 import type { EC2SectionProps } from '@/types/aws-services/ec2/instance-create'
 
 export function NetworkSetting({ control }: EC2SectionProps) {
@@ -22,7 +33,53 @@ export function NetworkSetting({ control }: EC2SectionProps) {
       }
       description="인스턴스의 네트워크 및 보안 설정을 구성하세요"
     >
-      <div className="space-y-6">
+      <div className="space-y-5">
+        {/* VPC 선택 */}
+        <div className="space-y-2">
+          <Label htmlFor="vpc-select">VPC</Label>
+          <Controller
+            name="networkSetting.vpcName"
+            control={control}
+            render={({ field }) => (
+              <Select value={field.value} onValueChange={field.onChange}>
+                <SelectTrigger>
+                  <SelectValue placeholder="VPC 선택" />
+                </SelectTrigger>
+                <SelectContent>
+                  {VPC_OPTIONS.map((vpc) => (
+                    <SelectItem key={vpc.value} value={vpc.value}>
+                      {vpc.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+          />
+        </div>
+
+        {/* Subnet 선택 */}
+        <div className="space-y-2">
+          <Label htmlFor="subnet-select">Subnet</Label>
+          <Controller
+            name="networkSetting.subnetName"
+            control={control}
+            render={({ field }) => (
+              <Select value={field.value} onValueChange={field.onChange}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Subnet 선택" />
+                </SelectTrigger>
+                <SelectContent>
+                  {SUBNET_OPTIONS.map((subnet) => (
+                    <SelectItem key={subnet.value} value={subnet.value}>
+                      {subnet.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+          />
+        </div>
+
         {/* 퍼블릭 IP 자동 할당 */}
         <div className="flex items-center justify-between">
           <div className="space-y-1">
