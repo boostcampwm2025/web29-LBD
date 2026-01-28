@@ -136,3 +136,35 @@ export const VOLUME_TYPE_OPTIONS = [
     iops: '',
   },
 ] as const
+
+export const VPC_OPTIONS = [
+  {
+    value: 'default-vpc',
+    label: 'Default VPC',
+    cidr: '172.31.0.0/16',
+  },
+] as const
+
+export const SUBNET_OPTIONS = [
+  {
+    value: 'subnet-public-2a',
+    label: 'Public Subnet 2a',
+    id: 'subnet-01',
+    vpc: 'default-vpc',
+    cidr: '172.31.0.0/20',
+  },
+  {
+    value: 'subnet-public-2b',
+    label: 'Public Subnet 2b',
+    id: 'subnet-02',
+    vpc: 'default-vpc',
+    cidr: '172.31.0.0/20',
+  },
+  {
+    value: 'subnet-private-2c',
+    label: 'Private Subnet 2c',
+    id: 'subnet-03',
+    vpc: 'default-vpc',
+    cidr: '172.31.16.0/20',
+  },
+] as const
