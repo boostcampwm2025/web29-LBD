@@ -1,3 +1,5 @@
+import VpcCreate from '../vpc/vpc-create/vpc-create'
+
 import { ComponentType } from 'react'
 import type { DefaultValues, FieldValues } from 'react-hook-form'
 
@@ -30,6 +32,7 @@ import { S3_BUCKET_LIST_SECTIONS } from '@/types/aws-services/s3/bucket-list/'
 import type { S3ListFormData } from '@/types/aws-services/s3/bucket-list/s3-list-form-data.types'
 import { S3_FILE_UPLOAD_SECTIONS } from '@/types/aws-services/s3/file-upload/'
 import type { S3UploadFormData } from '@/types/aws-services/s3/file-upload/s3-upload-form-data.types'
+import { VPC_CREATE_SECTIONS } from '@/types/aws-services/vpc/constants'
 
 export interface ServicePage<T extends FieldValues = FieldValues> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -165,8 +168,19 @@ const EC2: Record<string, ServicePage> = {
   },
 }
 
+const VPC: Record<string, ServicePage> = {
+  vpcCreate: {
+    component: VpcCreate,
+    sections: VPC_CREATE_SECTIONS,
+    defaultValues: {
+      nameTag: { name: '' },
+    },
+  },
+}
+
 export const AWS_SERVICE_REGISTRY = {
   s3: S3,
   cloudFront: CloudFront,
   ec2: EC2,
+  vpc: VPC,
 }
