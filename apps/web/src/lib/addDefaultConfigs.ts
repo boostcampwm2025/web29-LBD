@@ -50,6 +50,15 @@ export function addDefaultConfigs(
             isReady: true,
           })
           break
+
+        case 'routeTable':
+          if (!defaultConfigs.routeTable) defaultConfigs.routeTable = []
+          defaultConfigs.routeTable.push({
+            id: options.id || '',
+            data: options,
+            isReady: true,
+          })
+          break
       }
     }
   }
