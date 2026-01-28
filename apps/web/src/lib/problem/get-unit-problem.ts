@@ -16,7 +16,7 @@ interface RequiredField {
   fixedOptions?: ServiceConfig
 }
 
-export interface ProblemData {
+interface ProblemData {
   problemType: string
   title: string
   description: string
@@ -38,7 +38,7 @@ export async function getUnitProblemDataById(id: string): Promise<ProblemData> {
   })
 
   if (!res.ok) {
-    throw new Error('문제 상세 조회 실패')
+    throw new Error('유닛 문제 상세 조회 실패')
   }
 
   const response = await res.json()
