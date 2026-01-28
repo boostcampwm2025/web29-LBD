@@ -4,6 +4,7 @@ import {
   LAYOUT_CONFIG,
   REGION_CHILDS_TYPES,
 } from './types'
+import { TYPE_ICONS_MAP } from './types'
 
 import { useCallback } from 'react'
 
@@ -174,6 +175,11 @@ export function useAwsDiagramLogic(
             prevNodes,
           )
 
+          // 다이어그램에 필요없는 것들은 넘어감.
+          if (payload._type === 'routeTable') {
+            return prevNodes
+          }
+
           // 2. 새 노드 생성
           const newNode: Node = {
             id: payload.name,
@@ -187,7 +193,7 @@ export function useAwsDiagramLogic(
             data: {
               type: payload._type,
               label: payload.name,
-              icon: payload._type,
+              icon: TYPE_ICONS_MAP[payload._type] || payload._type,
               width:
                 payload._type === 'vpc'
                   ? 400

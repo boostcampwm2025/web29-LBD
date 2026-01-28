@@ -97,6 +97,7 @@ export class ProblemsService {
       description: problem.description,
       descDetail: problem.descDetail,
       requiredFields: problem.requiredFields,
+      fixedOptions: problem.fixedOptions,
       tags: problem.tags.map((tag) => tag.name),
     };
   }

@@ -33,6 +33,9 @@ export class Problem {
   @Column({ name: 'required_fields', type: 'json', nullable: false })
   requiredFields: TServiceConfigMap[];
 
+  @Column({ name: 'fixed_options', type: 'json', nullable: true })
+  fixedOptions?: Record<string, any>;
+
   @ManyToMany(() => Tag, (tag) => tag.problems)
   @JoinTable({
     name: 'problem_tag',

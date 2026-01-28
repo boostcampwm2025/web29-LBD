@@ -39,6 +39,7 @@ interface ProblemFormContextValue<T extends FieldValues = FieldValues> {
 
   // 리소스 구성 관련
   submitConfig: GlobalSubmitConfig
+  setSubmitConfig: Dispatch<SetStateAction<GlobalSubmitConfig>>
   handleAddItem: (type: ServiceType, data: ServiceConfig) => void
   handleRemoveItem: (type: ServiceType, id: string) => void
 
@@ -204,6 +205,7 @@ export function ProblemFormProvider<T extends FieldValues>({
       isSubmitting,
       submitProblem,
       submitConfig,
+      setSubmitConfig,
       handleAddItem,
       handleRemoveItem,
       nodes,
@@ -217,6 +219,7 @@ export function ProblemFormProvider<T extends FieldValues>({
       isSubmitting,
       submitProblem,
       submitConfig,
+      setSubmitConfig,
       handleAddItem,
       handleRemoveItem,
       nodes,

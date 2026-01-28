@@ -8,5 +8,6 @@ export class ProblemDetailResponseDto {
   description: string;
   descDetail: string;
   requiredFields: TServiceConfigMap[];
+  fixedOptions?: Record<string, any>;
   tags: string[];
 }

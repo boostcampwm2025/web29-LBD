@@ -1,3 +1,8 @@
+import RouteTableCreate from '../route-table/route-table-create/route-table-create'
+import RouteTableEdit from '../route-table/route-table-edit/route-table-edit'
+import SubnetCreate from '../subnet/subnet-create'
+import VpcCreate from '../vpc/vpc-create/vpc-create'
+
 import { ComponentType } from 'react'
 import type { DefaultValues, FieldValues } from 'react-hook-form'
 
@@ -22,6 +27,10 @@ import { CLOUDFRONT_ORIGIN_SETTINGS_SECTIONS } from '@/types/aws-services/cloudf
 import type { CloudFrontWebsiteFormData } from '@/types/aws-services/cloudfront/website-settings'
 import { CLOUDFRONT_WEBSITE_SETTINGS_SECTIONS } from '@/types/aws-services/cloudfront/website-settings/constants'
 import { EC2_INSTANCE_CREATE_SECTIONS } from '@/types/aws-services/ec2/instance-create'
+import {
+  ROUTE_TABLE_CREATE_SECTIONS,
+  ROUTE_TABLE_EDIT_SECTIONS,
+} from '@/types/aws-services/route-table/constants'
 import type { S3BucketFormData } from '@/types/aws-services/s3/bucket-create'
 import { S3_BUCKET_CREATE_SECTIONS } from '@/types/aws-services/s3/bucket-create/'
 import { S3_BUCKET_DETAIL_SECTIONS } from '@/types/aws-services/s3/bucket-detail/'
@@ -30,6 +39,8 @@ import { S3_BUCKET_LIST_SECTIONS } from '@/types/aws-services/s3/bucket-list/'
 import type { S3ListFormData } from '@/types/aws-services/s3/bucket-list/s3-list-form-data.types'
 import { S3_FILE_UPLOAD_SECTIONS } from '@/types/aws-services/s3/file-upload/'
 import type { S3UploadFormData } from '@/types/aws-services/s3/file-upload/s3-upload-form-data.types'
+import { SUBNET_CREATE_SECTIONS } from '@/types/aws-services/subnet/constants'
+import { VPC_CREATE_SECTIONS } from '@/types/aws-services/vpc/constants'
 
 export interface ServicePage<T extends FieldValues = FieldValues> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -165,8 +176,51 @@ const EC2: Record<string, ServicePage> = {
   },
 }
 
+const VPC: Record<string, ServicePage> = {
+  vpcCreate: {
+    component: VpcCreate,
+    sections: VPC_CREATE_SECTIONS,
+    defaultValues: {
+      nameTag: { name: '' },
+    },
+  },
+}
+
+const Subnet: Record<string, ServicePage> = {
+  subnetCreate: {
+    component: SubnetCreate,
+    sections: SUBNET_CREATE_SECTIONS,
+    defaultValues: {
+      vpcId: '',
+    },
+  },
+}
+
+const RouteTable: Record<string, ServicePage> = {
+  routeTableCreate: {
+    component: RouteTableCreate,
+    sections: ROUTE_TABLE_CREATE_SECTIONS,
+    defaultValues: {
+      nameTag: '',
+      vpcId: '',
+      tags: [],
+    },
+  },
+  routeTableEdit: {
+    component: RouteTableEdit,
+    sections: ROUTE_TABLE_EDIT_SECTIONS,
+    defaultValues: {
+      routes: [],
+      subnetIds: [],
+    },
+  },
+}
+
 export const AWS_SERVICE_REGISTRY = {
   s3: S3,
   cloudFront: CloudFront,
   ec2: EC2,
+  vpc: VPC,
+  subnet: Subnet,
+  routeTable: RouteTable,
 }

@@ -6,20 +6,31 @@ import type {
   EC2ServerPayload,
   EC2SubmitConfig,
 } from './aws-services/ec2/ec2-submit-config.types'
+import { RouteTableSubmitConfig } from './aws-services/route-table/route-table.types'
 import type {
   S3ServerPayload,
   S3SubmitConfig,
 } from './aws-services/s3/bucket-create'
+import { SubnetSubmitConfig } from './aws-services/subnet/subnet-submit-config.types'
+import { VpcSubmitConfig } from './aws-services/vpc/vpc-submit-config.types'
 
-export type ServiceType = 's3' | 'cloudFront' | 'ec2' | 'vpc' | 'subnet'
+export type ServiceType =
+  | 's3'
+  | 'cloudFront'
+  | 'ec2'
+  | 'vpc'
+  | 'subnet'
+  | 'routeTable'
+  | 'rds'
 
 // 일단 임시로 vpc, subnet 타입도 추가
 export type ServiceConfig =
   | S3SubmitConfig
   | CloudFrontSubmitConfig
   | EC2SubmitConfig
-  | { _type: 'vpc'; id: string; name: string }
-  | { _type: 'subnet'; id: string; name: string; vpcId: string }
+  | VpcSubmitConfig
+  | SubnetSubmitConfig
+  | RouteTableSubmitConfig
   | { _type: 'rds'; id: string; name: string; subnetId: string }
 
 // 개별 서비스 데이터 (ID를 포함해 식별 가능하게 함)
@@ -34,6 +45,9 @@ export interface GlobalSubmitConfig {
   s3?: ServiceConfigItem<S3SubmitConfig>[]
   cloudFront?: ServiceConfigItem<CloudFrontSubmitConfig>[]
   ec2?: ServiceConfigItem<EC2SubmitConfig>[]
+  vpc?: ServiceConfigItem<VpcSubmitConfig>[]
+  subnet?: ServiceConfigItem<SubnetSubmitConfig>[]
+  routeTable?: ServiceConfigItem<RouteTableSubmitConfig>[]
 }
 
 // 서버 제출용 payload 유니온
@@ -41,6 +55,9 @@ export type ServerPayload =
   | S3ServerPayload
   | CloudFrontServerPayload
   | EC2ServerPayload
+  | VpcSubmitConfig
+  | SubnetSubmitConfig
+  | RouteTableSubmitConfig
 
 // 최종 제출
 export interface FinalSubmitConfig {
@@ -48,5 +65,8 @@ export interface FinalSubmitConfig {
     s3?: S3ServerPayload[]
     cloudFront?: CloudFrontServerPayload[]
     ec2?: EC2ServerPayload[]
+    vpc?: VpcSubmitConfig[]
+    subnet?: SubnetSubmitConfig[]
+    routeTable?: RouteTableSubmitConfig[]
   }
 }

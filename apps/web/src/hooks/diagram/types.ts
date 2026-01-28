@@ -21,3 +21,8 @@ export const SUBNET_CHILDS_TYPES = [
   'efs',
   'natGateway',
 ]
+
+export const TYPE_ICONS_MAP = {
+  vpc: 'vpcGroup',
+  subnet: 'privateSubnet',
+}

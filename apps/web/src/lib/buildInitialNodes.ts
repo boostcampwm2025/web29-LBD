@@ -28,7 +28,17 @@ export function useBuildDefaultNodes(
             addAwsResource(item.data)
           }
         }
+        if (configs.vpc) {
+          for (const item of configs.vpc) {
+            addAwsResource(item.data)
+          }
+        }
         // VPC가 부모인 노드 생성
+        if (configs.subnet) {
+          for (const item of configs.subnet) {
+            addAwsResource(item.data)
+          }
+        }
         // 서브넷이 부모인 노드 생성
       }
     },

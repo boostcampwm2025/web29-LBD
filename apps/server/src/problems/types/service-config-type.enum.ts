@@ -50,6 +50,9 @@ export class VPCConfig {
 
   @IsString()
   cidrBlock: string;
+
+  @IsEnum(['default', 'dedicated'])
+  tenancy: 'default' | 'dedicated';
 }
 
 export class SubnetConfig {

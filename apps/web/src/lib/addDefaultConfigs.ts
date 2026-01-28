@@ -4,7 +4,7 @@ export function addDefaultConfigs(
   fixedOptions?: ServiceConfig[],
 ): GlobalSubmitConfig {
   const defaultConfigs: GlobalSubmitConfig = {}
-  if (fixedOptions) {
+  if (fixedOptions instanceof Array && fixedOptions[0] !== undefined) {
     for (const options of fixedOptions) {
       switch (options._type) {
         case 's3':
@@ -29,6 +29,32 @@ export function addDefaultConfigs(
           if (!defaultConfigs.ec2) defaultConfigs.ec2 = []
           defaultConfigs.ec2.push({
             id: options.id,
+            data: options,
+            isReady: true,
+          })
+          break
+        case 'vpc':
+          if (!defaultConfigs.vpc) defaultConfigs.vpc = []
+          defaultConfigs.vpc.push({
+            id: options.id,
+            data: options,
+            isReady: true,
+          })
+          break
+
+        case 'subnet':
+          if (!defaultConfigs.subnet) defaultConfigs.subnet = []
+          defaultConfigs.subnet.push({
+            id: options.id,
+            data: options,
+            isReady: true,
+          })
+          break
+
+        case 'routeTable':
+          if (!defaultConfigs.routeTable) defaultConfigs.routeTable = []
+          defaultConfigs.routeTable.push({
+            id: options.id || '',
             data: options,
             isReady: true,
           })
