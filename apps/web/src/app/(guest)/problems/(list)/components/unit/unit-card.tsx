@@ -20,7 +20,8 @@ export const UnitCard = ({ id, title, description, tags }: UnitProblem) => {
   const router = useRouter()
 
   const handleCardClick = () => {
-    router.push(`/problems/${id}?type=unit`)
+    // router.push(`/problems/${id}?type=unit`)
+    router.push(`/problems/unit/${id}`)
   }
 
   return (
