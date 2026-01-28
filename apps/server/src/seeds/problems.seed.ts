@@ -262,6 +262,29 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
         },
       ],
     },
+    {
+      problemType: ProblemType.UNIT,
+      title: 'Subnet 생성하기',
+      description: '기본 설정으로 Subnet을 하나 생성하세요',
+      descDetail:
+        'Subnet은 VPC 내에서 IP 주소 범위를 지정하는 가상 네트워크입니다. 이 문제에서는 특별한 설정 없이 기본 구성으로 Subnet을 하나 생성하는 것이 목표입니다. 생성한 Subnet은 이후 문제에서 사용될 수 있습니다.',
+      requiredFields: [
+        {
+          serviceName: 'subnet',
+          serviceTask: 'subnetCreate',
+          serviceSections: ['general'],
+          fixedOptions: [
+            {
+              _type: 'vpc',
+              id: 'default-vpc',
+              name: 'default-vpc',
+              cidrBlock: '10.0.0.0/16',
+              tenancy: 'default',
+            },
+          ],
+        },
+      ],
+    },
   ];
 
   for (const problemData of problems) {
