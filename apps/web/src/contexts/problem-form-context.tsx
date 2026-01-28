@@ -27,7 +27,7 @@ import type {
   GlobalSubmitConfig,
   ServiceConfig,
   ServiceConfigItem,
-  ServiceType,
+  SubmitConfigServiceType,
 } from '@/types/submitConfig.types'
 import type { Edge, Node } from '@xyflow/react'
 
@@ -39,8 +39,8 @@ interface ProblemFormContextValue<T extends FieldValues = FieldValues> {
 
   // 리소스 구성 관련
   submitConfig: GlobalSubmitConfig
-  handleAddItem: (type: ServiceType, data: ServiceConfig) => void
-  handleRemoveItem: (type: ServiceType, id: string) => void
+  handleAddItem: (type: SubmitConfigServiceType, data: ServiceConfig) => void
+  handleRemoveItem: (type: SubmitConfigServiceType, id: string) => void
 
   // 다이어그램 관련
   nodes: Node[]
@@ -127,7 +127,7 @@ export function ProblemFormProvider<T extends FieldValues>({
 
   // 리소스 추가 핸들러
   const handleAddItem = useCallback(
-    (type: ServiceType, data: ServiceConfig) => {
+    (type: SubmitConfigServiceType, data: ServiceConfig) => {
       const id = data.name || `${type}-${Date.now()}`
 
       // 중복 체크
@@ -151,24 +151,25 @@ export function ProblemFormProvider<T extends FieldValues>({
       // 다이어그램에 노드 추가
       addAwsResource({
         ...data,
-        type,
         name: id,
-        region: data._type === 's3' ? data.region : 'us-east-1',
       })
     },
     [submitConfig, addAwsResource],
   )
 
   // 리소스 삭제 핸들러
-  const handleRemoveItem = useCallback((type: ServiceType, id: string) => {
-    setSubmitConfig((prev) => ({
-      ...prev,
-      [type]: (prev[type] || []).filter((item) => item.id !== id),
-    }))
+  const handleRemoveItem = useCallback(
+    (type: SubmitConfigServiceType, id: string) => {
+      setSubmitConfig((prev) => ({
+        ...prev,
+        [type]: (prev[type] || []).filter((item) => item.id !== id),
+      }))
 
-    // 다이어그램에서 노드 제거
-    setNodes((prevNodes) => prevNodes.filter((node) => node.id !== id))
-  }, [])
+      // 다이어그램에서 노드 제거
+      setNodes((prevNodes) => prevNodes.filter((node) => node.id !== id))
+    },
+    [],
+  )
 
   // 제출 핸들러
   const submitProblem = useCallback(async () => {

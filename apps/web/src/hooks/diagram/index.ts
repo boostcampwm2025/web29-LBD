@@ -5,5 +5,4 @@ export {
   GLOBAL_SERVICE_TYPES,
   REGIONAL_SERVICE_TYPES,
   REGION_CHILDS_TYPES,
-  type ConfigType,
 } from './types'

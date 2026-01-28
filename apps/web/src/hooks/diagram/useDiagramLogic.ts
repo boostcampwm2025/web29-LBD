@@ -56,7 +56,7 @@ export function useAwsDiagramLogic(
       // Regional / VPC / Subnet
       else {
         // region은 나중에 전역 상태로 관리해서 리전을 따로 받지 않는 그런 타입에 관해서는 현재 리전을 바로 적용해도 될듯.
-        const region = payload.region || 'us-east-1'
+        const region = 'region' in payload ? payload.region : 'us-east-1'
         const regionId = `region-${region}`
 
         // 1. Region Node 자동 생성
@@ -175,12 +175,19 @@ export function useAwsDiagramLogic(
           )
 
           // 2. 새 노드 생성
+          const isGroupType =
+            payload._type === 'vpc' ||
+            payload._type === 'subnet' ||
+            payload._type === 'securityGroup' ||
+            payload._type === 'securityGroups'
+
+          const isSecurityGroup =
+            payload._type === 'securityGroup' ||
+            payload._type === 'securityGroups'
+
           const newNode: Node = {
             id: payload.name,
-            type:
-              payload._type === 'vpc' || payload._type === 'subnet'
-                ? 'awsGroup'
-                : 'awsService',
+            type: isGroupType ? 'awsGroup' : 'awsService',
             parentId: parentId,
             extent: 'parent',
             position: { x: LAYOUT_CONFIG.PADDING, y: LAYOUT_CONFIG.PADDING }, // 초기엔 왼쪽 위 배치
@@ -191,15 +198,17 @@ export function useAwsDiagramLogic(
               width:
                 payload._type === 'vpc'
                   ? 400
-                  : payload._type === 'subnet'
+                  : payload._type === 'subnet' || isSecurityGroup
                     ? 300
                     : 80,
               height:
                 payload._type === 'vpc'
                   ? 300
-                  : payload._type === 'subnet'
+                  : payload._type === 'subnet' || isSecurityGroup
                     ? 200
                     : 80,
+              // Security Group은 빨간 점선 테두리
+              ...(isSecurityGroup && { borderColor: 'red', bgColor: 'red' }),
             },
           }
 
