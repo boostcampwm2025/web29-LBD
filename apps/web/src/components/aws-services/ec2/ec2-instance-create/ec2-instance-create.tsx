@@ -59,6 +59,8 @@ export default function EC2InstanceCreate({
       _type: 'ec2',
       id: data.nameTag.name || `ec2-${uniqueId}`,
       name: data.nameTag.name || `ec2-${uniqueId}`,
+      vpcName: data.networkSetting?.vpcName,
+      subnetName: data.networkSetting?.subnetName,
       osType: data.ami?.osType,
       instanceType: data.instanceType?.type,
       keyName: data.keyPair?.keyName,
