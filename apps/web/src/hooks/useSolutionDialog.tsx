@@ -9,8 +9,8 @@ export type TSolutionStatus = 'IDLE' | 'PASS' | 'FAIL'
 export default function useSolutionDialog() {
   const [status, setStatus] = useState<TSolutionStatus>('IDLE')
   const router = useRouter()
-  const openModal = (isPassed: boolean) => {
-    setStatus(isPassed ? 'PASS' : 'FAIL')
+  const openModal = (isSuccess: Exclude<TSolutionStatus, 'IDLE'>) => {
+    setStatus(isSuccess)
   }
   const closeModal = () => setStatus('IDLE')
   const handleNavigation = (problemType: TProblemType, nextId: string) => {

@@ -60,7 +60,7 @@ export async function getUnitProblemDataById(id: string): Promise<ProblemData> {
     problemType: response.problemType,
     title: response.title ?? '문제',
     description: response.description ?? '',
-    descDetail: response.descDetail,
+    descDetail: response.descDetail ?? '',
     tags: response.tags ?? [],
     serviceMappers,
     defaultConfigs,
