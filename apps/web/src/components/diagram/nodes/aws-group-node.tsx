@@ -26,6 +26,7 @@ const borderColorMap: Record<string, string> = {
   orange: 'border-orange-500',
   purple: 'border-purple-500',
   gray: 'border-gray-500',
+  red: 'border-red-500',
 }
 
 const bgColorMap: Record<string, string> = {
@@ -34,6 +35,7 @@ const bgColorMap: Record<string, string> = {
   orange: 'bg-orange-50/50',
   purple: 'bg-purple-50/50',
   gray: 'bg-gray-50/50',
+  red: 'bg-red-50/30',
 }
 
 export function AwsGroupNode({ data }: AwsGroupNodeProps) {
@@ -51,13 +53,15 @@ export function AwsGroupNode({ data }: AwsGroupNodeProps) {
     >
       <Handle type="target" position={Position.Top} className="!bg-gray-400" />
       <div className="flex items-center gap-2">
-        <Image
-          src={iconPath}
-          alt={data.label}
-          width={24}
-          height={24}
-          className="h-6 w-6"
-        />
+        {iconPath && (
+          <Image
+            src={iconPath}
+            alt={data.label}
+            width={24}
+            height={24}
+            className="h-6 w-6"
+          />
+        )}
         <span className="text-sm font-semibold text-gray-700">
           {data.label}
         </span>

@@ -5,6 +5,7 @@ export const EC2_INSTANCE_CREATE_SECTIONS = [
   'keyPair',
   'networkSetting',
   'storage',
+  'userData',
 ] as const
 
 export type EC2InstanceCreateSectionKey =

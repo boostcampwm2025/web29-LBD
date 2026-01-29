@@ -5,5 +5,8 @@ export {
   GLOBAL_SERVICE_TYPES,
   REGIONAL_SERVICE_TYPES,
   REGION_CHILDS_TYPES,
-  type ConfigType,
+  NODE_TYPE_CONFIG,
+  DEFAULT_NODE_CONFIG,
+  getNodeConfig,
+  type NodeTypeConfig,
 } from './types'

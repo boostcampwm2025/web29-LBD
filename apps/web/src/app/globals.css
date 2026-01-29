@@ -2,15 +2,8 @@
 
 @custom-variant dark (&:is(.dark *));
 
-@font-face {
-  font-family: 'Pretendard';
-  src: url('./fonts/PretendardVariable.woff2') format('woff2');
-  font-weight: 100 900;
-  font-display: swap;
-}
-
 @theme inline {
-  --font-sans: 'Pretendard', system-ui, -apple-system, sans-serif;
+  --font-sans: var(--font-pretendard), system-ui, -apple-system, sans-serif;
   --screen-xl: 1440px;
   --color-background: var(--background);
   --color-foreground: var(--foreground);

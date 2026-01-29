@@ -8,6 +8,7 @@ import {
   NameTag,
   NetworkSetting,
   Storage,
+  UserData,
 } from './sections'
 
 import { useForm } from 'react-hook-form'
@@ -31,6 +32,7 @@ const DEFAULT_VALUES: EC2InstanceFormData = {
     allowHTTP: false,
   },
   storage: { size: 8, volumeType: 'gp3' },
+  userData: { script: '' },
 }
 
 interface EC2InstanceCreateProps {
@@ -70,6 +72,7 @@ export default function EC2InstanceCreate({
       allowHTTP: data.networkSetting?.allowHTTP,
       storageSize: data.storage?.size,
       volumeType: data.storage?.volumeType,
+      userData: data.userData?.script,
     }
     onSubmit(submitData)
     reset(DEFAULT_VALUES)
@@ -101,6 +104,8 @@ export default function EC2InstanceCreate({
       )}
 
       {config.storage && <Storage control={control} config={config} />}
+
+      {config.userData && <UserData control={control} config={config} />}
     </form>
   )
 }

@@ -8,10 +8,21 @@ import {
 } from '@/components/aws-services/utils/serviceMapper'
 import { useProblemForm } from '@/contexts/problem-form-context'
 import { cn } from '@/lib/utils'
-import type { ServiceConfig, ServiceType } from '@/types/submitConfig.types'
+import type {
+  ServiceConfig,
+  SubmitConfigServiceType,
+} from '@/types/submitConfig.types'
 
-const getServiceType = (serviceName: string): ServiceType => {
-  const serviceTypeMap: Record<string, ServiceType> = {
+const getServiceType = (
+  serviceName: string,
+  serviceTask?: string,
+): SubmitConfigServiceType => {
+  // Security Group은 ec2 serviceName이지만 별도 타입으로 처리
+  if (serviceName === 'ec2' && serviceTask === 'securityGroupCreate') {
+    return 'securityGroups'
+  }
+
+  const serviceTypeMap: Record<string, SubmitConfigServiceType> = {
     s3: 's3',
     cloudFront: 'cloudFront',
     ec2: 'ec2',
@@ -33,7 +44,7 @@ export const ServiceForm = ({
   if (!mapper) return null
 
   const { Component, config } = serviceMapper(mapper)
-  const serviceType = getServiceType(mapper.serviceName)
+  const serviceType = getServiceType(mapper.serviceName, mapper.serviceTask)
   const createdItems = submitConfig[serviceType] || []
 
   return (

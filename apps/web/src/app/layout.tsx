@@ -1,9 +1,17 @@
 import './globals.css'
 
 import type { Metadata, Viewport } from 'next'
+import localFont from 'next/font/local'
 
 import { Footer, Header } from '@/components/layout'
 import { cn } from '@/lib/utils'
+
+const Pretendard = localFont({
+  src: './fonts/PretendardVariable.woff2',
+  variable: '--font-pretendard',
+  display: 'swap',
+  adjustFontFallback: false,
+})
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -26,7 +34,8 @@ export default function RootLayout({
     <html lang="ko">
       <body
         className={cn(
-          'bg-background antialiased',
+          Pretendard.variable,
+          'bg-background font-sans antialiased',
           'selection:bg-primary/30 selection:text-foreground',
         )}
       >

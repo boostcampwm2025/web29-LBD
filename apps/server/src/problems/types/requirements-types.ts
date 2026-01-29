@@ -37,6 +37,8 @@ export interface Ec2Requirements {
       requirePublicIp?: boolean;
       expectedAmi?: string;
       expectedInstanceType?: string;
+      requireUserData?: boolean;
+      userDataMustContain?: string[];
     };
   };
 }

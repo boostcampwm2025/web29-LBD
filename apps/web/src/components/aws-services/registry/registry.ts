@@ -7,6 +7,7 @@ import CloudFrontDistributionSettings from '@/components/aws-services/cloudfront
 import CloudFrontOriginSettings from '@/components/aws-services/cloudfront/cloudfront-origin-settings/cloudfront-origin-settings'
 import CloudFrontWebsiteSettings from '@/components/aws-services/cloudfront/cloudfront-website-settings/cloudfront-website-settings'
 import EC2InstanceCreate from '@/components/aws-services/ec2/ec2-instance-create/ec2-instance-create'
+import EC2SecurityGroup from '@/components/aws-services/ec2/ec2-security-group/ec2-security-group'
 import S3BucketCreate from '@/components/aws-services/s3/s3-bucket-create/s3-bucket-create'
 import S3BucketDetail from '@/components/aws-services/s3/s3-bucket-detail/s3-bucket-detail'
 import S3BucketList from '@/components/aws-services/s3/s3-bucket-list/s3-bucket-list'
@@ -22,6 +23,10 @@ import { CLOUDFRONT_ORIGIN_SETTINGS_SECTIONS } from '@/types/aws-services/cloudf
 import type { CloudFrontWebsiteFormData } from '@/types/aws-services/cloudfront/website-settings'
 import { CLOUDFRONT_WEBSITE_SETTINGS_SECTIONS } from '@/types/aws-services/cloudfront/website-settings/constants'
 import { EC2_INSTANCE_CREATE_SECTIONS } from '@/types/aws-services/ec2/instance-create'
+import {
+  DEFAULT_SG_FORM_DATA,
+  EC2_SECURITY_GROUP_SECTIONS,
+} from '@/types/aws-services/ec2/security-group'
 import type { S3BucketFormData } from '@/types/aws-services/s3/bucket-create'
 import { S3_BUCKET_CREATE_SECTIONS } from '@/types/aws-services/s3/bucket-create/'
 import { S3_BUCKET_DETAIL_SECTIONS } from '@/types/aws-services/s3/bucket-detail/'
@@ -162,6 +167,11 @@ const EC2: Record<string, ServicePage> = {
     defaultValues: {
       nameTag: { name: '' },
     },
+  },
+  securityGroupCreate: {
+    component: EC2SecurityGroup,
+    sections: EC2_SECURITY_GROUP_SECTIONS,
+    defaultValues: DEFAULT_SG_FORM_DATA,
   },
 }
 

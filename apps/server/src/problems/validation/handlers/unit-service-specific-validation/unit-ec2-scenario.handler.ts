@@ -91,6 +91,33 @@ export class Ec2ScenarioHandler {
           });
         }
       }
+
+      // 5. EC2_USER_DATA_MISSING
+      if (req.requireUserData && !instance.userData?.trim()) {
+        feedbacks.push({
+          serviceType: 'ec2',
+          service: ec2Name,
+          field: 'userData',
+          code: EC2FeedbackScenarios.EC2_USER_DATA_MISSING,
+          message: `EC2 인스턴스 ${ec2Name}에 User Data 스크립트가 필요합니다.`,
+        });
+      }
+
+      // 6. EC2_USER_DATA_INCOMPLETE
+      if (req.userDataMustContain?.length) {
+        const script = instance.userData || '';
+        for (const keyword of req.userDataMustContain) {
+          if (!script.includes(keyword)) {
+            feedbacks.push({
+              serviceType: 'ec2',
+              service: ec2Name,
+              field: 'userData',
+              code: EC2FeedbackScenarios.EC2_USER_DATA_INCOMPLETE,
+              message: `User Data 스크립트에 '${keyword}' 관련 설정이 필요합니다.`,
+            });
+          }
+        }
+      }
     }
 
     return feedbacks;

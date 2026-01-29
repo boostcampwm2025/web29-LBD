@@ -39,6 +39,10 @@ export class EC2Config {
 
   @IsString()
   ami: string;
+
+  @IsString()
+  @IsOptional()
+  userData?: string;
 }
 
 export class VPCConfig {
