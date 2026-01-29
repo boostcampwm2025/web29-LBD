@@ -26,6 +26,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
     blockPublicAcls: 'DONT_CARE',
     ignorePublicAcls: 'DONT_CARE',
     blockPublicPolicy: 'DONT_CARE',
+    objectLockEnabled: 'DONT_CARE',
     restrictPublicBuckets: 'DONT_CARE',
     encryptionType: 'DONT_CARE',
     versioningEnabled: 'DONT_CARE',

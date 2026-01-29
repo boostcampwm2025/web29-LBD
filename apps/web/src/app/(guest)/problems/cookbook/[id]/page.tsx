@@ -16,7 +16,7 @@ export default async function CookbookProblemPage({
 }: CookbookProblemPageProps) {
   const { id } = await params
 
-  const { title, description, tags, units } =
+  const { title, descDetail, tags, units } =
     await getCookbookProblemDataById(id)
 
   const currentUnitId = units[0].id
@@ -33,7 +33,7 @@ export default async function CookbookProblemPage({
       unitId={currentUnitId}
       cookbookId={id}
       title={title}
-      description={description}
+      descDetail={descDetail}
       tags={tags}
       problemData={serviceMappers}
       defaultConfigs={defaultConfigs}

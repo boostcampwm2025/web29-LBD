@@ -11,6 +11,7 @@ const Pretendard = localFont({
   variable: '--font-pretendard',
   display: 'swap',
   adjustFontFallback: false,
+  weight: '45 920',
 })
 
 export const viewport: Viewport = {

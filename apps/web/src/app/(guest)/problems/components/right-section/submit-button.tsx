@@ -16,16 +16,6 @@ export function SubmitButton() {
     )
   }, [submitConfig])
 
-  // 서비스별 리소스 카운트 문자열 생성
-  const resourceSummary = useMemo(() => {
-    const summaries: string[] = []
-    if (submitConfig.s3?.length) {
-      summaries.push(`S3: ${submitConfig.s3.length}개`)
-    }
-    // 향후 다른 서비스 추가 시 확장
-    return summaries.join(', ')
-  }, [submitConfig])
-
   return (
     <div className="space-y-2">
       <Button
@@ -33,20 +23,8 @@ export function SubmitButton() {
         onClick={submitProblem}
         disabled={isSubmitting || totalResourceCount === 0}
       >
-        {isSubmitting
-          ? '제출 중...'
-          : `제출하기 (${totalResourceCount}개 리소스)`}
+        {isSubmitting ? '제출 중...' : `제출하기`}
       </Button>
-      {totalResourceCount > 0 && (
-        <p className="text-muted-foreground text-center text-sm">
-          {resourceSummary}
-        </p>
-      )}
-      {totalResourceCount === 0 && (
-        <p className="text-muted-foreground text-center text-sm">
-          리소스를 추가해주세요
-        </p>
-      )}
     </div>
   )
 }

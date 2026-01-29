@@ -170,6 +170,10 @@ export class S3Config {
 
   @IsBoolean()
   @IsOptional()
+  objectLockEnabled?: boolean;
+
+  @IsBoolean()
+  @IsOptional()
   blockPublicAcls?: boolean;
 
   @IsBoolean()

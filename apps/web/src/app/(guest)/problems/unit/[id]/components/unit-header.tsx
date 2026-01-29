@@ -3,13 +3,13 @@ import { LayersIcon } from 'lucide-react'
 
 interface UnitProblemHeaderProps {
   title: string
-  description: string
+  descDetail: string
   tags: string[]
 }
 
 export function UnitProblemHeader({
   title,
-  description,
+  descDetail,
   tags,
 }: UnitProblemHeaderProps) {
   return (
@@ -19,7 +19,7 @@ export function UnitProblemHeader({
           <LayersIcon className="bg-primary text-primary-foreground h-7 w-7 rounded-full p-1.5" />
           {title}
         </h1>
-        <p className="text-muted-foreground">{description}</p>
+        <p className="text-muted-foreground">{descDetail}</p>
       </div>
 
       <div className="flex flex-wrap gap-2">

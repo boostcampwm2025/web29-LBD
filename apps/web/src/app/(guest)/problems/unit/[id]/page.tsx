@@ -13,14 +13,14 @@ export default async function UnitProblemPage({
 }: UnitProblemPageProps) {
   const { id } = await params
 
-  const { title, description, tags, serviceMappers, defaultConfigs } =
+  const { title, descDetail, tags, serviceMappers, defaultConfigs } =
     await getUnitProblemDataById(id)
 
   return (
     <UnitProblemClient
       unitId={id}
       title={title}
-      description={description}
+      descDetail={descDetail}
       tags={tags}
       problemData={serviceMappers}
       defaultConfigs={defaultConfigs}

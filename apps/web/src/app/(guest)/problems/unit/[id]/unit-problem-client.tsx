@@ -14,7 +14,7 @@ import { GlobalSubmitConfig } from '@/types/submitConfig.types'
 interface UnitProblemClientProps {
   unitId: string
   title: string
-  description: string
+  descDetail: string
   tags: string[]
   problemData: IServiceMapper[]
   defaultConfigs: GlobalSubmitConfig
@@ -23,7 +23,7 @@ interface UnitProblemClientProps {
 export default function UnitProblemClient({
   unitId,
   title,
-  description,
+  descDetail,
   tags,
   problemData,
   defaultConfigs,
@@ -41,11 +41,7 @@ export default function UnitProblemClient({
       defaultConfigs={defaultConfigs}
     >
       <ProblemLeftSection problemData={problemData}>
-        <UnitProblemHeader
-          title={title}
-          description={description}
-          tags={tags}
-        />
+        <UnitProblemHeader title={title} descDetail={descDetail} tags={tags} />
       </ProblemLeftSection>
 
       <ProblemRightSection />

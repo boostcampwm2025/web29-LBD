@@ -17,7 +17,7 @@ interface CookbookProblemClientProps {
   unitId: string
   cookbookId: string
   title: string
-  description: string
+  descDetail: string
   tags: string[]
   problemData: IServiceMapper[]
   defaultConfigs: GlobalSubmitConfig
@@ -29,7 +29,7 @@ export default function CookbookProblemClient({
   unitId,
   cookbookId,
   title,
-  description,
+  descDetail,
   tags,
   problemData,
   defaultConfigs,
@@ -58,7 +58,7 @@ export default function CookbookProblemClient({
       <ProblemLeftSection problemData={problemData}>
         <CookbookProblemHeader
           title={title}
-          description={description}
+          descDetail={descDetail}
           tags={tags}
           units={units}
           currUnitId={unitId}
