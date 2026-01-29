@@ -13,12 +13,16 @@ export default function useSolutionDialog() {
     setStatus(isSuccess)
   }
   const closeModal = () => setStatus('IDLE')
-  const handleNavigation = (problemType: TProblemType, nextId: string) => {
+  const handleNavigation = (problemType: TProblemType, dest: string) => {
     closeModal()
     if (problemType === 'unit') {
       router.push(`/problems?type=unit`)
-    } else if (problemType === 'cookbook' && nextId) {
-      router.push(`/problems/cookbook/${nextId}`)
+    } else if (problemType === 'cookbook') {
+      if (dest) {
+        router.push(`/problems/cookbook/${dest}`)
+      } else {
+        router.push(`/problems?type=cookbook`)
+      }
     }
   }
   return {

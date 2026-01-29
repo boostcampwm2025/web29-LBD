@@ -213,7 +213,7 @@ export function ProblemFormProvider<T extends FieldValues>({
       handleNavigation('unit', '')
     } else if (problemType === 'cookbook') {
       // cookbook인 경우 nextUnitId가 있으면 같은 cookbook의 다음 unit으로, 없으면 목록으로
-      handleNavigation('cookbook', nextUnitId || cookbookId || '')
+      handleNavigation('cookbook', `${cookbookId}?unitId=${nextUnitId}`)
     }
   }, [problemType, nextUnitId, cookbookId, handleNavigation])
 
