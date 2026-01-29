@@ -13,10 +13,7 @@ export const Header = () => {
         </Link>
         <div className="flex gap-4 justify-self-end">
           <Button asChild variant="outline">
-            <Link href="/problems?type=unit">문제</Link>
-          </Button>
-          <Button asChild>
-            <Link href="/login">로그인하기</Link>
+            <Link href="/problems?type=unit">문제 목록</Link>
           </Button>
         </div>
       </div>
