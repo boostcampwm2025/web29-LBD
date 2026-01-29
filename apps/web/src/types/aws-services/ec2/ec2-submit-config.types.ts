@@ -30,6 +30,9 @@ export type EC2SubmitConfig = {
   // Storage
   storageSize?: number
   volumeType?: string
+
+  // User Data
+  userData?: string
 }
 
 export type EC2ServerPayload = Omit<EC2SubmitConfig, '_type'>

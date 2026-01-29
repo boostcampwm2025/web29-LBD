@@ -30,4 +30,7 @@ export interface EC2InstanceFormData {
     size: number
     volumeType: string
   }
+  userData?: {
+    script: string
+  }
 }

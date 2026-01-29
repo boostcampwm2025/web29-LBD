@@ -1,4 +1,4 @@
-import { ProblemTagBadge } from '../../../components/problem-tag-badge'
+import { ProblemTagBadge } from '../../../(list)/components/problem-tag-badge'
 import { BookOpenIcon, LayersIcon } from 'lucide-react'
 
 interface ProblemHeaderProps {

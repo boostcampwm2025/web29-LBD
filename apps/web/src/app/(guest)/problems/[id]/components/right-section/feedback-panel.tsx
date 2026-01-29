@@ -1,6 +1,6 @@
 'use client'
 
-import { FeedbackDetailCard } from '../../../components/feedback-detail-card'
+import { FeedbackDetailCard } from '../../../(list)/components/feedback-detail-card'
 
 import { useProblemForm } from '@/contexts/problem-form-context'
 

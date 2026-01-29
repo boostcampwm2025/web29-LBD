@@ -30,7 +30,8 @@ export const CookbookCard = ({
   const router = useRouter()
 
   const handleCardClick = () => {
-    router.push(`/problems/${id}`)
+    // router.push(`/problems/${id}?type=cookbook`)
+    router.push(`/problems/cookbook/${id}`)
   }
 
   return (

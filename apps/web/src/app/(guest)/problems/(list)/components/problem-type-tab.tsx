@@ -1,13 +1,8 @@
 'use client'
 
-import {
-  BadgeInfoIcon,
-  BookOpenIcon,
-  FileTextIcon,
-  LayersIcon,
-} from 'lucide-react'
+import { BadgeInfoIcon, BookOpenIcon, LayersIcon } from 'lucide-react'
 
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { cn } from '@/lib/utils'
@@ -36,8 +31,11 @@ export const ProblemTypeTab = () => {
     router.push(`/problems?type=${value}`)
   }
 
+  const searchParams = useSearchParams()
+  const type = searchParams.get('type') ?? problemType.UNIT
+
   return (
-    <Tabs defaultValue={problemType.UNIT} className="w-full">
+    <Tabs defaultValue={type} className="w-full">
       <TabsList className="w-full rounded-none bg-transparent p-0">
         {problemTabList.map((tab) => (
           <TabsTrigger

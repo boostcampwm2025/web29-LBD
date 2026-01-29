@@ -67,6 +67,10 @@ export class EC2Config {
   @IsString()
   @IsOptional()
   volumeType?: string;
+
+  @IsString()
+  @IsOptional()
+  userData?: string;
 }
 
 export class VPCConfig {

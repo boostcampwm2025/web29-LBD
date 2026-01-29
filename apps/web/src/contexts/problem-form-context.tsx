@@ -19,10 +19,13 @@ import {
   useForm,
 } from 'react-hook-form'
 
+import ResultDialog from '@/components/result-dialog'
 import { LAYOUT_CONFIG, useAwsDiagramLogic } from '@/hooks/diagram'
-import { useBuildDefaultNodes } from '@/lib/buildInitialNodes'
+import useSolutionDialog from '@/hooks/useSolutionDialog'
+import { useBuildDefaultNodes } from '@/lib/build-initial-nodes'
 import { submitProblemSolution } from '@/lib/problem/submit-problem'
 import type { FeedbackDetail } from '@/types/feedback.type'
+import type { TProblemType } from '@/types/problem.type'
 import type {
   FinalSubmitConfig,
   GlobalSubmitConfig,
@@ -57,7 +60,10 @@ interface ProblemFormProviderProps<
   T extends FieldValues,
 > extends PropsWithChildren {
   defaultValues: DefaultValues<T>
-  problemId: string
+  unitId: string
+  cookbookId?: string
+  problemType: TProblemType
+  nextUnitId?: string
   initialFeedback?: FeedbackDetail[]
   initialNodes?: Node[]
   initialEdges?: Edge[]
@@ -83,7 +89,10 @@ const DEFAULT_ROOT_NODE: Node = {
 export function ProblemFormProvider<T extends FieldValues>({
   children,
   defaultValues,
-  problemId,
+  unitId,
+  cookbookId,
+  problemType,
+  nextUnitId,
   initialFeedback = [],
   initialNodes = [DEFAULT_ROOT_NODE],
   initialEdges = [],
@@ -94,6 +103,8 @@ export function ProblemFormProvider<T extends FieldValues>({
     formState: { isSubmitting },
   } = methods
   const [feedback, setFeedback] = useState<FeedbackDetail[]>(initialFeedback)
+  const { status, openModal, closeModal, handleNavigation, isModalOpen } =
+    useSolutionDialog()
 
   // 리소스 구성 상태
   const [submitConfig, setSubmitConfig] =
@@ -153,9 +164,7 @@ export function ProblemFormProvider<T extends FieldValues>({
       // 다이어그램에 노드 추가
       addAwsResource({
         ...data,
-        type,
         name: id,
-        region: data._type === 's3' ? data.region : 'us-east-1',
       })
     },
     [submitConfig, addAwsResource],
@@ -190,13 +199,23 @@ export function ProblemFormProvider<T extends FieldValues>({
     }
 
     try {
-      const result = await submitProblemSolution(String(problemId), finalConfig)
+      const result = await submitProblemSolution(String(unitId), finalConfig)
 
-      setFeedback(result)
+      setFeedback(result.feedback || [])
+      openModal(result.result)
     } catch (error) {
       console.error('Failed to submit problem:', error)
     }
-  }, [problemId, submitConfig])
+  }, [submitConfig, openModal, unitId])
+  // Navigation 핸들러 - problemType에 따라 분기
+  const onNavigationConfirm = useCallback(() => {
+    if (problemType === 'unit') {
+      handleNavigation('unit', '')
+    } else if (problemType === 'cookbook') {
+      // cookbook인 경우 nextUnitId가 있으면 같은 cookbook의 다음 unit으로, 없으면 목록으로
+      handleNavigation('cookbook', nextUnitId || cookbookId || '')
+    }
+  }, [problemType, nextUnitId, cookbookId, handleNavigation])
 
   const contextValue = useMemo(
     () => ({
@@ -232,6 +251,12 @@ export function ProblemFormProvider<T extends FieldValues>({
       value={contextValue as ProblemFormContextValue}
     >
       {children}
+      <ResultDialog
+        isOpen={isModalOpen}
+        status={status}
+        onClose={closeModal}
+        onConfirm={onNavigationConfirm}
+      />
     </ProblemFormContext.Provider>
   )
 }

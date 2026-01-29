@@ -221,6 +221,128 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
         },
       ],
     },
+    {
+      problemType: ProblemType.UNIT,
+      title: 'EC2 보안 그룹 HTTP 포트 열기',
+      description:
+        '웹 서버 접근을 위해 보안 그룹에 HTTP(80) 포트를 열어주세요.',
+      descDetail: `보안 그룹은 EC2 인스턴스의 가상 방화벽 역할을 합니다.
+웹 서버를 외부에서 접근하려면 HTTP(80) 포트를 인바운드 규칙에 추가해야 합니다.
+
+전제 조건:
+- VPC가 이미 존재: default-vpc
+- EC2 인스턴스가 이미 존재: web-server
+
+학습 목표:
+1. 보안 그룹의 역할 이해
+2. 인바운드 규칙 추가 방법
+3. 포트와 소스 IP 설정`,
+      requiredFields: [
+        {
+          serviceName: 'ec2',
+          serviceTask: 'securityGroupCreate',
+          serviceSections: ['basicInfo', 'inboundRules'],
+          fixedOptions: [
+            {
+              _type: 'vpc',
+              id: 'default-vpc',
+              name: 'default-vpc',
+            },
+          ],
+        },
+      ],
+      solution: {
+        answerConfig: {
+          securityGroups: [
+            {
+              name: 'web-server-sg',
+              vpcId: 'default-vpc',
+              vpcName: 'default-vpc',
+              ipPermissions: [
+                {
+                  ipProtocol: 'tcp',
+                  fromPort: '80',
+                  toPort: '80',
+                  cidrIp: '0.0.0.0/0',
+                  isInbound: true,
+                },
+              ],
+            },
+          ],
+        },
+      },
+      requirements: {
+        securityGroup: {
+          'web-server-sg': {
+            requireOpenPorts: [80],
+          },
+        },
+      },
+      tags: [tagMap.get('Security')!, tagMap.get('EC2')!],
+    },
+    {
+      problemType: ProblemType.UNIT,
+      title: 'EC2 User Data로 nginx 웹서버 설정',
+      description:
+        'User Data 스크립트를 사용하여 EC2 인스턴스에 nginx를 자동 설치하세요.',
+      descDetail: `## 전제 조건
+- VPC와 퍼블릭 서브넷이 이미 존재합니다.
+- 보안 그룹에서 HTTP(80) 포트가 열려있습니다.
+
+## 목표
+EC2 인스턴스 시작 시 자동으로 nginx 웹서버를 설치하고 실행하는 User Data 스크립트를 작성하세요.
+
+## 학습 목표
+1. EC2 User Data 개념 이해
+2. 부트스트래핑을 통한 인스턴스 자동 구성
+3. Amazon Linux에서 nginx 설치 명령어
+
+## 힌트
+- Amazon Linux에서는 yum 패키지 매니저를 사용합니다.
+- systemctl 명령으로 서비스를 시작/활성화합니다.`,
+      requiredFields: [
+        {
+          serviceName: 'ec2',
+          serviceTask: 'instanceCreate',
+          serviceSections: ['nameTag', 'ami', 'userData'],
+          fixedOptions: {
+            ami: {
+              osType: {
+                value: 'amazon-linux',
+                helperText: 'Amazon Linux 2023을 선택하세요.',
+              },
+            },
+            userData: {
+              script: {
+                placeholder:
+                  '#!/bin/bash\n# nginx 설치 및 시작 스크립트를 작성하세요',
+                helperText: 'yum을 사용하여 nginx를 설치하고 시작하세요.',
+              },
+            },
+          },
+        },
+      ],
+      solution: {
+        answerConfig: {
+          ec2: [
+            {
+              name: 'web-server',
+              osType: 'amazon-linux',
+              userData: 'DONT_CARE',
+            },
+          ],
+        },
+      },
+      requirements: {
+        ec2: {
+          'web-server': {
+            requireUserData: true,
+            userDataMustContain: ['nginx', 'yum install', 'systemctl start'],
+          },
+        },
+      },
+      tags: [tagMap.get('Compute')!, tagMap.get('EC2')!, tagMap.get('Server')!],
+    },
   ];
 
   for (const problemData of problems) {

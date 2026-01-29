@@ -24,7 +24,7 @@ export const HeroSection = () => {
         </div>
       </div>
 
-      <div id="xyflow">
+      <div id="xyflow" className="h-100">
         <AwsDiagram />
       </div>
     </section>

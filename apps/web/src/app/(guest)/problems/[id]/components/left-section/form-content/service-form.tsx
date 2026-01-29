@@ -7,7 +7,15 @@ import {
 import { useProblemForm } from '@/contexts/problem-form-context'
 import type { ServiceConfig, ServiceType } from '@/types/submitConfig.types'
 
-const getServiceType = (serviceName: string): ServiceType => {
+const getServiceType = (
+  serviceName: string,
+  serviceTask?: string,
+): ServiceType => {
+  // Security Group은 ec2 serviceName이지만 별도 타입으로 처리
+  if (serviceName === 'ec2' && serviceTask === 'securityGroupCreate') {
+    return 'securityGroup'
+  }
+
   const serviceTypeMap: Record<string, ServiceType> = {
     s3: 's3',
     cloudFront: 'cloudFront',

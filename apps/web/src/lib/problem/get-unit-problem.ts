@@ -1,4 +1,4 @@
-import { addDefaultConfigs } from '../addDefaultConfigs'
+import { addDefaultConfigs } from '../add-default-configs'
 
 import { IServiceMapper } from '@/components/aws-services/utils/serviceMapper'
 import { GlobalSubmitConfig, ServiceConfig } from '@/types/submitConfig.types'
@@ -16,7 +16,7 @@ interface RequiredField {
   fixedOptions?: Record<string, string>[]
 }
 
-export interface ProblemData {
+interface ProblemData {
   problemType: string
   title: string
   description: string
@@ -26,7 +26,7 @@ export interface ProblemData {
   defaultConfigs: GlobalSubmitConfig
 }
 
-export async function getProblemData(id: string): Promise<ProblemData> {
+export async function getUnitProblemDataById(id: string): Promise<ProblemData> {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3001'
 
   if (!baseUrl) {
@@ -38,7 +38,7 @@ export async function getProblemData(id: string): Promise<ProblemData> {
   })
 
   if (!res.ok) {
-    throw new Error('문제 상세 조회 실패')
+    throw new Error('유닛 문제 상세 조회 실패')
   }
 
   const response = await res.json()
@@ -60,7 +60,7 @@ export async function getProblemData(id: string): Promise<ProblemData> {
     problemType: response.problemType,
     title: response.title ?? '문제',
     description: response.description ?? '',
-    descDetail: response.descDetail,
+    descDetail: response.descDetail ?? '',
     tags: response.tags ?? [],
     serviceMappers,
     defaultConfigs,

@@ -16,7 +16,7 @@ export class CookbooksService {
   ): Promise<CookbookDetailResponseDto> {
     const cookbook = await this.cookbookRepository.findOne({
       where: { id: cookbookId },
-      relations: ['tags', 'cookbook_problems', 'cookbook_problems.problem'],
+      relations: ['tags', 'cookbookProblems', 'cookbookProblems.problem'],
     });
 
     if (!cookbook) {

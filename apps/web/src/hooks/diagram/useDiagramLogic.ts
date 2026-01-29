@@ -3,8 +3,8 @@ import {
   GLOBAL_SERVICE_TYPES,
   LAYOUT_CONFIG,
   REGION_CHILDS_TYPES,
+  getNodeConfig,
 } from './types'
-import { TYPE_ICONS_MAP } from './types'
 
 import { useCallback } from 'react'
 
@@ -57,7 +57,7 @@ export function useAwsDiagramLogic(
       // Regional / VPC / Subnet
       else {
         // region은 나중에 전역 상태로 관리해서 리전을 따로 받지 않는 그런 타입에 관해서는 현재 리전을 바로 적용해도 될듯.
-        const region = payload.region || 'us-east-1'
+        const region = 'region' in payload ? payload.region : 'us-east-1'
         const regionId = `region-${region}`
 
         // 1. Region Node 자동 생성
@@ -184,31 +184,24 @@ export function useAwsDiagramLogic(
           }
 
           // 2. 새 노드 생성
+          const nodeConfig = getNodeConfig(payload._type)
+
           const newNode: Node = {
             id: payload.name,
-            type:
-              payload._type === 'vpc' || payload._type === 'subnet'
-                ? 'awsGroup'
-                : 'awsService',
+            type: nodeConfig.nodeType,
             parentId: parentId,
             extent: 'parent',
-            position: { x: LAYOUT_CONFIG.PADDING, y: LAYOUT_CONFIG.PADDING }, // 초기엔 왼쪽 위 배치
+            position: { x: LAYOUT_CONFIG.PADDING, y: LAYOUT_CONFIG.PADDING },
             data: {
               type: payload._type,
               label: payload.name,
-              icon: TYPE_ICONS_MAP[payload._type] || payload._type,
-              width:
-                payload._type === 'vpc'
-                  ? 400
-                  : payload._type === 'subnet'
-                    ? 300
-                    : 80,
-              height:
-                payload._type === 'vpc'
-                  ? 300
-                  : payload._type === 'subnet'
-                    ? 200
-                    : 80,
+              icon: payload._type,
+              width: nodeConfig.width,
+              height: nodeConfig.height,
+              ...(nodeConfig.borderColor && {
+                borderColor: nodeConfig.borderColor,
+              }),
+              ...(nodeConfig.bgColor && { bgColor: nodeConfig.bgColor }),
             },
           }
 
