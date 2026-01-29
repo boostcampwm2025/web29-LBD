@@ -53,8 +53,8 @@ export function CnameSection({
                 도메인 추가
               </Button>
 
-              <div className="flex items-start gap-2 rounded-md border border-orange-200 bg-orange-50 p-3 text-sm text-orange-900">
-                <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
+              <div className="flex items-start gap-2 rounded-md border border-orange-200 bg-orange-50 p-3 text-xs text-orange-900">
+                <AlertCircle className="mt-0.5 h-3 w-3 shrink-0" />
                 <p>
                   대체 도메인을 사용하려면 해당 도메인의 SSL/TLS 인증서가
                   필요합니다. 아래 SSL/TLS 인증서 섹션에서 ACM 인증서를

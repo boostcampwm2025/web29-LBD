@@ -54,14 +54,14 @@ export function OriginDomainSection({
           render={({ field }) => (
             <RadioGroup value={field.value} onValueChange={field.onChange}>
               {/* S3 Bucket Option */}
-              <div className="flex items-start gap-3">
-                <RadioGroupItem value="s3" id="origin-s3" className="mt-1" />
+              <div className="flex items-start gap-2">
+                <RadioGroupItem value="s3" id="origin-s3" />
                 <div className="flex-1 space-y-3">
                   <Label htmlFor="origin-s3" className="font-semibold">
                     Amazon S3 버킷
                   </Label>
                   {originType === 's3' && (
-                    <div className="space-y-3">
+                    <div className="space-y-2">
                       <Controller
                         name="selectedBucket"
                         control={control}
@@ -91,8 +91,8 @@ export function OriginDomainSection({
                           </div>
                         </div>
                       )}
-                      <div className="text-muted-foreground flex items-start gap-2 text-sm">
-                        <Info className="mt-0.5 h-4 w-4 shrink-0" />
+                      <div className="text-muted-foreground flex items-center gap-1 text-xs">
+                        <Info className="h-3 w-3" />
                         <p>
                           선택한 S3 버킷이 자동으로 Origin Domain으로 설정됩니다
                         </p>
@@ -103,12 +103,8 @@ export function OriginDomainSection({
               </div>
 
               {/* Custom Origin Option */}
-              <div className="flex items-start gap-3">
-                <RadioGroupItem
-                  value="custom"
-                  id="origin-custom"
-                  className="mt-1"
-                />
+              <div className="flex items-start gap-2">
+                <RadioGroupItem value="custom" id="origin-custom" />
                 <div className="flex-1 space-y-3">
                   <Label htmlFor="origin-custom" className="font-semibold">
                     커스텀 Origin
@@ -126,8 +122,8 @@ export function OriginDomainSection({
                           />
                         )}
                       />
-                      <div className="text-muted-foreground flex items-start gap-2 text-sm">
-                        <Info className="mt-0.5 h-4 w-4 shrink-0" />
+                      <div className="text-muted-foreground flex items-center gap-1 text-xs">
+                        <Info className="h-3 w-3" />
                         <p>웹 서버 도메인 이름을 입력하세요</p>
                       </div>
                     </div>

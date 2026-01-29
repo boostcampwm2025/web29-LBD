@@ -20,8 +20,8 @@ export function OriginPathSection({ control }: CloudFrontOriginSectionProps) {
             <Input {...field} placeholder="/production" className="max-w-md" />
           )}
         />
-        <div className="text-muted-foreground flex items-start gap-2 text-sm">
-          <Info className="mt-0.5 h-4 w-4 shrink-0" />
+        <div className="text-muted-foreground flex items-start gap-2 text-xs">
+          <Info className="mt-0.5 h-3 w-3 shrink-0" />
           <p>
             예: /production을 입력하면 CloudFront가 Origin/production에서
             콘텐츠를 가져옵니다

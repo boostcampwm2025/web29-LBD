@@ -20,7 +20,11 @@ export const ServiceTitle = ({
       <p className="text-muted-foreground">{description}</p>
       {button && (
         <div className="flex justify-end">
-          <Button type="submit" disabled={button.isDisabled}>
+          <Button
+            type="submit"
+            disabled={button.isDisabled}
+            className="disabled:cursor-not-allowed"
+          >
             {button.buttonText}
           </Button>
         </div>

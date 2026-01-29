@@ -73,8 +73,8 @@ export function ViewerProtocolSection({
           )}
         />
 
-        <div className="flex items-start gap-2 rounded-md border border-blue-200 bg-blue-50 p-3 text-sm text-blue-900">
-          <Shield className="mt-0.5 h-4 w-4 shrink-0" />
+        <div className="flex items-start gap-2 rounded-md border border-blue-200 bg-blue-50 p-3 text-xs text-blue-900">
+          <Shield className="mt-0.5 h-3 w-3 shrink-0" />
           <p>
             정적 웹사이트의 경우 보안을 위해 HTTPS 리디렉션 또는 HTTPS 전용을
             권장합니다.

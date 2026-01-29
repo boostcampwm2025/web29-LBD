@@ -54,9 +54,9 @@ export function OriginAccessControlSection({
                           )}
                         />
                       </div>
-                      <div className="text-muted-foreground bg-muted/50 rounded-md p-3 text-sm">
-                        <div className="flex items-start gap-2">
-                          <Info className="mt-0.5 h-4 w-4 shrink-0" />
+                      <div className="text-muted-foreground rounded-md text-xs">
+                        <div className="flex items-center gap-1">
+                          <Info className="h-3 w-3" />
                           <p>
                             배포 생성 후 S3 버킷 정책을 업데이트하여
                             CloudFront에서만 액세스할 수 있도록 설정해야 합니다.

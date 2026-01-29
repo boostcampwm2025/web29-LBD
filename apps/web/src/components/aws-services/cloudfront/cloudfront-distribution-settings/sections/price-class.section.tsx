@@ -69,8 +69,8 @@ export function PriceClassSection({ control }: CloudFrontSettingsSectionProps) {
           )}
         />
 
-        <div className="text-muted-foreground bg-muted/50 flex items-start gap-2 rounded-md p-3 text-sm">
-          <Info className="mt-0.5 h-4 w-4 shrink-0" />
+        <div className="text-muted-foreground bg-muted/50 flex items-start gap-2 rounded-md p-3 text-xs">
+          <Info className="mt-0.5 h-3 w-3 shrink-0" />
           <p>
             Price Class는 배포 생성 후에도 변경할 수 있습니다. 트래픽 패턴을
             확인한 후 최적화하세요.

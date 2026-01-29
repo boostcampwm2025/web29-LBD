@@ -136,8 +136,8 @@ export function CustomErrorPagesSection({
                 오류 응답 추가
               </Button>
 
-              <div className="text-muted-foreground flex items-start gap-2 text-sm">
-                <Info className="mt-0.5 h-4 w-4 shrink-0" />
+              <div className="text-muted-foreground flex items-start gap-2 text-xs">
+                <Info className="mt-0.5 h-3 w-3 shrink-0" />
                 <p>
                   일반적으로 404 오류를 /404.html로, 403 오류를 /403.html로
                   매핑합니다.
