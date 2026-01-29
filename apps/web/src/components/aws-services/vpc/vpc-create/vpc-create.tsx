@@ -1,29 +1,20 @@
 'use client'
 
-import {
-  CidrBlock,
-  EncryptionControl,
-  GeneralConfig,
-  Tenancy,
-} from './sections'
+import { CidrBlock, GeneralConfig, Tenancy } from './sections'
 
 import { useForm } from 'react-hook-form'
 
 import { Button } from '@/components/ui/button'
-import type { VpcCreateConfig } from '@/types/aws-services/vpc/vpc-config.types'
+import type { VpcCreateConfig } from '@/types/aws-services/vpc/constants'
 import type { VpcFormData } from '@/types/aws-services/vpc/vpc-form-data.types'
 import type { VpcSubmitConfig } from '@/types/aws-services/vpc/vpc-submit-config.types'
 
 const DEFAULT_VALUES: VpcFormData = {
-  resourceType: 'vpc-only',
   nameTag: { name: '' },
   cidr: {
-    ipv4Method: 'manual',
-    ipv4CidrBlock: '10.0.0.0/16',
-    ipv6Method: 'none',
+    cidrBlock: '10.0.0.0/16',
   },
   tenancy: { type: 'default' },
-  encryption: { mode: 'none' },
 }
 
 interface VpcCreateProps {
@@ -40,10 +31,10 @@ export default function VpcCreate({ config, onSubmit }: VpcCreateProps) {
   const handleFormSubmit = handleSubmit((data) => {
     const submitData: VpcSubmitConfig = {
       _type: 'vpc',
-      id: data.nameTag.name || crypto.randomUUID(),
-      name: data.nameTag.name,
-      cidrBlock: data.cidr.cidrBlock,
-      tenancy: data.tenancy.type,
+      id: data.nameTag?.name || crypto.randomUUID(),
+      name: data.nameTag?.name || 'Unnamed VPC',
+      cidrBlock: data.cidr?.cidrBlock || '10.0.0.0/16',
+      tenancy: data.tenancy?.type || 'default',
     }
     onSubmit(submitData)
     reset(DEFAULT_VALUES)
@@ -72,7 +63,6 @@ export default function VpcCreate({ config, onSubmit }: VpcCreateProps) {
           <GeneralConfig control={control} config={config} />
           <CidrBlock control={control} config={config} />
           <Tenancy control={control} config={config} />
-          <EncryptionControl control={control} config={config} />
         </div>
       </div>
 

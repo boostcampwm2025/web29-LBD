@@ -20,7 +20,7 @@ import { getRouteTables } from '@/lib/get-route-tables'
 import type {
   RouteItem,
   RouteTableEditFormData,
-} from '@/types/aws-services/route-table.types'
+} from '@/types/aws-services/route-table/route-table.types'
 
 interface RouteTableEditProps {
   onAfterSubmit?: () => void
@@ -56,7 +56,9 @@ export default function RouteTableEdit({ onAfterSubmit }: RouteTableEditProps) {
   // 3. 해당 VPC에 속한 서브넷만 필터링 (SubnetAssociations에 전달용)
   const availableSubnets = useMemo(() => {
     if (!currentVpcId) return []
-    return subnetItems.filter((subnet) => subnet.data.vpcId === currentVpcId)
+    return subnetItems
+      .filter((subnet) => subnet.data.vpcId === currentVpcId)
+      .map((subnet) => subnet?.data)
   }, [subnetItems, currentVpcId])
 
   // 4. 라우팅 테이블 선택 시 폼 초기화 (데이터 매핑 로직 포함)
@@ -67,22 +69,21 @@ export default function RouteTableEdit({ onAfterSubmit }: RouteTableEditProps) {
 
     // (A) 라우트 데이터 매핑: destinationCidrBlock -> destination 변환
     const formRoutes: RouteItem[] = (targetData.routes || []).map(
-      (r: { destination?: string; target?: string }) => ({
+      (r: { destinationCidr?: string; targetGatewayId?: string }) => ({
         // 저장된 데이터에 destinationCidrBlock이 있다면 이를 destination으로 매핑
-        destination: r.destination || '',
-        target: r.target,
+        destinationCidr: r.destinationCidr || '',
+        targetGatewayId: r.targetGatewayId || '',
       }),
     )
 
     // (B) local 라우트가 없고, VPC 정보가 있다면 자동으로 추가 (UI 표시용)
-    const hasLocalRoute = formRoutes.some((r) => r.target === 'local')
+    const hasLocalRoute = formRoutes.some((r) => r.targetGatewayId === 'local')
     if (!hasLocalRoute && currentVpcId) {
       const targetVpc = vpcItems.find((v) => v.id === currentVpcId)
       if (targetVpc && targetVpc.data.cidrBlock) {
         formRoutes.unshift({
-          destination: targetVpc.data.cidrBlock,
-          target: 'local',
-          isDefault: true, // 삭제 방지 플래그
+          destinationCidr: targetVpc.data.cidrBlock,
+          targetGatewayId: 'local',
         })
       }
     }
@@ -90,7 +91,9 @@ export default function RouteTableEdit({ onAfterSubmit }: RouteTableEditProps) {
     reset({
       selectedRouteTableId,
       routes: formRoutes,
-      associatedSubnetIds: targetData.subnetIds || [],
+      associatedSubnetIds:
+        targetData.associations?.map((a: { subnetId: string }) => a.subnetId) ||
+        [],
     })
   }, [selectedRouteTableId, selectedRouteTable, currentVpcId, vpcItems, reset])
 
@@ -108,7 +111,9 @@ export default function RouteTableEdit({ onAfterSubmit }: RouteTableEditProps) {
               data: {
                 ...item.data,
                 routes: data.routes,
-                subnetIds: data.associatedSubnetIds,
+                associations: data.associatedSubnetIds.map((subnetId) => ({
+                  subnetId,
+                })),
               },
             }
           }

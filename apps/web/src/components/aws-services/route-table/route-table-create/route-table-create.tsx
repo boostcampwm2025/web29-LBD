@@ -17,7 +17,6 @@ const DEFAULT_VALUES: RouteTableCreateFormData = {
     nameTag: '',
     vpcId: '',
   },
-  tags: [],
 }
 
 interface RouteTableCreateProps {
@@ -55,11 +54,12 @@ export default function RouteTableCreate({ onSubmit }: RouteTableCreateProps) {
 
       name: data.settings.nameTag,
       vpcId: data.settings.vpcId,
-      tags: data.tags,
-
+      vpcName: data.settings.vpcId,
       // 생성 시점에는 라우트나 서브넷 정보가 없음
-      routes: [{ destination: vpc?.cidrBlock || '', target: 'local' }],
-      subnetIds: [],
+      routes: [
+        { destinationCidr: vpc?.cidrBlock || '', targetGatewayId: 'local' },
+      ],
+      associations: [],
     }
 
     onSubmit(submitData)

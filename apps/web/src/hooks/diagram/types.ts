@@ -51,3 +51,11 @@ export const DEFAULT_NODE_CONFIG: NodeTypeConfig = {
 export function getNodeConfig(serviceType: string): NodeTypeConfig {
   return NODE_TYPE_CONFIG[serviceType] ?? DEFAULT_NODE_CONFIG
 }
+
+export function getIcons(serviceType: string): string {
+  const TYPES_TO_ICON: Record<string, string> = {
+    vpc: 'vpcGroup',
+    subnet: 'privateSubnet',
+  }
+  return TYPES_TO_ICON[serviceType] || serviceType
+}

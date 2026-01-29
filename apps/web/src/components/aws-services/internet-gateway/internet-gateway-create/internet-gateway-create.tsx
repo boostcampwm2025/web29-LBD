@@ -12,7 +12,6 @@ import {
 
 const DEFAULT_VALUES: InternetGatewayCreateFormData = {
   nameTag: '',
-  tags: [],
 }
 
 interface InternetGatewayCreateProps {
@@ -32,7 +31,6 @@ export default function InternetGatewayCreate({
       _type: 'internetGateway',
       vpcId: undefined,
       name: data.nameTag,
-      tags: data.tags,
     }
     onSubmit(submitData)
   })

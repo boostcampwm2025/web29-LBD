@@ -66,6 +66,7 @@ export default function InternetGatewayAttach({
               data: {
                 ...igw.data,
                 vpcId: data.vpcId,
+                vpcName: data.vpcId,
               },
             }
           }

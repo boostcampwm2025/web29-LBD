@@ -1,14 +1,8 @@
 // types/aws-services/internet-gateway.types.ts
 
-export interface Tag {
-  key: string
-  value: string
-}
-
 // 기존 생성 폼 데이터
 export interface InternetGatewayCreateFormData {
   nameTag: string
-  tags: Tag[]
 }
 
 export interface InternetGatewayAttachFormData {
@@ -22,7 +16,6 @@ export type InternetGatewaySubmitConfig = {
   id?: string
 
   name: string
-  tags?: Tag[]
-
+  vpcName?: string
   vpcId?: string
 }

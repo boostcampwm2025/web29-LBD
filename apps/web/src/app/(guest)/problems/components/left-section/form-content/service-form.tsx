@@ -12,6 +12,11 @@ const getServiceType = (serviceName: string): ServiceType => {
     s3: 's3',
     cloudFront: 'cloudFront',
     ec2: 'ec2',
+    vpc: 'vpc',
+    rds: 'rds',
+    subnet: 'subnet',
+    routeTable: 'routeTable',
+    internetGateway: 'internetGateway',
   }
   return serviceTypeMap[serviceName] || 's3'
 }

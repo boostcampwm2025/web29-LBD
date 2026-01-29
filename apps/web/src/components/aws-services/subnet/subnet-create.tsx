@@ -46,6 +46,7 @@ export default function SubnetCreate({ onSubmit }: SubnetCreateProps) {
     const submitData: SubnetSubmitConfig = {
       _type: 'subnet',
       vpcId: data.vpcId,
+      vpcName: data.vpcId,
       id: data.subnetSettings.nameTag,
       name: data.subnetSettings.nameTag,
       availabilityZone: data.subnetSettings.availabilityZone,

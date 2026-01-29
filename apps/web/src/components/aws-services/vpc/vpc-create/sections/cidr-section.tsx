@@ -15,7 +15,7 @@ export function CidrBlock({ control }: VpcSectionProps) {
       <SectionContainer title="IPv4 CIDR 블록">
         <div className="space-y-4">
           <Controller
-            name="cidr.ipv4Method"
+            name="cidr.cidrBlock"
             control={control}
             render={({ field }) => (
               <RadioGroup
@@ -40,7 +40,7 @@ export function CidrBlock({ control }: VpcSectionProps) {
           <div className="space-y-2">
             <Label className="text-sm font-semibold">IPv4 CIDR</Label>
             <Controller
-              name="cidr.ipv4CidrBlock"
+              name="cidr.cidrBlock"
               control={control}
               render={({ field }) => (
                 <Input

@@ -1,12 +1,6 @@
 export interface RouteItem {
-  destination: string
-  target: string
-  isDefault?: boolean
-}
-
-export interface Tag {
-  key: string
-  value: string
+  destinationCidr: string
+  targetGatewayId: string
 }
 
 export interface RouteTableCreateFormData {
@@ -14,7 +8,6 @@ export interface RouteTableCreateFormData {
     nameTag: string
     vpcId: string
   }
-  tags?: Tag[]
 }
 
 export interface RouteTableEditFormData {
@@ -30,9 +23,8 @@ export type RouteTableSubmitConfig = {
   name?: string
 
   vpcId?: string
+  vpcName?: string
 
   routes?: RouteItem[]
-  subnetIds?: string[]
-
-  tags?: Tag[]
+  associations?: { subnetId: string }[]
 }

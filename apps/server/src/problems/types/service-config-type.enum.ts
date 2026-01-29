@@ -102,6 +102,10 @@ export class SubnetConfig {
 
   @IsString()
   cidrBlock: string;
+
+  @IsString()
+  @IsOptional()
+  availabilityZone?: string;
 }
 
 export class SGRules {

@@ -15,7 +15,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import type { RouteTableEditFormData } from '@/types/aws-services/route-table.types'
+import type { RouteTableEditFormData } from '@/types/aws-services/route-table/route-table.types'
 
 export function RoutesEditor() {
   // 메인 폼의 컨텍스트를 가져옴
@@ -44,13 +44,13 @@ export function RoutesEditor() {
           <TableBody>
             {fields.map((field, index) => {
               // local 라우트는 수정/삭제 불가 처리
-              const isLocal = field.target === 'local'
+              const isLocal = field.targetGatewayId === 'local'
 
               return (
                 <TableRow key={field.id}>
                   <TableCell>
                     <Input
-                      {...register(`routes.${index}.destination`)}
+                      {...register(`routes.${index}.destinationCidr`)}
                       disabled={isLocal}
                       className={
                         isLocal ? 'bg-muted text-muted-foreground' : ''
@@ -59,7 +59,7 @@ export function RoutesEditor() {
                   </TableCell>
                   <TableCell>
                     <Input
-                      {...register(`routes.${index}.target`)}
+                      {...register(`routes.${index}.targetGatewayId`)}
                       disabled={isLocal}
                       className={
                         isLocal ? 'bg-muted text-muted-foreground' : ''
@@ -96,7 +96,7 @@ export function RoutesEditor() {
         <Button
           type="button"
           variant="outline"
-          onClick={() => append({ destination: '', target: '' })}
+          onClick={() => append({ destinationCidr: '', targetGatewayId: '' })}
           className="gap-2"
         >
           <Plus className="h-4 w-4" /> 라우트 추가

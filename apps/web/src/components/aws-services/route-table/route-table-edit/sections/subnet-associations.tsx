@@ -12,12 +12,11 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import type { RouteTableEditFormData } from '@/types/aws-services/route-table.types'
+import type { RouteTableEditFormData } from '@/types/aws-services/route-table/route-table.types'
 import type { SubnetSubmitConfig } from '@/types/aws-services/subnet/subnet-submit-config.types'
-import type { ServiceConfigItem } from '@/types/problem-data'
 
 interface SubnetAssociationsProps {
-  availableSubnets: ServiceConfigItem<SubnetSubmitConfig>[]
+  availableSubnets: SubnetSubmitConfig[]
 }
 
 export function SubnetAssociations({
@@ -82,13 +81,13 @@ export function SubnetAssociations({
                             />
                           </TableCell>
                           <TableCell className="font-medium">
-                            {subnet.data.name || '-'}
+                            {subnet.name || '-'}
                           </TableCell>
                           <TableCell className="text-muted-foreground">
                             {subnet.id}
                           </TableCell>
-                          <TableCell>{subnet.data.ipv4CidrBlock}</TableCell>
-                          <TableCell>{subnet.data.availabilityZone}</TableCell>
+                          <TableCell>{subnet.cidrBlock}</TableCell>
+                          <TableCell>{subnet.availabilityZone}</TableCell>
                         </TableRow>
                       )
                     })

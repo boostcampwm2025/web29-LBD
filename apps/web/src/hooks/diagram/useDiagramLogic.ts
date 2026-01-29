@@ -3,6 +3,7 @@ import {
   GLOBAL_SERVICE_TYPES,
   LAYOUT_CONFIG,
   REGION_CHILDS_TYPES,
+  getIcons,
   getNodeConfig,
 } from './types'
 
@@ -195,7 +196,7 @@ export function useAwsDiagramLogic(
             data: {
               type: payload._type,
               label: payload.name,
-              icon: payload._type,
+              icon: getIcons(payload._type),
               width: nodeConfig.width,
               height: nodeConfig.height,
               ...(nodeConfig.borderColor && {
