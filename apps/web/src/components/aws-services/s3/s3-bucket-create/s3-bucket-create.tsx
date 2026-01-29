@@ -14,7 +14,6 @@ import {
 import { useForm } from 'react-hook-form'
 
 import { flattenObject } from '@/components/aws-services/utils/flattenObject'
-import { Button } from '@/components/ui/button'
 import type {
   S3BucketCreateConfig,
   S3BucketFormData,
@@ -23,7 +22,10 @@ import type {
 
 const DEFAULT_VALUES: S3BucketFormData = {
   general: { name: '', region: 'ap-northeast-2' },
-  ownership: { aclEnabled: 'disabled' },
+  ownership: {
+    aclEnabled: 'disabled',
+    ownershipModel: 'bucket-owner-preferred',
+  },
   blockPublicAccess: {
     blockAll: true,
     blockPublicAcls: true,
@@ -59,9 +61,7 @@ export default function S3BucketCreate({
   const isDisabled = bucketName.length === 0
 
   const handleFormSubmit = handleSubmit((data) => {
-    const flattenedData = flattenObject(
-      data as Record<string, unknown>,
-    ) as S3SubmitConfig
+    const flattenedData = flattenObject(data as Record<string, unknown>)
     onSubmit(flattenedData)
     reset(DEFAULT_VALUES)
   })

@@ -226,8 +226,16 @@ export class UnitValidationHandler implements ProblemValidationHandler {
       for (const submittedConfig of onlyInAnswer) {
         if (!hasName(submittedConfig)) continue;
         const matchedSolution = solutionMap.get(submittedConfig.name);
-        // TODO: 여기서 이름을 확인해달라는 피드백 보내기. 일단 이름은 다 맞는 것으로 가정.
-        if (!matchedSolution) continue;
+
+        if (!matchedSolution) {
+          feedbacks.push({
+            serviceType: serviceKey,
+            service: submittedConfig.name,
+            code: UnitProblemFeedbackType.SERVICE_MISSING,
+            message: '제출한 이름을 다시 한 번 확인해주세요.',
+          });
+          continue;
+        }
 
         // 2. 필드 누락 (Field Missing)
         feedbacks.push(
