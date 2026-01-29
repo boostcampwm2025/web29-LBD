@@ -191,65 +191,12 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
         {
           serviceName: 's3',
           serviceTask: 'bucketList',
-          serviceSections: ['header', 'searchBar'],
-        },
-      ],
-      fixedOptions: [
-        {
-          _type: 's3',
-          id: 'default-bucket1',
-          name: 'default-bucket1',
-          region: 'ap-northeast-2',
-          aclEnabled: 'disabled',
-          blockAll: true,
-          blockPublicAcls: true,
-          ignorePublicAcls: true,
-          blockPublicPolicy: true,
-          restrictPublicBuckets: true,
+          serviceSections: ['header', 'bucketTable', 'searchBar'],
         },
         {
-          _type: 's3',
-          id: 'default-bucket2',
-          name: 'default-bucket2',
-          region: 'ap-northeast-2',
-          aclEnabled: 'disabled',
-          blockAll: true,
-          blockPublicAcls: true,
-          ignorePublicAcls: true,
-          blockPublicPolicy: true,
-          restrictPublicBuckets: true,
-        },
-      ],
-    },
-    {
-      problemType: ProblemType.UNIT,
-      title: 'EC2 인스턴스 생성하기',
-      description: '기본 설정으로 EC2 인스턴스를 하나 생성하세요',
-      descDetail:
-        'EC2는 가상 서버를 제공하는 서비스입니다. 이 문제에서는 특별한 설정 없이 기본 구성으로 EC2 인스턴스를 하나 생성하는 것이 목표입니다. 생성한 인스턴스는 이후 문제에서 사용될 수 있습니다.',
-      requiredFields: [
-        {
-          serviceName: 'ec2',
-          serviceTask: 'instanceCreate',
-          serviceSections: ['general', 'network', 'security'],
-        },
-      ],
-      fixedOptions: [
-        {
-          _type: 'vpc',
-          id: 'default-vpc1',
-          name: 'default-vpc1',
-        },
-        {
-          _type: 'vpc',
-          id: 'default-vpc2',
-          name: 'default-vpc2',
-        },
-        {
-          _type: 'subnet',
-          id: 'default-subnet1',
-          name: 'default-subnet1',
-          vpcId: 'default-vpc1',
+          serviceName: 'cloudFront',
+          serviceTask: 'websiteSettings',
+          serviceSections: ['defaultRootObject'],
         },
       ],
     },
@@ -258,101 +205,28 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
       title: 'VPC 생성하기',
       description: '기본 설정으로 VPC를 하나 생성하세요',
       descDetail:
-        'VPC는 가상 네트워크를 제공하는 서비스입니다. 이 문제에서는 특별한 설정 없이 기본 구성으로 VPC를 하나 생성하는 것이 목표입니다. 생성한 VPC는 이후 문제에서 사용될 수 있습니다.',
+        'VPC는 가상 네트워크를 생성하고 관리할 수 있는 서비스입니다. 이 문제에서는 특별한 설정 없이 기본 구성으로 VPC를 하나 생성하는 것이 목표입니다. 생성한 VPC는 이후 문제에서 사용될 수 있습니다.',
       requiredFields: [
         {
           serviceName: 'vpc',
           serviceTask: 'vpcCreate',
-          serviceSections: ['nameTag', 'cidr', 'tenancy', 'subnets'],
+          serviceSections: ['nameTag', 'cidrBlock', 'tags', 'tenancy'],
+          fixedOptions: [],
         },
       ],
     },
     {
       problemType: ProblemType.UNIT,
       title: 'Subnet 생성하기',
-      description: '기본 설정으로 Subnet을 하나 생성하세요',
+      description: '기본 설정으로 Subnet를 하나 생성하세요',
       descDetail:
-        'Subnet은 VPC 내에서 IP 주소 범위를 지정하는 가상 네트워크입니다. 이 문제에서는 특별한 설정 없이 기본 구성으로 Subnet을 하나 생성하는 것이 목표입니다. 생성한 Subnet은 이후 문제에서 사용될 수 있습니다.',
+        'VPC는 가상 네트워크를 생성하고 관리할 수 있는 서비스입니다. 이 문제에서는 특별한 설정 없이 기본 구성으로 VPC를 하나 생성하는 것이 목표입니다. 생성한 VPC는 이후 문제에서 사용될 수 있습니다.',
       requiredFields: [
         {
           serviceName: 'subnet',
           serviceTask: 'subnetCreate',
           serviceSections: ['general'],
-        },
-      ],
-      fixedOptions: [
-        {
-          _type: 'vpc',
-          id: 'default-vpc',
-          name: 'default-vpc',
-          cidrBlock: '10.0.0.0/16',
-          tenancy: 'default',
-        },
-      ],
-    },
-    {
-      problemType: ProblemType.UNIT,
-      title: 'Route Table 생성하기',
-      description: '기본 설정으로 Route Table을 하나 생성하세요',
-      descDetail:
-        'Route Table은 VPC 내에서 네트워크 트래픽의 경로를 지정하는 가상 네트워크 구성 요소입니다. 이 문제에서는 특별한 설정 없이 기본 구성으로 Route Table을 하나 생성하는 것이 목표입니다. 생성한 Route Table은 이후 문제에서 사용될 수 있습니다.',
-      requiredFields: [
-        {
-          serviceName: 'routeTable',
-          serviceTask: 'routeTableCreate',
-          serviceSections: ['general'],
-        },
-      ],
-      fixedOptions: [
-        {
-          _type: 'vpc',
-          id: 'default-vpc',
-          name: 'default-vpc',
-          cidrBlock: '10.0.0.0/16',
-          tenancy: 'default',
-        },
-      ],
-    },
-    {
-      problemType: ProblemType.UNIT,
-      title: 'Route Table 연결하기',
-      description: '기본 설정으로 Route Table을 하나 연결하세요',
-      descDetail:
-        'Route Table은 VPC 내에서 네트워크 트래픽의 경로를 지정하는 가상 네트워크 구성 요소입니다. 이 문제에서는 특별한 설정 없이 기본 구성으로 Route Table을 하나 생성하는 것이 목표입니다. 생성한 Route Table은 이후 문제에서 사용될 수 있습니다.',
-      requiredFields: [
-        {
-          serviceName: 'routeTable',
-          serviceTask: 'routeTableEdit',
-          serviceSections: ['routes', 'subnetAssociations'],
-        },
-      ],
-      fixedOptions: [
-        {
-          _type: 'vpc',
-          id: 'default-vpc',
-          name: 'default-vpc',
-          cidrBlock: '10.0.0.0/16',
-          tenancy: 'default',
-        },
-        {
-          _type: 'subnet',
-          id: 'default-subnet',
-          name: 'default-subnet',
-          vpcId: 'default-vpc',
-          cidrBlock: '10.0.1.0/24',
-        },
-        {
-          _type: 'routeTable',
-          id: 'default-route-table',
-          name: 'default-route-table',
-          vpcId: 'default-vpc',
-          routes: [
-            {
-              destinationCidrBlock: '10.0.0.0/16',
-              target: 'local',
-            },
-          ],
-          subnetIds: [],
+          fixedOptions: [],
         },
       ],
     },
