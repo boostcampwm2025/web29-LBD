@@ -3,6 +3,7 @@ import {
   GLOBAL_SERVICE_TYPES,
   LAYOUT_CONFIG,
   REGION_CHILDS_TYPES,
+  getNodeConfig,
 } from './types'
 
 import { useCallback } from 'react'
@@ -175,40 +176,24 @@ export function useAwsDiagramLogic(
           )
 
           // 2. 새 노드 생성
-          const isGroupType =
-            payload._type === 'vpc' ||
-            payload._type === 'subnet' ||
-            payload._type === 'securityGroup' ||
-            payload._type === 'securityGroups'
-
-          const isSecurityGroup =
-            payload._type === 'securityGroup' ||
-            payload._type === 'securityGroups'
+          const nodeConfig = getNodeConfig(payload._type)
 
           const newNode: Node = {
             id: payload.name,
-            type: isGroupType ? 'awsGroup' : 'awsService',
+            type: nodeConfig.nodeType,
             parentId: parentId,
             extent: 'parent',
-            position: { x: LAYOUT_CONFIG.PADDING, y: LAYOUT_CONFIG.PADDING }, // 초기엔 왼쪽 위 배치
+            position: { x: LAYOUT_CONFIG.PADDING, y: LAYOUT_CONFIG.PADDING },
             data: {
               type: payload._type,
               label: payload.name,
               icon: payload._type,
-              width:
-                payload._type === 'vpc'
-                  ? 400
-                  : payload._type === 'subnet' || isSecurityGroup
-                    ? 300
-                    : 80,
-              height:
-                payload._type === 'vpc'
-                  ? 300
-                  : payload._type === 'subnet' || isSecurityGroup
-                    ? 200
-                    : 80,
-              // Security Group은 빨간 점선 테두리
-              ...(isSecurityGroup && { borderColor: 'red', bgColor: 'red' }),
+              width: nodeConfig.width,
+              height: nodeConfig.height,
+              ...(nodeConfig.borderColor && {
+                borderColor: nodeConfig.borderColor,
+              }),
+              ...(nodeConfig.bgColor && { bgColor: nodeConfig.bgColor }),
             },
           }
 
