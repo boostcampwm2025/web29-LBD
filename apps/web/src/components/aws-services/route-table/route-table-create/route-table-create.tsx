@@ -10,11 +10,13 @@ import { getDefaultVpcs } from '@/lib/get-default-vpcs'
 import type {
   RouteTableCreateFormData,
   RouteTableSubmitConfig,
-} from '@/types/aws-services/route-table.types'
+} from '@/types/aws-services/route-table/route-table.types'
 
 const DEFAULT_VALUES: RouteTableCreateFormData = {
-  nameTag: '',
-  vpcId: '',
+  settings: {
+    nameTag: '',
+    vpcId: '',
+  },
   tags: [],
 }
 
@@ -43,20 +45,20 @@ export default function RouteTableCreate({ onSubmit }: RouteTableCreateProps) {
         ]
 
   // 생성 버튼 활성화/비활성화를 위해 감시
-  const vpcId = useWatch({ control, name: 'vpcId' })
+  const vpcId = useWatch({ control, name: 'settings.vpcId' })
 
   const handleFormSubmit = handleSubmit((data) => {
     // 2. 통합 Submit Config 타입으로 변환
-    const vpc = vpcs.find((v) => v.id === data.vpcId)
+    const vpc = vpcs.find((v) => v.id === data.settings.vpcId)
     const submitData: RouteTableSubmitConfig = {
       _type: 'routeTable',
 
-      name: data.nameTag,
-      vpcId: data.vpcId,
+      name: data.settings.nameTag,
+      vpcId: data.settings.vpcId,
       tags: data.tags,
 
       // 생성 시점에는 라우트나 서브넷 정보가 없음
-      routes: [{ destinationCidrBlock: vpc?.cidrBlock || '', target: 'local' }],
+      routes: [{ destination: vpc?.cidrBlock || '', target: 'local' }],
       subnetIds: [],
     }
 
