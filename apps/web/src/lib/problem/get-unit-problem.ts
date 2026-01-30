@@ -1,4 +1,5 @@
 import { addDefaultConfigs } from '../add-default-configs'
+import { getApiBaseUrl } from '../get-base-url'
 
 import { IServiceMapper } from '@/components/aws-services/utils/serviceMapper'
 import { GlobalSubmitConfig, ServiceConfig } from '@/types/submitConfig.types'
@@ -27,7 +28,7 @@ interface ProblemData {
 }
 
 export async function getUnitProblemDataById(id: string): Promise<ProblemData> {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3001'
+  const baseUrl = getApiBaseUrl()
 
   if (!baseUrl) {
     throw new Error('NEXT_PUBLIC_BASE_URL이 설정되지 않았습니다.')

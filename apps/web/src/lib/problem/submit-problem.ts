@@ -1,3 +1,5 @@
+import { getApiBaseUrl } from '../get-base-url'
+
 import { FeedbackDetail } from '@/types/feedback.type'
 import { FinalSubmitConfig } from '@/types/submitConfig.types'
 
@@ -11,11 +13,7 @@ export async function submitProblemSolution(
   problemId: string,
   submitConfig: FinalSubmitConfig,
 ) {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3001'
-
-  if (!baseUrl) {
-    throw new Error('NEXT_PUBLIC_BASE_URL이 설정되지 않았습니다.')
-  }
+  const baseUrl = getApiBaseUrl()
 
   const res = await fetch(`${baseUrl}/api/problems/${problemId}/submit`, {
     method: 'POST',

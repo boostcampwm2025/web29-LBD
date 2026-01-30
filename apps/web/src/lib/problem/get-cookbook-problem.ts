@@ -1,3 +1,5 @@
+import { getApiBaseUrl } from '../get-base-url'
+
 interface UnitProblem {
   id: string
   title: string
@@ -15,7 +17,7 @@ interface CookbookProblemData {
 export async function getCookbookProblemDataById(
   id: string,
 ): Promise<CookbookProblemData> {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3001'
+  const baseUrl = getApiBaseUrl()
 
   if (!baseUrl) {
     throw new Error('NEXT_PUBLIC_BASE_URL이 설정되지 않았습니다.')

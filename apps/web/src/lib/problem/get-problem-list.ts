@@ -1,8 +1,10 @@
+import { getApiBaseUrl } from '../get-base-url'
+
 import { TProblemType } from '@/types/problem.type'
 
 // 문제 유형에 따른 문제 목록 조회
 export async function getProblemListByType(type: TProblemType) {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3001'
+  const baseUrl = getApiBaseUrl()
 
   if (!baseUrl) {
     throw new Error('NEXT_PUBLIC_BASE_URL이 설정되지 않았습니다.')
