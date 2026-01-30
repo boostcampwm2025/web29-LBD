@@ -4,6 +4,8 @@ import type { Metadata, Viewport } from 'next'
 import localFont from 'next/font/local'
 
 import { Footer, Header } from '@/components/layout'
+import { ActionFeedbackModal } from '@/components/ui/action-feedback-modal'
+import { ActionFeedbackProvider } from '@/contexts/action-feedback-context'
 import { cn } from '@/lib/utils'
 
 const Pretendard = localFont({
@@ -40,9 +42,12 @@ export default function RootLayout({
           'selection:bg-primary/30 selection:text-foreground',
         )}
       >
-        <Header />
-        <main className="h-full min-h-[calc(100vh)] pt-18">{children}</main>
-        <Footer />
+        <ActionFeedbackProvider>
+          <Header />
+          <main className="h-full min-h-[calc(100vh)] pt-18">{children}</main>
+          <Footer />
+          <ActionFeedbackModal />
+        </ActionFeedbackProvider>
       </body>
     </html>
   )
