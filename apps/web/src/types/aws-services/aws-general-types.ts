@@ -2,7 +2,7 @@ import type { Control, FieldValues, UseFormSetValue } from 'react-hook-form'
 
 export interface AwsSectionProps<
   T extends FieldValues,
-  TConfig extends Record<string, boolean> = Record<string, boolean>,
+  TConfig extends Record<string, any> = Record<string, any>,
 > {
   control: Control<T>
   config: TConfig
@@ -10,7 +10,7 @@ export interface AwsSectionProps<
 
 export type AwsWithSetValueSectionProps<
   T extends FieldValues,
-  TConfig extends Record<string, boolean> = Record<string, boolean>,
+  TConfig extends Record<string, any> = Record<string, any>,
 > = {
   setValue: UseFormSetValue<T>
 } & AwsSectionProps<T, TConfig>

@@ -19,6 +19,9 @@ import type {
   EC2InstanceCreateConfig,
   EC2InstanceFormData,
 } from '@/types/aws-services/ec2/instance-create'
+import { getDefaultSubnets } from '@/lib/get-default-subnets'
+import { getDefaultVpcs } from '@/lib/get-default-vpcs'
+import { useProblemForm } from '@/contexts/problem-form-context'
 
 const DEFAULT_VALUES: EC2InstanceFormData = {
   nameTag: { name: '' },
@@ -26,10 +29,13 @@ const DEFAULT_VALUES: EC2InstanceFormData = {
   instanceType: { type: 't2.micro' },
   keyPair: { keyName: '' },
   networkSetting: {
+    vpcName: '',
+    subnetName: '',
     autoAssignPublicIp: true,
     allowSSH: true,
     allowHTTPS: false,
     allowHTTP: false,
+    securityGroups: [],
   },
   storage: { size: 8, volumeType: 'gp3' },
   userData: { script: '' },
@@ -46,6 +52,10 @@ export default function EC2InstanceCreate({
   onSubmit,
   buttonText = 'EC2 인스턴스 추가',
 }: EC2InstanceCreateProps) {
+  const { submitConfig } = useProblemForm()
+  const currentVpcs = getDefaultVpcs(submitConfig)
+  const currentSubnets = getDefaultSubnets(submitConfig)
+
   const { control, handleSubmit, watch, reset } = useForm<EC2InstanceFormData>({
     mode: 'onChange',
     defaultValues: DEFAULT_VALUES,
@@ -57,12 +67,21 @@ export default function EC2InstanceCreate({
 
   const handleFormSubmit = handleSubmit((data) => {
     const uniqueId = crypto.randomUUID()
+    const selectedVpc = currentVpcs.find(
+      (v) => v.id === data.networkSetting?.vpcName,
+    )
+    const selectedSubnet = currentSubnets.find(
+      (s) => s.id === data.networkSetting?.subnetName,
+    )
+
     const submitData: EC2SubmitConfig = {
       _type: 'ec2',
       id: data.nameTag.name || `ec2-${uniqueId}`,
       name: data.nameTag.name || `ec2-${uniqueId}`,
-      vpcName: data.networkSetting?.vpcName,
-      subnetName: data.networkSetting?.subnetName,
+      vpcId: data.networkSetting?.vpcName,
+      vpcName: selectedVpc?.name || data.networkSetting?.vpcName || '',
+      subnetId: data.networkSetting?.subnetName,
+      subnetName: selectedSubnet?.name || data.networkSetting?.subnetName || '',
       osType: data.ami?.osType,
       instanceType: data.instanceType?.type,
       keyName: data.keyPair?.keyName,
@@ -70,6 +89,7 @@ export default function EC2InstanceCreate({
       allowSSH: data.networkSetting?.allowSSH,
       allowHTTPS: data.networkSetting?.allowHTTPS,
       allowHTTP: data.networkSetting?.allowHTTP,
+      securityGroups: data.networkSetting?.securityGroups,
       storageSize: data.storage?.size,
       volumeType: data.storage?.volumeType,
       userData: data.userData?.script,

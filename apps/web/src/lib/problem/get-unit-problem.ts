@@ -15,6 +15,7 @@ interface RequiredField {
   serviceTask: string
   serviceSections: string[]
   fixedOptions?: Record<string, string>[]
+  label?: string
 }
 
 interface ProblemData {
@@ -46,9 +47,11 @@ export async function getUnitProblemDataById(id: string): Promise<ProblemData> {
 
   const serviceMappers: IServiceMapper[] = response.requiredFields.map(
     (field: RequiredField) => ({
-      serviceName: field.serviceName,
+      serviceName: field.serviceName as any,
       serviceTask: field.serviceTask,
       inputSections: field.serviceSections,
+      label: field.label,
+      fixedOptions: field.fixedOptions,
     }),
   )
   const fixedOptions: ServiceConfig[] =

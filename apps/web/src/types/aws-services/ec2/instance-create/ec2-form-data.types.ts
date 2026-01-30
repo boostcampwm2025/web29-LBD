@@ -4,13 +4,13 @@ export interface EC2InstanceFormData {
   }
   ami: {
     osType:
-      | 'amazon-linux'
-      | 'mac-os'
-      | 'ubuntu'
-      | 'windows'
-      | 'red-hat'
-      | 'suse-linux'
-      | 'debian'
+    | 'amazon-linux'
+    | 'mac-os'
+    | 'ubuntu'
+    | 'windows'
+    | 'red-hat'
+    | 'suse-linux'
+    | 'debian'
   }
   instanceType: {
     type: string
@@ -25,6 +25,7 @@ export interface EC2InstanceFormData {
     allowSSH: boolean
     allowHTTPS: boolean
     allowHTTP: boolean
+    securityGroups?: string[]
   }
   storage: {
     size: number

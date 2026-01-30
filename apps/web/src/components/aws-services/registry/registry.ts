@@ -15,6 +15,7 @@ import CloudFrontOriginSettings from '@/components/aws-services/cloudfront/cloud
 import CloudFrontWebsiteSettings from '@/components/aws-services/cloudfront/cloudfront-website-settings/cloudfront-website-settings'
 import EC2InstanceCreate from '@/components/aws-services/ec2/ec2-instance-create/ec2-instance-create'
 import EC2SecurityGroup from '@/components/aws-services/ec2/ec2-security-group/ec2-security-group'
+import NATGatewayCreate from '@/components/aws-services/nat-gateway/nat-gateway-create/nat-gateway-create'
 import S3BucketCreate from '@/components/aws-services/s3/s3-bucket-create/s3-bucket-create'
 import S3BucketDetail from '@/components/aws-services/s3/s3-bucket-detail/s3-bucket-detail'
 import S3BucketList from '@/components/aws-services/s3/s3-bucket-list/s3-bucket-list'
@@ -38,6 +39,7 @@ import {
   INTERNET_GATEWAY_ATTACH_SECTIONS,
   INTERNET_GATEWAY_CREATE_SECTIONS,
 } from '@/types/aws-services/internet-gateway/constants'
+import type { NATGatewayFormData } from '@/types/aws-services/nat-gateway/nat-gateway.types'
 import {
   ROUTE_TABLE_CREATE_SECTIONS,
   ROUTE_TABLE_EDIT_SECTIONS,
@@ -185,7 +187,10 @@ const EC2: Record<string, ServicePage> = {
       nameTag: { name: '' },
     },
   },
-  securityGroupCreate: {
+}
+
+const SecurityGroups: Record<string, ServicePage> = {
+  securityGroupsCreate: {
     component: EC2SecurityGroup,
     sections: EC2_SECURITY_GROUP_SECTIONS,
     defaultValues: DEFAULT_SG_FORM_DATA,
@@ -250,6 +255,17 @@ const InternetGateway: Record<string, ServicePage> = {
   },
 }
 
+const NATGateway: Record<string, ServicePage> = {
+  natGatewayCreate: {
+    component: NATGatewayCreate,
+    sections: ['general', 'subnet'],
+    defaultValues: {
+      nameTag: '',
+      subnetId: '',
+    } satisfies NATGatewayFormData,
+  },
+}
+
 export const AWS_SERVICE_REGISTRY = {
   s3: S3,
   cloudFront: CloudFront,
@@ -258,4 +274,6 @@ export const AWS_SERVICE_REGISTRY = {
   subnet: Subnet,
   routeTable: RouteTable,
   internetGateway: InternetGateway,
+  natGateway: NATGateway,
+  securityGroups: SecurityGroups,
 }

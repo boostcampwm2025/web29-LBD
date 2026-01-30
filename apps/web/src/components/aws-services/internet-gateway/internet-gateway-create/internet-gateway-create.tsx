@@ -30,7 +30,9 @@ export default function InternetGatewayCreate({
     const submitData: InternetGatewaySubmitConfig = {
       _type: 'internetGateway',
       vpcId: undefined,
+      vpcName: undefined,
       name: data.nameTag,
+      id: data.nameTag || crypto.randomUUID(),
     }
     onSubmit(submitData)
   })
@@ -57,7 +59,6 @@ export default function InternetGatewayCreate({
         <Button
           type="submit"
           size="lg"
-          className="bg-orange-600 font-bold text-white hover:bg-orange-700"
         >
           인터넷 게이트웨이 생성
         </Button>

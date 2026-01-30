@@ -1,5 +1,5 @@
 export type SecurityGroupSubmitConfig = {
-  _type: 'securityGroup'
+  _type: 'securityGroups'
   id: string
   name: string
 }

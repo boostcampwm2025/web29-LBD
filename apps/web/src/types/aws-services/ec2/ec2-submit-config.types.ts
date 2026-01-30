@@ -5,13 +5,13 @@ export type EC2SubmitConfig = {
 
   // AMI
   osType?:
-    | 'amazon-linux'
-    | 'mac-os'
-    | 'ubuntu'
-    | 'windows'
-    | 'red-hat'
-    | 'suse-linux'
-    | 'debian'
+  | 'amazon-linux'
+  | 'mac-os'
+  | 'ubuntu'
+  | 'windows'
+  | 'red-hat'
+  | 'suse-linux'
+  | 'debian'
 
   // Instance type
   instanceType?: string
@@ -21,11 +21,14 @@ export type EC2SubmitConfig = {
 
   // Network settings
   vpcName?: string
+  vpcId?: string
+  subnetId?: string
   subnetName?: string
   autoAssignPublicIp?: boolean
   allowSSH?: boolean
   allowHTTPS?: boolean
   allowHTTP?: boolean
+  securityGroups?: string[]
 
   // Storage
   storageSize?: number

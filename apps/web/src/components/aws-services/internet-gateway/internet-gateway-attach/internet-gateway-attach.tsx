@@ -5,6 +5,7 @@ import { AttachForm } from './sections/attach-form'
 import { useForm, useWatch } from 'react-hook-form'
 
 import { Button } from '@/components/ui/button'
+import { useActionFeedback } from '@/contexts/action-feedback-context'
 import { useProblemForm } from '@/contexts/problem-form-context'
 import type {
   InternetGatewayAttachFormData,
@@ -51,6 +52,8 @@ export default function InternetGatewayAttach({
     name: ['internetGatewayId', 'vpcId'],
   })
 
+  const { showFeedback } = useActionFeedback()
+
   const handleFormSubmit = handleSubmit((data) => {
     // 2. 전역 상태 업데이트
     setSubmitConfig((prev) => {
@@ -66,7 +69,8 @@ export default function InternetGatewayAttach({
               data: {
                 ...igw.data,
                 vpcId: data.vpcId,
-                vpcName: data.vpcId,
+                vpcName:
+                  vpcList.find((v) => v.id === data.vpcId)?.name || data.vpcId,
               },
             }
           }
@@ -74,6 +78,13 @@ export default function InternetGatewayAttach({
         }),
       }
     })
+
+    showFeedback({
+      title: '연결 완료',
+      message: `인터넷 게이트웨이가 VPC(${data.vpcId})에 성공적으로 연결되었습니다.`,
+      type: 'success',
+    })
+
     if (onAfterSubmit) onAfterSubmit()
   })
 
@@ -97,7 +108,6 @@ export default function InternetGatewayAttach({
         <Button
           type="submit"
           size="lg"
-          className="bg-orange-600 font-bold text-white hover:bg-orange-700"
           disabled={!selectedIgw || !selectedVpc}
         >
           인터넷 게이트웨이 연결

@@ -12,7 +12,6 @@ import { useCallback } from 'react'
 import type { ServiceConfig } from '@/types/submitConfig.types'
 import type { Edge, Node } from '@xyflow/react'
 
-// TODO: ServiceConfig, ServiceType에 vpc, subnet 등도 추가 필요. 지금 타입 경고
 export function useAwsDiagramLogic(
   _nodes: Node[],
   setNodes: React.Dispatch<React.SetStateAction<Node[]>>,
@@ -181,6 +180,12 @@ export function useAwsDiagramLogic(
             return prevNodes
           }
           if (payload._type === 'internetGateway' && !payload.vpcId) {
+            return prevNodes
+          }
+          if (payload._type === 'natGateway' && !payload.subnetId) {
+            return prevNodes
+          }
+          if (payload._type === 'securityGroups') {
             return prevNodes
           }
 

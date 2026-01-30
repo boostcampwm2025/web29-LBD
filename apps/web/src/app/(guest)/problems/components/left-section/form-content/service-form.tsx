@@ -17,20 +17,22 @@ const getServiceType = (serviceName: string): ServiceType => {
     subnet: 'subnet',
     routeTable: 'routeTable',
     internetGateway: 'internetGateway',
+    natGateway: 'natGateway',
+    securityGroups: 'securityGroups',
   }
   return serviceTypeMap[serviceName] || 's3'
 }
 
 export const ServiceForm = ({
   problemData,
-  currentService,
+  currentTask,
 }: {
   problemData: IServiceMapper[]
-  currentService: IServiceMapper['serviceName']
+  currentTask: IServiceMapper['serviceTask']
 }) => {
   const { handleAddItem } = useProblemForm()
 
-  const mapper = problemData.find((m) => m.serviceName === currentService)
+  const mapper = problemData.find((m) => m.serviceTask === currentTask)
 
   if (!mapper) return null
 

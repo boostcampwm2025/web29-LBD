@@ -36,12 +36,12 @@ export default function RouteTableCreate({ onSubmit }: RouteTableCreateProps) {
     defaultVpcs.length > 0
       ? defaultVpcs
       : [
-          {
-            id: 'vpc-12345678',
-            name: 'Default VPC',
-            cidrBlock: '10.0.0.0/16',
-          },
-        ]
+        {
+          id: 'vpc-12345678',
+          name: 'Default VPC',
+          cidrBlock: '10.0.0.0/16',
+        },
+      ]
 
   // 생성 버튼 활성화/비활성화를 위해 감시
   const vpcId = useWatch({ control, name: 'settings.vpcId' })
@@ -54,10 +54,14 @@ export default function RouteTableCreate({ onSubmit }: RouteTableCreateProps) {
 
       name: data.settings.nameTag,
       vpcId: data.settings.vpcId,
-      vpcName: data.settings.vpcId,
+      vpcName: vpc?.name || data.settings.vpcId,
       // 생성 시점에는 라우트나 서브넷 정보가 없음
       routes: [
-        { destinationCidr: vpc?.cidrBlock || '', targetGatewayId: 'local' },
+        {
+          destinationCidr: vpc?.cidrBlock || '',
+          targetGatewayId: 'local',
+          targetGatewayName: 'local',
+        },
       ],
       associations: [],
     }
@@ -87,7 +91,6 @@ export default function RouteTableCreate({ onSubmit }: RouteTableCreateProps) {
         <Button
           type="submit"
           size="lg"
-          className="bg-orange-600 font-bold text-white hover:bg-orange-700"
           disabled={!vpcId} // VPC 필수 선택
         >
           라우팅 테이블 생성

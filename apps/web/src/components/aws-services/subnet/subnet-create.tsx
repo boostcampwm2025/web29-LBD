@@ -46,10 +46,13 @@ export default function SubnetCreate({ onSubmit }: SubnetCreateProps) {
     const submitData: SubnetSubmitConfig = {
       _type: 'subnet',
       vpcId: data.vpcId,
-      vpcName: data.vpcId,
-      id: data.subnetSettings.nameTag,
-      name: data.subnetSettings.nameTag,
-      availabilityZone: data.subnetSettings.availabilityZone,
+      vpcName: selectedVpc?.name || data.vpcId,
+      id: data.subnetSettings.nameTag || crypto.randomUUID(),
+      name: data.subnetSettings.nameTag || 'Unnamed Subnet',
+      availabilityZone:
+        data.subnetSettings.availabilityZone === 'no-preference'
+          ? undefined
+          : data.subnetSettings.availabilityZone,
       cidrBlock: data.subnetSettings.cidrBlock,
     }
     onSubmit(submitData)
@@ -80,7 +83,6 @@ export default function SubnetCreate({ onSubmit }: SubnetCreateProps) {
         <Button
           type="submit"
           size="lg"
-          className="bg-orange-600 font-bold text-white hover:bg-orange-700"
           disabled={!selectedVpcId} // VPC 미선택 시 버튼 비활성화
         >
           서브넷 생성

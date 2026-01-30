@@ -7,23 +7,23 @@ export const ServiceTabs = ({
   onChange,
 }: {
   services: IServiceMapper[]
-  current: IServiceMapper['serviceName']
-  onChange: (name: IServiceMapper['serviceName']) => void
+  current: IServiceMapper['serviceTask']
+  onChange: (task: IServiceMapper['serviceTask']) => void
 }) => {
   return (
     <div className="mb-0 flex w-full items-center justify-between">
-      {services.map((service, idx) => (
+      {services.map((service) => (
         <span
-          key={service.serviceName + idx}
+          key={service.label || service.serviceTask}
           className={cn(
             'w-full cursor-pointer rounded-t-lg border py-1 text-center text-base font-semibold select-none',
-            current === service.serviceName
-              ? 'bg-background border-b-0'
-              : 'bg-muted border-b',
+            current === service.serviceTask
+              ? 'bg-background border-b-0 text-primary'
+              : 'bg-muted border-b text-muted-foreground',
           )}
-          onClick={() => onChange(service.serviceName)}
+          onClick={() => onChange(service.serviceTask)}
         >
-          {service.serviceName}
+          {service.label || service.serviceTask}
         </span>
       ))}
     </div>

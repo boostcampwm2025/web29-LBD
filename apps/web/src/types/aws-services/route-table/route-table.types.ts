@@ -1,6 +1,7 @@
 export interface RouteItem {
   destinationCidr: string
   targetGatewayId: string
+  targetGatewayName: string
 }
 
 export interface RouteTableCreateFormData {
@@ -26,5 +27,5 @@ export type RouteTableSubmitConfig = {
   vpcName?: string
 
   routes?: RouteItem[]
-  associations?: { subnetId: string }[]
+  associations?: { subnetId: string; subnetName: string }[]
 }

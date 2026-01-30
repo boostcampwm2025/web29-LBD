@@ -11,6 +11,7 @@ import type {
   SGSubmitConfig,
 } from './aws-services/ec2/sg-submit-config.types'
 import { InternetGatewaySubmitConfig } from './aws-services/internet-gateway/internet-gateway.types'
+import type { NATGatewaySubmitConfig } from './aws-services/nat-gateway/nat-gateway.types'
 import { RouteTableSubmitConfig } from './aws-services/route-table/route-table.types'
 import type {
   S3ServerPayload,
@@ -28,7 +29,8 @@ export type ServiceType =
   | 'routeTable'
   | 'rds'
   | 'internetGateway'
-  | 'securityGroup'
+  | 'securityGroups'
+  | 'natGateway'
 
 // GlobalSubmitConfig의 키 타입
 export type SubmitConfigServiceType = keyof GlobalSubmitConfig
@@ -43,6 +45,7 @@ export type ServiceConfig =
   | SubnetSubmitConfig
   | RouteTableSubmitConfig
   | InternetGatewaySubmitConfig
+  | NATGatewaySubmitConfig
   | { _type: 'rds'; id: string; name: string; subnetId: string }
 
 // 개별 서비스 데이터 (ID를 포함해 식별 가능하게 함)
@@ -57,11 +60,12 @@ export interface GlobalSubmitConfig {
   s3?: ServiceConfigItem<S3SubmitConfig>[]
   cloudFront?: ServiceConfigItem<CloudFrontSubmitConfig>[]
   ec2?: ServiceConfigItem<EC2SubmitConfig>[]
-  securityGroup?: ServiceConfigItem<SGSubmitConfig>[]
+  securityGroups?: ServiceConfigItem<SGSubmitConfig>[]
   vpc?: ServiceConfigItem<VpcSubmitConfig>[]
   subnet?: ServiceConfigItem<SubnetSubmitConfig>[]
   routeTable?: ServiceConfigItem<RouteTableSubmitConfig>[]
   internetGateway?: ServiceConfigItem<InternetGatewaySubmitConfig>[]
+  natGateway?: ServiceConfigItem<NATGatewaySubmitConfig>[]
   rds?: []
 }
 
@@ -75,6 +79,7 @@ export type ServerPayload =
   | SubnetSubmitConfig
   | RouteTableSubmitConfig
   | InternetGatewaySubmitConfig
+  | NATGatewaySubmitConfig
 
 // 최종 제출
 export interface FinalSubmitConfig {
@@ -82,10 +87,11 @@ export interface FinalSubmitConfig {
     s3?: S3ServerPayload[]
     cloudFront?: CloudFrontServerPayload[]
     ec2?: EC2ServerPayload[]
-    securityGroup?: SGServerPayload[]
+    securityGroups?: SGServerPayload[]
     vpc?: VpcSubmitConfig[]
     subnet?: SubnetSubmitConfig[]
     routeTable?: RouteTableSubmitConfig[]
     internetGateway?: InternetGatewaySubmitConfig[]
+    natGateway?: NATGatewaySubmitConfig[]
   }
 }

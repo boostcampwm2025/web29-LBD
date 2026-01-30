@@ -51,16 +51,20 @@ export function RoutesEditor() {
                   <TableCell>
                     <Input
                       {...register(`routes.${index}.destinationCidr`)}
-                      disabled={isLocal}
+                      readOnly={isLocal}
                       className={
                         isLocal ? 'bg-muted text-muted-foreground' : ''
                       }
+                    />
+                    <input
+                      type="hidden"
+                      {...register(`routes.${index}.targetGatewayName`)}
                     />
                   </TableCell>
                   <TableCell>
                     <Input
                       {...register(`routes.${index}.targetGatewayId`)}
-                      disabled={isLocal}
+                      readOnly={isLocal}
                       className={
                         isLocal ? 'bg-muted text-muted-foreground' : ''
                       }
@@ -96,7 +100,13 @@ export function RoutesEditor() {
         <Button
           type="button"
           variant="outline"
-          onClick={() => append({ destinationCidr: '', targetGatewayId: '' })}
+          onClick={() =>
+            append({
+              destinationCidr: '',
+              targetGatewayId: '',
+              targetGatewayName: '',
+            })
+          }
           className="gap-2"
         >
           <Plus className="h-4 w-4" /> 라우트 추가

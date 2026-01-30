@@ -5,6 +5,13 @@ import { Controller, type UseFormReturn } from 'react-hook-form'
 import { SectionContainer } from '@/components/section-container'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import type {
   SecurityGroupFormData,
@@ -68,7 +75,8 @@ export function BasicInfoSection({
         </div>
 
         {/* VPC 선택 */}
-        {/* <div className="space-y-2">
+        {/* VPC 선택 */}
+        <div className="space-y-2">
           <Label htmlFor="sg-vpc">
             VPC <span className="text-destructive">*</span>
           </Label>
@@ -104,7 +112,7 @@ export function BasicInfoSection({
               </>
             )}
           />
-        </div> */}
+        </div>
       </div>
     </SectionContainer>
   )

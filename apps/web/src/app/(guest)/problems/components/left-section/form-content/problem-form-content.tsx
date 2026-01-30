@@ -12,26 +12,35 @@ interface ProblemFormContentProps {
 }
 
 export function ProblemFormContent({ problemData }: ProblemFormContentProps) {
-  const [currService, setCurrService] = useState(problemData[0].serviceName)
+  const [currTask, setCurrTask] = useState(problemData[0].serviceTask)
 
-  const handleServiceChange = (serviceName: IServiceMapper['serviceName']) => {
-    setCurrService(serviceName)
+  const uniqueTasks = React.useMemo(() => {
+    return problemData.filter(
+      (item, index, self) =>
+        self.findIndex(
+          (t) => t.serviceTask === item.serviceTask && t.label === item.label,
+        ) === index,
+    )
+  }, [problemData])
+
+  const handleTaskChange = (serviceTask: IServiceMapper['serviceTask']) => {
+    setCurrTask(serviceTask)
   }
 
   return (
     <React.Fragment>
-      {problemData.length > 1 && (
+      {uniqueTasks.length > 1 && (
         <div className="m-0 flex w-full items-end">
           <ServiceTabs
-            services={problemData}
-            current={currService}
-            onChange={handleServiceChange}
+            services={uniqueTasks}
+            current={currTask}
+            onChange={handleTaskChange}
           />
           <div className="m-0 flex-1 border-b" />
         </div>
       )}
 
-      <ServiceForm problemData={problemData} currentService={currService} />
+      <ServiceForm problemData={problemData} currentTask={currTask} />
     </React.Fragment>
   )
 }

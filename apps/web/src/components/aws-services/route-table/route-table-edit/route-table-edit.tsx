@@ -15,6 +15,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { useActionFeedback } from '@/contexts/action-feedback-context'
 import { useProblemForm } from '@/contexts/problem-form-context'
 import { getRouteTables } from '@/lib/get-route-tables'
 import type {
@@ -28,6 +29,7 @@ interface RouteTableEditProps {
 
 export default function RouteTableEdit({ onAfterSubmit }: RouteTableEditProps) {
   const { submitConfig, setSubmitConfig } = useProblemForm()
+  const { showFeedback } = useActionFeedback()
 
   // 1. 필요한 데이터 목록 가져오기 (RouteTable, VPC, Subnet)
   const routeTableItems = getRouteTables(submitConfig)
@@ -69,10 +71,15 @@ export default function RouteTableEdit({ onAfterSubmit }: RouteTableEditProps) {
 
     // (A) 라우트 데이터 매핑: destinationCidrBlock -> destination 변환
     const formRoutes: RouteItem[] = (targetData.routes || []).map(
-      (r: { destinationCidr?: string; targetGatewayId?: string }) => ({
+      (r: {
+        destinationCidr?: string
+        targetGatewayId?: string
+        targetGatewayName?: string
+      }) => ({
         // 저장된 데이터에 destinationCidrBlock이 있다면 이를 destination으로 매핑
         destinationCidr: r.destinationCidr || '',
         targetGatewayId: r.targetGatewayId || '',
+        targetGatewayName: r.targetGatewayName || r.targetGatewayId || '',
       }),
     )
 
@@ -84,6 +91,7 @@ export default function RouteTableEdit({ onAfterSubmit }: RouteTableEditProps) {
         formRoutes.unshift({
           destinationCidr: targetVpc.data.cidrBlock,
           targetGatewayId: 'local',
+          targetGatewayName: 'local',
         })
       }
     }
@@ -110,16 +118,30 @@ export default function RouteTableEdit({ onAfterSubmit }: RouteTableEditProps) {
               isReady: true,
               data: {
                 ...item.data,
-                routes: data.routes,
-                associations: data.associatedSubnetIds.map((subnetId) => ({
-                  subnetId,
+                routes: data.routes.map((r) => ({
+                  ...r,
+                  targetGatewayName: r.targetGatewayName || r.targetGatewayId,
                 })),
+                associations: data.associatedSubnetIds.map((subnetId) => {
+                  const subnetItem = subnetItems.find((s) => s.id === subnetId)
+                  return {
+                    subnetId,
+                    subnetName:
+                      subnetItem?.data.name || subnetItem?.id || subnetId,
+                  }
+                }),
               },
             }
           }
           return item
         }),
       }
+    })
+
+    showFeedback({
+      title: '변경사항 저장 완료',
+      message: `라우팅 테이블(${data.selectedRouteTableId})의 규칙 및 연결이 업데이트되었습니다.`,
+      type: 'success',
     })
 
     reset(data)

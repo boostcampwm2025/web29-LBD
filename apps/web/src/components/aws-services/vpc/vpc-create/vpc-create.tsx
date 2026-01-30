@@ -67,11 +67,7 @@ export default function VpcCreate({ config, onSubmit }: VpcCreateProps) {
       </div>
 
       <div className="flex justify-end">
-        <Button
-          type="submit"
-          size="lg"
-          className="bg-orange-600 font-bold text-white hover:bg-orange-700"
-        >
+        <Button type="submit" size="lg">
           VPC 생성
         </Button>
       </div>

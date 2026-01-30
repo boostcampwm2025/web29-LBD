@@ -7,7 +7,7 @@ export interface SGRuleConfig {
 }
 
 export type SGSubmitConfig = {
-  _type: 'securityGroup'
+  _type: 'securityGroups'
   id: string
   name: string
   description?: string

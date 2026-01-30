@@ -25,7 +25,7 @@ export function DiagramPanel() {
   )
 
   return (
-    <div className="h-[400px] overflow-hidden rounded-lg border">
+    <div className="h-[600px] overflow-hidden rounded-lg border">
       <ReactFlow
         nodes={nodes}
         edges={edges}

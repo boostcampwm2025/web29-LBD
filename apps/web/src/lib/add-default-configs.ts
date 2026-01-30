@@ -122,6 +122,37 @@ export function addDefaultConfigs(
             })
           }
           break
+        case 'natGateway':
+          if (!defaultConfigs.natGateway) defaultConfigs.natGateway = []
+          if (
+            !isDuplicated(
+              defaultConfigs.natGateway.map((item) => item.data),
+              options,
+            )
+          ) {
+            defaultConfigs.natGateway.push({
+              id: options.id || '',
+              data: options,
+              isReady: true,
+            })
+          }
+          break
+
+        case 'securityGroups':
+          if (!defaultConfigs.securityGroups) defaultConfigs.securityGroups = []
+          if (
+            !isDuplicated(
+              defaultConfigs.securityGroups.map((item) => item.data),
+              options,
+            )
+          ) {
+            defaultConfigs.securityGroups.push({
+              id: options.id,
+              data: options,
+              isReady: true,
+            })
+          }
+          break
       }
     }
   }
